@@ -1,23 +1,26 @@
 from clases_8escalones import *
-from vista_8escalones import Vista_8escalones
 
-class Juego_controlador:
+class ControladorJuego:
+    def __init__(self, controlador_ppal):
+        self.__controladorPrincipal = controlador_ppal
+        self.__lista_jugadores = []  # Lista de jugadores
+        self.__escalon_actual = Escalon(1, "tema_generico", self.__lista_jugadores)  # El primer escalón
+        self.__vista = self.__controladorPrincipal.ventanaJuego  # La ventana de juego que se muestra
     
-    def __init__(self, escalon, jugadores):
-        self.__lista_jugadores=jugadores
-        self.__escalon_actual=Escalon(jugadores)
-        self.__lista_jugadores_eliminados=[]
-    
+    def iniciar_juego(self):
+        self.__lista_jugadores = [Jugador("Jugador1"), Jugador("Jugador2")]  # Crear jugadores
+        self.ronda()  # Iniciar la ronda del juego
+
     def ronda(self):
         for jugador in self.__lista_jugadores:
-            responder= self.__escalon_actual.asigna_pregunta(jugador)
-            if responder==False:
+            # Lógica para asignar pregunta y obtener la respuesta
+            if not self.__escalon_actual.asigna_pregunta(jugador, "respuesta_dada"):
                 self.eliminar(jugador)
-                
+
     def eliminar(self, jugador):
-        jugador.eliminado=True
-        self.__lista_jugadores_eliminados.append(jugador)
-        Vista_8escalones().mostrar_eliminacion(jugador)
+        jugador.marcar_eliminado()
+        self.__vista.actualizar_estado_jugador(jugador)  # Actualizar la vista cuando un jugador es eliminado
+    
 
 
     
