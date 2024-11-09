@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QGroupBox,QSlider, QVBoxLayout, QRadioButton,QLineEdit,QGridLayout, QLabel,QApplication, QMainWindow, QPushButton, QMessageBox, QHBoxLayout, QWidget
+from PyQt6.QtWidgets import QApplication,QGroupBox,QSlider, QVBoxLayout, QRadioButton,QLineEdit,QGridLayout, QLabel, QMainWindow, QPushButton, QWidget
 from PyQt6.QtCore import Qt,pyqtSignal,QUrl
-from PyQt6.QtGui import QFont,QPixmap,QIcon,QPalette,QColor
+from PyQt6.QtGui import QPixmap,QIcon,QPalette,QColor
 from PyQt6.QtMultimedia import QMediaPlayer, QAudioOutput
 
 class Audio():
@@ -40,60 +40,18 @@ class MainWindow(QMainWindow):
         self.labelFondo.setPixmap(pixmap)
         self.labelFondo.setScaledContents(True) 
         
-        
+
 class VentanaInicial(MainWindow):
-    
-    signalInvitado = pyqtSignal()
-    signalAdmin = pyqtSignal()
+    signalJugar = pyqtSignal()
+    signalOpciones = pyqtSignal()
     signalCerrar = pyqtSignal()
     
     def __init__(self):
         super().__init__("TpFinal/Images/FondoPantallaPpal.png")
         self.btnWidth = 150
-        self.btnHeight = 40        
-        self.crearBtns()
-        self.crearLayout()
-        self.audio = Audio()
-        self.setCentralWidget(self.labelFondo)
-
-
-    def crearBtns(self):
-        self.btnInvitado = QPushButton("Entrar como invitado")
-        self.btnAdmin = QPushButton("Entrar como Administrador")
-        self.btnCerrar = QPushButton("Salir")
-        
-        self.btnInvitado.setFixedSize(self.btnWidth, self.btnHeight)
-        self.btnAdmin.setFixedSize(self.btnWidth, self.btnHeight)
-        self.btnCerrar.setFixedSize(100,50)
-        
-        self.btnInvitado.clicked.connect(self.signalInvitado.emit)
-        self.btnAdmin.clicked.connect(self.signalAdmin.emit)
-        self.btnCerrar.clicked.connect(self.signalCerrar.emit)
-   
-    def crearLayout(self):
-        layout1 = QHBoxLayout()
-        layout1.setContentsMargins(200, 50, 200, 50)
-        layout1.addWidget(self.btnInvitado,2,alignment=Qt.AlignmentFlag.AlignCenter)
-        layout1.addWidget(self.btnAdmin,2,alignment=Qt.AlignmentFlag.AlignCenter)
-        
-        layout2 = QVBoxLayout()
-        
-        layout2.addLayout(layout1)
-        layout2.addWidget(self.btnCerrar)
-        
-        self.labelFondo.setLayout(layout2) 
-
-
-class VentanaInvitado(MainWindow):
-    signalJugar = pyqtSignal()
-    signalOpciones = pyqtSignal()
-    signalAtras = pyqtSignal()
-    
-    def __init__(self):
-        super().__init__("TpFinal/Images/FondoJuego.jpg")
-        self.btnWidth = 150
         self.btnHeight = 40
-    
+        
+        self.audio = Audio()
         self.crearBtns()
         self.crearLayout()
         self.setCentralWidget(self.labelFondo)
@@ -101,7 +59,7 @@ class VentanaInvitado(MainWindow):
     def crearBtns(self):
         self.btnJugar = QPushButton("Jugar")
         self.btnOpciones = QPushButton("Opciones")
-        self.btnAtras = QPushButton("Atras")
+        self.btnAtras = QPushButton("Salir")
         
         self.btnJugar.setFixedSize(self.btnWidth, self.btnHeight)
         self.btnOpciones.setFixedSize(self.btnWidth, self.btnHeight)
@@ -109,7 +67,7 @@ class VentanaInvitado(MainWindow):
     
         self.btnJugar.clicked.connect(self.signalJugar.emit)
         self.btnOpciones.clicked.connect(self.signalOpciones.emit)
-        self.btnAtras.clicked.connect(self.signalAtras.emit)
+        self.btnAtras.clicked.connect(self.signalCerrar.emit)
         
     
     def crearLayout(self):
@@ -124,6 +82,7 @@ class VentanaInvitado(MainWindow):
 class VentanaOpciones(MainWindow):
     signalAplicar = pyqtSignal(int)
     signalAtras = pyqtSignal()
+    signalEntrarAdmin = pyqtSignal()
     
     def __init__(self):
         super().__init__("TpFinal/Images/FondoJuego.jpg")
@@ -142,6 +101,7 @@ class VentanaOpciones(MainWindow):
         self.radioBtnNormal = QRadioButton("Normal")
         self.radioBtnDificil = QRadioButton("Dificil")
         self.btnAplicar = QPushButton("Aplicar")
+        self.btnEntrarAdmin = QPushButton("Entrar como Admin")
         
         #config Slider
         self.sliderVol.setMinimum(0)
@@ -158,6 +118,8 @@ class VentanaOpciones(MainWindow):
         self.btnAplicar.clicked.connect(self.emitirCambios)
         
         self.btnAtras.clicked.connect(self.signalAtras.emit)
+        
+        self.btnEntrarAdmin.clicked.connect(self.signalEntrarAdmin)
     
     def setValueVol(self,valor):
         self.textVol.setText(f"Volumen: {valor}")
@@ -166,16 +128,15 @@ class VentanaOpciones(MainWindow):
     
     def emitirCambios(self):
         self.signalAplicar.emit(self.valorVol)
-        
+        #falta enviar la dificultad
     
     def crearLayout(self):  
-        widgetContenedor = QWidget(self.labelFondo)
+        widgetContenedor = QWidget()
         widgetContenedor.setAutoFillBackground(True)
         palette = widgetContenedor.palette()
         palette.setColor(QPalette.ColorRole.Window, QColor(255, 255, 255, 180))  # Negro semitransparente
         widgetContenedor.setPalette(palette)
-        widgetContenedor.setGeometry(250, 100, 300, 200)
-
+        
         grupoDificultad = QGroupBox("Seleccionar Dificultad")
         dificultadLayout = QVBoxLayout()
         dificultadLayout.addWidget(self.textVol)
@@ -190,12 +151,21 @@ class VentanaOpciones(MainWindow):
         grupoVolumen.setLayout(volumenLayout)
         
         layout = QGridLayout()
-        layout.addWidget(grupoDificultad,0,0)
-        layout.addWidget(grupoVolumen,0,1)
-        layout.addWidget(self.btnAtras,1,0)
-        layout.addWidget(self.btnAplicar,1,1)
+        layout.addWidget(grupoDificultad, 0, 0)
+        layout.addWidget(grupoVolumen, 0, 1)
+        layout.addWidget(self.btnAtras, 1, 0)
+        layout.addWidget(self.btnAplicar, 1, 1)
         widgetContenedor.setLayout(layout)
-    
+        
+        mainContainer = QWidget(self.labelFondo)
+        mainContainer.setGeometry(225, 80, 350, 250)
+        mainLayout = QVBoxLayout() 
+        
+        mainLayout.addWidget(widgetContenedor)  
+        mainLayout.addWidget(self.btnEntrarAdmin)
+        
+        # Establecer el layout principal de la ventana
+        mainContainer.setLayout(mainLayout)
     
 class VentanaLoginAdmin(MainWindow):
     signalAtras = pyqtSignal()
@@ -252,9 +222,10 @@ class VentanaLoginAdmin(MainWindow):
 
 
 class VentanaAdmin(MainWindow):
-    signalOpciones = pyqtSignal()
     signalAtras = pyqtSignal()
-    signalABM = pyqtSignal()
+    signalABMPreg = pyqtSignal()
+    signalABMAdmin = pyqtSignal()
+    
     def __init__(self):
         super().__init__("TpFinal/Images/FondoJuego.jpg")
         self.btnWidth = 150
@@ -265,24 +236,25 @@ class VentanaAdmin(MainWindow):
         self.setCentralWidget(self.labelFondo)
         
     def crearBtns(self):
-        self.btnABM = QPushButton("ABM")
-        self.btnOpciones = QPushButton("Opciones")
+        self.btnABMPreg = QPushButton("ABM Preguntas")
+        self.btnABMAdmin = QPushButton("ABM Administradores")
+
         self.btnAtras = QPushButton("Atras")
         
-        self.btnABM.setFixedSize(self.btnWidth, self.btnHeight)
-        self.btnOpciones.setFixedSize(self.btnWidth, self.btnHeight)
+        self.btnABMPreg.setFixedSize(self.btnWidth, self.btnHeight)
+        self.btnABMAdmin.setFixedSize(self.btnWidth, self.btnHeight)
         self.btnAtras.setFixedSize(80, 30)
     
-        self.btnABM.clicked.connect(self.signalABM.emit)
-        self.btnOpciones.clicked.connect(self.signalOpciones.emit)
+        self.btnABMPreg.clicked.connect(self.signalABMPreg.emit)
+        self.btnABMAdmin.clicked.connect(self.signalABMAdmin.emit)
         self.btnAtras.clicked.connect(self.signalAtras.emit)
         
     
     def crearLayout(self):
         layout = QVBoxLayout()
         layout.setContentsMargins(50, 80, 50, 50)
-        layout.addWidget(self.btnABM,alignment=Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.btnOpciones,alignment=Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.btnABMPreg,alignment=Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.btnABMAdmin,alignment=Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.btnAtras,200,alignment=Qt.AlignmentFlag.AlignLeft)
         self.labelFondo.setLayout(layout)
         
