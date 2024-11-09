@@ -7,8 +7,14 @@ class ControladorJuego:
         self.__escalon_actual = Escalon(1, "tema_generico", self.__lista_jugadores)  # El primer escalón
         self.__vista = self.__controladorPrincipal.ventanaJuego  # La ventana de juego que se muestra
     
+    def registrar_jugador(self, jugador):
+        # Crear el jugador a partir de los datos proporcionados
+        jugador = Jugador()
+        self.__lista_jugadores.append(jugador)
+        self.__vista.actualizar_estado_jugador(jugador)  # Actualizar la vista cuando se agrega el jugador  (seria tu metodo cambiarVista?)
+    
+    
     def iniciar_juego(self):
-        self.__lista_jugadores = [Jugador("Jugador1"), Jugador("Jugador2")]  # Crear jugadores
         self.ronda()  # Iniciar la ronda del juego
 
     def ronda(self):
@@ -19,7 +25,7 @@ class ControladorJuego:
 
     def eliminar(self, jugador):
         jugador.marcar_eliminado()
-        self.__vista.actualizar_estado_jugador(jugador)  # Actualizar la vista cuando un jugador es eliminado
+        self.__vista.actualizar_estado_jugador(jugador)  # Actualizar la vista cuando un jugador es eliminado (seria tu metodo cambiarVista?)
     
 
 
