@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QApplication,QGroupBox,QSlider, QVBoxLayout, QRadioButton,QLineEdit,QGridLayout, QLabel, QMainWindow, QPushButton, QWidget
+from PyQt6.QtWidgets import QGroupBox,QSlider, QVBoxLayout, QRadioButton,QLineEdit,QGridLayout, QLabel, QMainWindow, QPushButton, QWidget
 from PyQt6.QtCore import Qt,pyqtSignal,QUrl
 from PyQt6.QtGui import QPixmap,QIcon,QPalette,QColor
 from PyQt6.QtMultimedia import QMediaPlayer, QAudioOutput
@@ -18,6 +18,15 @@ class Audio():
             self.audioOutput.setVolume(0)
         else:
             self.audioOutput.setVolume(vol*0.01) 
+        
+
+def widgetDeFondoConColor(red,green,blue,parent = None)-> QWidget:
+    widgetContenedor = QWidget(parent)
+    widgetContenedor.setAutoFillBackground(True)
+    palette = widgetContenedor.palette()
+    palette.setColor(QPalette.ColorRole.Window, QColor(red, green, blue, 180))  # 180: semitransparente
+    widgetContenedor.setPalette(palette)
+    return widgetContenedor
         
 class MainWindow(QMainWindow):
     def __init__(self,url):
@@ -131,12 +140,8 @@ class VentanaOpciones(MainWindow):
         #falta enviar la dificultad
     
     def crearLayout(self):  
-        widgetContenedor = QWidget()
-        widgetContenedor.setAutoFillBackground(True)
-        palette = widgetContenedor.palette()
-        palette.setColor(QPalette.ColorRole.Window, QColor(255, 255, 255, 180))  # Negro semitransparente
-        widgetContenedor.setPalette(palette)
-        
+        widgetContenedor = widgetDeFondoConColor(255,255,255)
+    
         grupoDificultad = QGroupBox("Seleccionar Dificultad")
         dificultadLayout = QVBoxLayout()
         dificultadLayout.addWidget(self.textVol)
@@ -198,11 +203,7 @@ class VentanaLoginAdmin(MainWindow):
         
     
     def crearLayout(self):
-        widgetContenedor = QWidget()
-        widgetContenedor.setAutoFillBackground(True)
-        palette = widgetContenedor.palette()
-        palette.setColor(QPalette.ColorRole.Window, QColor(255, 255, 255, 180))  
-        widgetContenedor.setPalette(palette)
+        widgetContenedor = widgetDeFondoConColor(255,255,255)
         widgetContenedor.setGeometry(250, 100, 300, 500)
         
         layout1 = QGridLayout()
