@@ -1,4 +1,5 @@
 from VistaIniciarJuego import VentanaIniciarJuego
+from ControladorJuego import ControladorJuego
 
 class ControladorIniciarJuego():
     
@@ -8,14 +9,15 @@ class ControladorIniciarJuego():
         self.contrAnterior = contrAnterior
         
         #inicializar controladores
-        #self.controladorJuego = None
+        self.controladorJuego = None
         
         #Manejo de Signals
-        self.vista.signalEnviarJugador.connect(self.cambiarVista)
+        self.vista.signalEnviarJugadores.connect(self.cambiarVista)
         
     def cambiarVista(self,listaJugadores):
+        self.vista.hide()
         
-        print(listaJugadores)
-        #if self.controladorJuego == None:
-        #   self.controladorJuego = ControladorJuego(self,listaJugadores)
-        
+        if self.controladorJuego == None:
+            self.controladorJuego = ControladorJuego(self,listaJugadores)
+        else:
+            self.controladorJuego.vista.show()

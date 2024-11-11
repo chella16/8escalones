@@ -19,20 +19,19 @@ class Audio():
         else:
             self.audioOutput.setVolume(vol*0.01) 
         
-
-def widgetDeFondoConColor(red,green,blue,parent = None)-> QWidget:
+def widgetDeFondoConColor(red,green,blue,opacidad,parent = None)-> QWidget:
     widgetContenedor = QWidget(parent)
     widgetContenedor.setAutoFillBackground(True)
     palette = widgetContenedor.palette()
-    palette.setColor(QPalette.ColorRole.Window, QColor(red, green, blue, 180))  # 180: semitransparente
+    palette.setColor(QPalette.ColorRole.Window, QColor(red, green, blue, opacidad))  # 180: semitransparente
     widgetContenedor.setPalette(palette)
     return widgetContenedor
         
 class MainWindow(QMainWindow):
-    def __init__(self,url):
+    def __init__(self,url,width=800,height=400): #todas las ventanas usan 800x400 menos la de juego, por eso se pasa como parametros opcionales
         super().__init__()
-        self.width = 800
-        self.height = 400
+        self.width = width
+        self.height = height
         self.crearVentana()
         self.agregarFondo(url)
         
@@ -140,7 +139,7 @@ class VentanaOpciones(MainWindow):
         #falta enviar la dificultad
     
     def crearLayout(self):  
-        widgetContenedor = widgetDeFondoConColor(255,255,255)
+        widgetContenedor = widgetDeFondoConColor(255,255,255,180)
     
         grupoDificultad = QGroupBox("Seleccionar Dificultad")
         dificultadLayout = QVBoxLayout()
@@ -203,7 +202,7 @@ class VentanaLoginAdmin(MainWindow):
         
     
     def crearLayout(self):
-        widgetContenedor = widgetDeFondoConColor(255,255,255)
+        widgetContenedor = widgetDeFondoConColor(255,255,255,180)
         widgetContenedor.setGeometry(250, 100, 300, 500)
         
         layout1 = QGridLayout()

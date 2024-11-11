@@ -4,7 +4,8 @@ from PyQt6.QtCore import Qt,pyqtSignal
 
 
 class VentanaIniciarJuego(MainWindow):
-    signalEnviarJugador = pyqtSignal(list)
+    signalEnviarJugadores = pyqtSignal(list)
+    
     def __init__(self):
         super().__init__("TpFinal/Images/FondoJuego.jpg")
         self.nroJugadores = 0
@@ -16,13 +17,13 @@ class VentanaIniciarJuego(MainWindow):
     def crearBtns(self):
         self.title = QLabel("Ingreso de jugadores")
         self.ingresarNombre = QLineEdit()
-        self.textoCantJugadores = QLabel(f"{self.nroJugadores}/8 Jugadores Ingresados")
+        self.textoCantJugadores = QLabel(f"{self.nroJugadores}/9 Jugadores Ingresados")
         
         self.ingresarNombre.setPlaceholderText("Ingrese un apodo y pulse Enter")
         self.ingresarNombre.returnPressed.connect(self.agregarJugador)
     
     def crearLayout(self):
-        widgetContenedor = widgetDeFondoConColor(255,255,255,self.labelFondo)
+        widgetContenedor = widgetDeFondoConColor(255,255,255,180,self.labelFondo)
         widgetContenedor.setGeometry(250, 100, 300, 200)
         layout = QGridLayout()
         layout.addWidget(self.title,0,0,1,2,alignment=Qt.AlignmentFlag.AlignCenter)
@@ -39,17 +40,17 @@ class VentanaIniciarJuego(MainWindow):
         if nombre in self.listaJugadores:
             self.ingresarNombre.setPlaceholderText("Ingrese un apodo que no se repita y pulse Enter")
             return 
-        if self.nroJugadores < 8:
+        if self.nroJugadores < 9:
             self.ingresarNombre.setPlaceholderText("Ingrese un apodo y pulse Enter")
             self.listaJugadores.append(nombre)
             self.actualizarNroJugadores()
-            if self.nroJugadores == 8:
-                self.signalEnviarJugador.emit(self.listaJugadores)
+            if self.nroJugadores == 9:
+                self.signalEnviarJugadores.emit(self.listaJugadores)
 
          
         
     def actualizarNroJugadores(self):
         self.nroJugadores += 1
-        self.textoCantJugadores.setText(f"{self.nroJugadores}/8 Jugadores Ingresados")
+        self.textoCantJugadores.setText(f"{self.nroJugadores}/9 Jugadores Ingresados")
 
-
+    

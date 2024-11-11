@@ -1,7 +1,8 @@
-from PyQt6.QtWidgets import QApplication
 from Vista import VentanaInicial
 from ControladorOpciones import ControladorOpciones
+from ControladorIniciarJuego import ControladorIniciarJuego
 import sys #se usa en el signalCerrar
+from PyQt6.QtWidgets import QApplication
 
 #el attr vista en cada controlador hace referencia a la vista que maneja el propio controlador
 #x ej ControladorJuego.vista hace referencia a la ventana Juego
