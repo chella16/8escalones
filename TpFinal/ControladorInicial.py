@@ -1,4 +1,5 @@
-from Vista import VentanaInicial,QApplication
+from PyQt6.QtWidgets import QApplication
+from Vista import VentanaInicial
 from ControladorOpciones import ControladorOpciones
 import sys #se usa en el signalCerrar
 
