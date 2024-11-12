@@ -6,8 +6,7 @@ class Jugador:
         #self.__strikes=0 cuando pifia una pregunta se le suma un strike ?¿ con dos strikes queda eliminado ?¿
         
     def responder_pregunta(self, pregunta) -> str:
-        respuesta=pregunta.verificar_respuesta(pregunta.get_consigna())
-        return respuesta
+        pass #?¿ creo q esto es una signal q tiene q ver con apretar un boton ligado a una opcion
     
     def get_nombre(self) -> str:
         return self.__nombre

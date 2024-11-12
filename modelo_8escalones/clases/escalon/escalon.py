@@ -13,6 +13,8 @@ class Escalon:
         self.__lista_preguntas_comunes=[] 
         self.__pregunta_aproximacion=None
         
+    #podria modularizar las 2 consultas para que no quede un metodo tan extenso   
+        
     def __cargar_lista_preguntas_comunes(self, tema):
         #select * from preguntas_comunes where id_categoria = 'tema' order by random
         #nombro variables producto de la consulta  
