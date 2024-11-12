@@ -14,14 +14,16 @@ class Escalon:
         self.__pregunta_aproximacion=None
         
     def __cargar_lista_preguntas_comunes(self, tema):
-        for _ in range(18):#para que el escalon tenga lo justo y necesario
-            random_id=random.sample(range(1,100), 18) #de la cantidad de preguntas que tengo en la tabla, me genera 18 numeros al azar(futuros ids) que no se repiten entre si (sin el 0 porque sino troll)
-            pregunta_comun=Pregunta_comun(tema, random_id)
+        #select * from preguntas_comunes where id_categoria = 'tema' order by random
+        #nombro variables producto de la consulta  
+        for _ in range(18):
+            pregunta_comun=Pregunta_comun(tema)#esas variables producidas por la consulta pasan como parámetro de la pregunta
             self.__lista_preguntas_comunes.append(pregunta_comun)
     
     def __cargar_pregunta_aproximacion(self, tema):
-        random_id=random.randint(1,1) #si se tienen mas preguntas de aproximación en la BD se modifica este intervalo (solo necesito una) estaria bueno que haya varias
-        pregunta_aproximacion=Pregunta_aproximacion(tema, random_id)
+        #select * from preguntas_aproximacion where id_categoria = 'tema' order by random
+        #nombro variables producto de la consulta
+        pregunta_aproximacion=Pregunta_aproximacion(tema)#esas variables producidas por la consulta pasan como parámetro de la pregunta
         self.__pregunta_aproximacion=pregunta_aproximacion
         
     def generar_datos_escalon(self):#el controlador interactua con esto y con los get si se quisiera
