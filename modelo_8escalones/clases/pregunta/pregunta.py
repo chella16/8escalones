@@ -4,7 +4,7 @@ class Pregunta(ABC): #Una pregunta a nivel general tiene: consigna, respuesta co
     def __init__(self, tema, consigna, rta): #ya que varía la consulta realizada
         self.__consigna = consigna
         self.__respuesta_correcta = rta
-        self.__tematica= tema 
+        self.__tematica= tema
         
     def verificar_respuesta(self, respuesta) -> bool:
         return respuesta == self.__respuesta_correcta
