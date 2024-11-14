@@ -80,6 +80,8 @@ class PreguntaWidget(QWidget):
         mainLayout.addLayout(layoutRespuestas)
         self.setLayout(mainLayout)
 
+
+#class DialogRta(Q
         
 class WidgetEscalon(QWidget):
     def __init__(self, nroEscalon):
@@ -154,21 +156,26 @@ class WidgetEscalones(QWidget):
 
 
 class VistaJuego(MainWindow):
-    _listaIconos = ["TpFinal/Images/PlayersIcons/playerIcon1.jpg",
-                    "TpFinal/Images/PlayersIcons/playerIcon2.jpg",
-                    "TpFinal/Images/PlayersIcons/playerIcon3.jpg",
-                    "TpFinal/Images/PlayersIcons/playerIcon4.jpg",
-                    "TpFinal/Images/PlayersIcons/playerIcon5.jpg",
-                    "TpFinal/Images/PlayersIcons/playerIcon6.jpg",
-                    "TpFinal/Images/PlayersIcons/playerIcon7.jpg",
-                    "TpFinal/Images/PlayersIcons/playerIcon8.jpg",
-                    "TpFinal/Images/PlayersIcons/playerIcon9.jpg"]
+    #signalOp1 = pyqtSignal
+    #signalOp2 = pyqtSignal(str)
+    #signalOp3 = pyqtSignal()
+    #signalOp4 
+    _listaIconos = ["Images/PlayersIcons/playerIcon1.jpg",
+                    "Images/PlayersIcons/playerIcon2.jpg",
+                    "Images/PlayersIcons/playerIcon3.jpg",
+                    "Images/PlayersIcons/playerIcon4.jpg",
+                    "Images/PlayersIcons/playerIcon5.jpg",
+                    "Images/PlayersIcons/playerIcon6.jpg",
+                    "Images/PlayersIcons/playerIcon7.jpg",
+                    "Images/PlayersIcons/playerIcon8.jpg",
+                    "Images/PlayersIcons/playerIcon9.jpg"]
     
     def __init__(self,listaJugadores):
-        super().__init__("TpFinal/Images/FondoJuego.jpg",1000,600)
+        super().__init__("Images/FondoJuego.jpg",1000,600)
         
         self.listaJugadores = listaJugadores #usada en setJugadores para setear el nombre de los jugadores en la interfaz
         
+        self.btnIniciar = QPushButton("Iniciar Partida")
         self.listaWidgetsJugadores = [] #contiene los widgetEscalones del juego, para poder acceder a cada uno de ellos, escalon en indice 0 de esta lista es = escalon nro 1
         self.preguntaWidget = PreguntaWidget() #Widget de las preguntas
         self.escalonesWidget = WidgetEscalones() #Widget de los Escalones
@@ -196,6 +203,7 @@ class VistaJuego(MainWindow):
         mainLayout.addWidget(self.preguntaWidget,0,0)
         mainLayout.addWidget(self.escalonesWidget,0,1)
         mainLayout.addLayout(layoutPlayers,1,0)
+        mainLayout.addWidget(self.btnIniciar,2,0,1,1,alignment=Qt.AlignmentFlag.AlignLeft)
         self.labelFondo.setLayout(mainLayout)
 
   

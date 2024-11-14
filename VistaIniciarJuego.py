@@ -5,7 +5,7 @@ from PyQt6.QtCore import Qt,pyqtSignal
 
 class VentanaIniciarJuego(MainWindow):
     signalEnviarJugadores = pyqtSignal(list)
-    
+    signalAtras = pyqtSignal()
     def __init__(self):
         super().__init__("Images/FondoJuego.jpg")
         self.nroJugadores = 0
@@ -17,7 +17,9 @@ class VentanaIniciarJuego(MainWindow):
     def crearBtns(self):
         self.title = QLabel("Ingreso de jugadores")
         self.btnAtras = QPushButton("Atras")
-        #self.btnAtras.setFixe
+        
+        self.btnAtras.clicked.connect(self.signalAtras.emit)
+        
         self.ingresarNombre = QLineEdit()
         self.textoCantJugadores = QLabel(f"{self.nroJugadores}/9 Jugadores Ingresados")
         

@@ -13,6 +13,12 @@ class ControladorIniciarJuego():
         
         #Manejo de Signals
         self.vista.signalEnviarJugadores.connect(self.cambiarVista)
+        self.vista.signalAtras.connect(self.volverAtrasVista)
+        
+    
+    def volverAtrasVista(self):
+        self.vista.hide()
+        self.contrAnterior.vista.show()
         
     def cambiarVista(self,listaJugadores):
         self.vista.hide()
