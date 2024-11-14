@@ -23,7 +23,7 @@ class MainWindow(QMainWindow):
     def crearVentana(self):
         self.setWindowTitle("Los 8 Escalones")
         self.setFixedSize(self.width, self.height)
-        self.setWindowIcon(QIcon("TpFinal/Images/WindowIcon.png"))
+        self.setWindowIcon(QIcon("Images/WindowIcon.png"))
     
     def agregarFondo(self,url:str):
         self.labelFondo = QLabel()
