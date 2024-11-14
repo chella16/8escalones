@@ -10,7 +10,7 @@ class VentanaAdmin(MainWindow):
     signalABMAdmin = pyqtSignal()
     
     def __init__(self):
-        super().__init__("TpFinal/Images/FondoJuego.jpg")
+        super().__init__("Images/FondoJuego.jpg")
         self.btnWidth = 150
         self.btnHeight = 40
     

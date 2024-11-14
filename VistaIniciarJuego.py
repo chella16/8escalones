@@ -7,7 +7,7 @@ class VentanaIniciarJuego(MainWindow):
     signalEnviarJugadores = pyqtSignal(list)
     
     def __init__(self):
-        super().__init__("TpFinal/Images/FondoJuego.jpg")
+        super().__init__("Images/FondoJuego.jpg")
         self.nroJugadores = 0
         self.listaJugadores = []
         self.crearBtns()

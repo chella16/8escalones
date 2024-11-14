@@ -5,7 +5,7 @@ class Audio():
         self.mediaPlayer = QMediaPlayer()
         self.audioOutput = QAudioOutput()
         self.mediaPlayer.setAudioOutput(self.audioOutput)
-        self.mediaPlayer.setSource(QUrl.fromLocalFile("TpFinal\Sounds\A.mp3"))  # Cambia a la ruta de tu archivo MP3
+        self.mediaPlayer.setSource(QUrl.fromLocalFile("Sounds\A.mp3"))  # Cambia a la ruta de tu archivo MP3
         self.audioOutput.setVolume(0.5)
         self.mediaPlayer.play()
     
