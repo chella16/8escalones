@@ -4,6 +4,7 @@ class Jugador:
         self.__nombre=nombre 
         self.__eliminado=False
         #self.__strikes=0 cuando pifia una pregunta se le suma un strike ?¿ con dos strikes queda eliminado ?¿
+        #self.__va_a_aproximacion=False
         
     def responder_pregunta(self, pregunta) -> str:
         pass #?¿ creo q esto es una signal q tiene q ver con apretar un boton ligado a una opcion
@@ -14,8 +15,15 @@ class Jugador:
     def get_estado(self) -> str:
         return self.__eliminado
     
+    #def set_strikes(self):
+        #self.__strikes+=1
+    
     #def get_strikes(self):
         #return self.__strikes
+        
+    #def reset_strikes(self):
+        #self.__strikes=0
+        
     
-    def marcar_eliminado(self):#para respetar la privacidad de los atributos 
+    def set_eliminado(self):#para respetar la privacidad de los atributos 
         self.__eliminado=True
