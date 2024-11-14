@@ -13,7 +13,7 @@ class DAO8Escalones:
         if self._conexion:
             self._conexion.close()
     
-    def __crear_tablas (self):
+    def _crear_tablas (self):
         try:
             self.crear_conexion()
             c = self._conexion.cursor()
@@ -71,7 +71,7 @@ class DAO8Escalones:
         except Exception as E:
             print (f"Error!! {E}")
         finally:
-            self.cerrar_conexion.close()
+            self.cerrar_conexion()
     
     def crear_participante (self, nombre_participante):
         #tener en cuenta que puede ser que se tenga que comparar de minusculas
@@ -94,4 +94,5 @@ class DAO8Escalones:
         c = self._conexion.cursor()
         c.execute ("UPDATE participantes SET (nombre_participante) = ? WHERE nombre_participante = nombre_buscado",(nombre_nuevo, nombre_buscado))
     
-    
+base_datos = DAO8Escalones('8escalones.bd')
+base_datos._crear_tablas()
