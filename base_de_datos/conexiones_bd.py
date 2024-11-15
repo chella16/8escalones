@@ -93,6 +93,7 @@ class DAO8Escalones:
         self.crear_conexion()
         c = self._conexion.cursor()
         c.execute ("UPDATE participantes SET (nombre_participante) = ? WHERE nombre_participante = nombre_buscado",(nombre_nuevo, nombre_buscado))
+<<<<<<< Updated upstream
         
         
     def cargar_temas(self):
@@ -104,3 +105,6 @@ class DAO8Escalones:
     
 base_datos = DAO8Escalones('8escalones.bd')
 base_datos._crear_tablas()
+=======
+
+>>>>>>> Stashed changes
