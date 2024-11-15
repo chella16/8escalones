@@ -15,4 +15,6 @@ pregunta1 = Pregunta_comun("Entretenimiento", "Consigna, Hola?", "Respuesta_corr
 pregunta1.crear_opciones()
 pregunta1.mostrar_info_preg()
 
+base_datos.alta_pregunta_normal(pregunta1)
 base_datos.mostrar_lista_de_preguntas()
+#base_datos.eliminar_todas_preguntas()

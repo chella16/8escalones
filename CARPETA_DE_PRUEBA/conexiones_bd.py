@@ -110,16 +110,26 @@ class DAO8Escalones:
     ###########################################################################################################
     def alta_pregunta_normal (self, pregunta_normal):
         #suponiendo que desde la interfaz ya se eligió cual tema de pregunta va a ser y la dificultad
+        self.crear_conexion()
+        
         desarrollo_preg = pregunta_normal.get_consigna()
         rtacorrecta_preg = pregunta_normal.get_rta()
         listaopciones = pregunta_normal.get_opciones()
         listaopciones_preg = json.dumps(listaopciones)
         tematica_preg = pregunta_normal.get_tematica()
         dificultad_preg = pregunta_normal.get_dificultad()
-        self.crear_conexion()
+        
         c = self._conexion.cursor()
+        c.execute ("SELECT id_tema FROM temas WHERE nombre_tema = (?)", (tematica_preg,))
+        resu = c.fetchone()
+        id_tematica_preg = resu[0]
+        
+        c.execute("SELECT id_dificultad FROM dificultades WHERE nombre_dificultad = (?)", (dificultad_preg,))
+        resu = c.fetchone()
+        id_dificultad_preg = resu[0]
+        
         c.execute("""INSERT INTO preguntas (desarrollo_pregunta, rta_correcta, lista_opciones, id_tema, id_dificultad)
-        VALUES (?, ?, ?, ?, ?)""",(desarrollo_preg, rtacorrecta_preg, listaopciones_preg, tematica_preg, dificultad_preg))
+        VALUES (?, ?, ?, ?, ?)""",(desarrollo_preg, rtacorrecta_preg, listaopciones_preg, id_tematica_preg, id_dificultad_preg))
         self.comitear_cambios()
         self.cerrar_conexion()
     
@@ -132,6 +142,13 @@ class DAO8Escalones:
             print (t)
         self.cerrar_conexion()
     
+    def eliminar_todas_preguntas(self):
+        self.crear_conexion()
+        c = self._conexion
+        c.execute("DELETE FROM preguntas")
+        c.execute("DELETE FROM sqlite_sequence WHERE name = 'preguntas'")
+        self.comitear_cambios()
+        self.cerrar_conexion()
     
     ###########################################################################################################
     def alta_tematica (self, tematica):

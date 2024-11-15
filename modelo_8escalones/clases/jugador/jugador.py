@@ -1,7 +1,8 @@
 class Jugador:
     
     def __init__(self, nombre): #¿Qué sabe hacer un jugador? Para mi, un jugador sabe decir su nombre, sabe responder preguntas y decir si está eliminado o no
-        self.__nombre=nombre 
+        self.__id = "" #esto lo agregue yo para asegurar utilizar bien el singleton
+        self.__nombre= nombre 
         self.__eliminado=False
         #self.__strikes=0 cuando pifia una pregunta se le suma un strike ?¿ con dos strikes queda eliminado ?¿
         #self.__va_a_aproximacion=False
@@ -27,3 +28,6 @@ class Jugador:
     
     def set_eliminado(self):#para respetar la privacidad de los atributos 
         self.__eliminado=True
+    
+    def set_id (self, id): #esto es por lo del singleton
+        self.__id = id
