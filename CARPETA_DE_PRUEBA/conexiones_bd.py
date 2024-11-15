@@ -194,6 +194,8 @@ class DAO8Escalones:
         self.cerrar_conexion()
     
     
-#base_datos = DAO8Escalones('8escalones.db')
-#base_datos._crear_tablas()
+base_datos = DAO8Escalones('8escalones.db')
+base_datos._crear_tablas()
 
+base_datos = DAO8Escalones('8escalones.db')
+base_datos._crear_tablas()
