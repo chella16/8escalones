@@ -196,7 +196,6 @@ class DAO8Escalones:
     
     ########################################## DIFICULTADES #################################################################
     
-<<<<<<< HEAD
     def alta_dificultad (self):
         self.crear_conexion()
         c = self._conexion.cursor()
