@@ -75,7 +75,7 @@ class DAO8Escalones:
             print (f"Error!! {E}")
         finally:
             self.cerrar_conexion()
-    ###########################################################################################################
+    ############################################### PARTICIPANTES ############################################################
     def alta_participante (self, participante):
         nombre_participante_aux = participante.get_nombre()
         self.crear_conexion()
@@ -112,7 +112,7 @@ class DAO8Escalones:
         c.execute("DELETE FROM participantes WHERE nombre_participante = ?", (nombre_eliminar,))
         #c.execute("DELETE FROM participantes WHERE id_participante = ?", (id_eliminar,))
         self._conexion.commit()
-    ###########################################################################################################
+    ########################################## PREGUNTAS #################################################################
     def alta_pregunta_normal (self, pregunta_normal):
         #suponiendo que desde la interfaz ya se eligió cual tema de pregunta va a ser y la dificultad
         self.crear_conexion()
@@ -129,12 +129,12 @@ class DAO8Escalones:
         resu = c.fetchone()
         id_tematica_preg = resu[0]
         
-        c.execute("SELECT id_dificultad FROM dificultades WHERE nombre_dificultad = (?)", (dificultad_preg,))
+        c.execute("SELECT id_dificultad FROM dificultades WHERE LOWER(nombre_dificultad) = LOWER(?)", (dificultad_preg,))
         resu = c.fetchone()
         id_dificultad_preg = resu[0]
         
         c.execute("""INSERT INTO preguntas (desarrollo_pregunta, rta_correcta, lista_opciones, id_tema, id_dificultad)
-        VALUES (?, ?, ?, ?, ?)""",(desarrollo_preg, rtacorrecta_preg, listaopciones_preg, id_tematica_preg, dificultad_preg))
+        VALUES (?, ?, ?, ?, ?)""",(desarrollo_preg, rtacorrecta_preg, listaopciones_preg, id_tematica_preg, id_dificultad_preg))
         self.comitear_cambios()
         self.cerrar_conexion()
     
@@ -155,7 +155,7 @@ class DAO8Escalones:
         self.comitear_cambios()
         self.cerrar_conexion()
     
-    ###########################################################################################################
+    ########################################### TEMATICAS ################################################################
     def alta_tematica (self, tematica):
         nombre_tema_aux = tematica.get_nombre_tematica()
         self.crear_conexion()
@@ -193,7 +193,35 @@ class DAO8Escalones:
         self.comitear_cambios()
         self.cerrar_conexion()
     
+    ########################################## DIFICULTADES #################################################################
     
+    def alta_dificultad (self):
+        self.crear_conexion()
+        c = self._conexion.cursor()
+        c.execute ("SELECT 1 FROM dificultades WHERE nombre_dificultad = (?)", ('Normal',))
+        resu = c.fetchone()
+        if resu:
+            print ("no se va a crear")
+        else:
+            c.execute ("INSERT INTO dificultades (nombre_dificultad) VALUES (?)", ('Normal',))
+        c.execute ("SELECT 1 FROM dificultades WHERE nombre_dificultad = (?)", ('Dificil',))
+        resu = c.fetchone()
+        if resu:
+            print ("no se va a crear")
+        else:
+            c.execute ("INSERT INTO dificultades (nombre_dificultad) VALUES (?)", ('Dificil',))
+        self.comitear_cambios()
+        self.cerrar_conexion()
+    
+    
+    def mostrar_dificultades (self):
+        self.crear_conexion()
+        c = self._conexion.cursor()
+        print (f"tabla de dificultades: ...")
+        c.execute ("SELECT * FROM dificultades")
+        resu = c.fetchall()
+        for t in resu:
+            print (t)
+        self.cerrar_conexion()
 #base_datos = DAO8Escalones('8escalones.db')
 #base_datos._crear_tablas()
-
