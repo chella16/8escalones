@@ -193,35 +193,7 @@ class DAO8Escalones:
         self.comitear_cambios()
         self.cerrar_conexion()
     
-    ########################################## DIFICULTADES #################################################################
     
-    def alta_dificultad (self):
-        self.crear_conexion()
-        c = self._conexion.cursor()
-        c.execute ("SELECT 1 FROM dificultades WHERE nombre_dificultad = (?)", ('Normal',))
-        resu = c.fetchone()
-        if resu:
-            print ("no se va a crear")
-        else:
-            c.execute ("INSERT INTO dificultades (nombre_dificultad) VALUES (?)", ('Normal',))
-        c.execute ("SELECT 1 FROM dificultades WHERE nombre_dificultad = (?)", ('Dificil',))
-        resu = c.fetchone()
-        if resu:
-            print ("no se va a crear")
-        else:
-            c.execute ("INSERT INTO dificultades (nombre_dificultad) VALUES (?)", ('Dificil',))
-        self.comitear_cambios()
-        self.cerrar_conexion()
-    
-    
-    def mostrar_dificultades (self):
-        self.crear_conexion()
-        c = self._conexion.cursor()
-        print (f"tabla de dificultades: ...")
-        c.execute ("SELECT * FROM dificultades")
-        resu = c.fetchall()
-        for t in resu:
-            print (t)
-        self.cerrar_conexion()
 #base_datos = DAO8Escalones('8escalones.db')
 #base_datos._crear_tablas()
+
