@@ -24,6 +24,5 @@ class Jugador:
     #def reset_strikes(self):
         #self.__strikes=0
         
-    
     def set_eliminado(self):#para respetar la privacidad de los atributos 
         self.__eliminado=True

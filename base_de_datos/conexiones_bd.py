@@ -93,6 +93,14 @@ class DAO8Escalones:
         self.crear_conexion()
         c = self._conexion.cursor()
         c.execute ("UPDATE participantes SET (nombre_participante) = ? WHERE nombre_participante = nombre_buscado",(nombre_nuevo, nombre_buscado))
+        
+        
+    def cargar_temas(self):
+        #para cargarle la lista con todos los temas al controlador de juego
+        #vas a tener q hacer una consulta q se lleve todos los nombres de los temas a una lista asi la copio en el controlador juego
+        pass
+    
+    
     
 base_datos = DAO8Escalones('8escalones.bd')
 base_datos._crear_tablas()
