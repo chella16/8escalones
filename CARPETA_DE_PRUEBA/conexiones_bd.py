@@ -81,7 +81,7 @@ class DAO8Escalones:
         self.crear_conexion()
         c = self._conexion.cursor()
         c.execute ("SELECT 1 FROM participantes WHERE LOWER(nombre_participante) = LOWER(?)", (nombre_participante_aux,))
-        resu = c.fetchone
+        resu = c.fetchone()
         if resu:
             print(f"Se encontro coincidencia de {nombre_participante_aux}")
             c.execute("SELECT id_participante FROM participantes WHERE LOWER(nombre_participante) = LOWER(?)", (nombre_participante_aux,))
@@ -90,7 +90,7 @@ class DAO8Escalones:
             c.execute("INSERT INTO participantes (nombre_participante) VALUES (?)", (nombre_participante_aux,))
             c.execute("SELECT id_participante FROM participantes WHERE LOWER(nombre_participante) = LOWER(?)", (nombre_participante_aux,))
             
-        resu = c.fetchone
+        resu = c.fetchone()
         id_participante = resu[0]
         participante.set_id(id_participante)
         self.comitear_cambios()
@@ -194,8 +194,6 @@ class DAO8Escalones:
         self.cerrar_conexion()
     
     ########################################## DIFICULTADES #################################################################
-    
-<<<<<<< HEAD
     def alta_dificultad (self):
         self.crear_conexion()
         c = self._conexion.cursor()
