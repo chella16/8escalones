@@ -1,3 +1,4 @@
+from pregunta import Pregunta
 from pregunta_comun import Pregunta_comun
 from pregunta_aproximacion import Pregunta_aproximacion
 import random
@@ -7,8 +8,8 @@ class Escalon:
     #una vez que al escalón se le pasó el tema correspondiente, este es removido de self.__lista_temas_disponibles del controlador
     #por cada instancia de juego se vuelve a repetir el proceso
     
-    def __init__(self,tema): 
-        self.__tema=tema
+    def __init__(self): 
+        self.__tema=None
         self.__lista_preguntas_comunes=[] 
         self.__pregunta_aproximacion=None
         

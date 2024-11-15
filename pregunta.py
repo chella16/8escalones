@@ -2,18 +2,18 @@ from abc import ABC, abstractmethod
 
 class Pregunta(ABC): #Una pregunta a nivel general tiene: consigna, respuesta correcta, temática, el metodo para obtener la información de la base de datos varía según el tipo de pregunta
     def __init__(self, tema, consigna, rta): #ya que varía la consulta realizada
-        self.__consigna = consigna
-        self.__respuesta_correcta = rta
-        self.__tematica= tema
+        self._consigna = consigna
+        self._respuesta_correcta = rta
+        self._tematica= tema
         
     def verificar_respuesta(self, respuesta) -> bool:
-        return respuesta == self.__respuesta_correcta
+        return respuesta == self._respuesta_correcta
     
     def get_consigna(self) -> str:
-        return self.__consigna
+        return self._consigna
     
     def get_tematica(self):
-        return self.__tematica    
+        return self._tematica    
     
     def get_rta(self):
-        return self.__respuesta_correcta 
+        return self._respuesta_correcta 

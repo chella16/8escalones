@@ -1,6 +1,6 @@
 from VistaJuego import VistaJuego
-from modelo_8escalones.clases.jugador import Jugador
-from modelo_8escalones.clases.escalon import Escalon
+from jugador import Jugador
+from escalon import Escalon
 from base_de_datos.conexiones_bd import DAO8Escalones
 #POSIBLES CASOS POR ESCALON:
 #a)PARA TOTALIDADES: Responden todos bien/ responden todos mal/ responden  todos 1 de dos: 
@@ -31,7 +31,7 @@ class ControladorJuego():
         self.__lista_sobrevivientes=[Jugador(x) for x in listaJugadores]
         self.__rondas_actuales=0
         self.__lista_temas=[]#lista de temas tienen que ser por lo menos 8 porque hay 8 escalones y no se deben repetir
-        self.__escalon_actual=None
+        self.__escalon_actual=Escalon()
         self.__estado_actual=None
         self.__contador_preguntas=0
         self.__pausa_jugador=True
