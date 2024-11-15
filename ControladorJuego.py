@@ -36,8 +36,8 @@ class ControladorJuego():
         self.__contador_preguntas=0
         self.__pausa_jugador=True
         self.__lista_van_a_aprox=None
-        self.__BD=DAO8Escalones()
-        
+        self.__BD=DAO8Escalones("8escalones.db")
+        self.cargar_jugadores()
     def continuar_ronda(self):
         global pausa
         pausa= False
@@ -47,7 +47,7 @@ class ControladorJuego():
     
     def cargar_jugadores(self):
         for jugador in self.__lista_sobrevivientes:
-            self.__BD.crear_participante(jugador.get_nombre())
+            self.__BD.alta_participante(jugador)
     
     def ronda(self):
         #itera sobre los x jugadores y reparte pregunta (que pregunta esta en escalon)

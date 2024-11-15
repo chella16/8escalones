@@ -194,6 +194,8 @@ class DAO8Escalones:
         self.cerrar_conexion()
     
     ########################################## DIFICULTADES #################################################################
+    
+<<<<<<< HEAD
     def alta_dificultad (self):
         self.crear_conexion()
         c = self._conexion.cursor()

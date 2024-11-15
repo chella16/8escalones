@@ -116,6 +116,7 @@ class DAO8Escalones:
     def alta_pregunta_normal (self, pregunta_normal):
         #suponiendo que desde la interfaz ya se eligió cual tema de pregunta va a ser y la dificultad
         self.crear_conexion()
+        c.execute ("UPDATE participantes SET (nombre_participante) = ? WHERE nombre_participante = nombre_buscado",(nombre_nuevo, nombre_buscado))
         
         desarrollo_preg = pregunta_normal.get_consigna()
         rtacorrecta_preg = pregunta_normal.get_rta()
@@ -194,6 +195,8 @@ class DAO8Escalones:
         self.cerrar_conexion()
     
     ########################################## DIFICULTADES #################################################################
+    
+<<<<<<< HEAD
     def alta_dificultad (self):
         self.crear_conexion()
         c = self._conexion.cursor()
@@ -222,5 +225,9 @@ class DAO8Escalones:
         for t in resu:
             print (t)
         self.cerrar_conexion()
-#base_datos = DAO8Escalones('8escalones.db')
+base_datos = DAO8Escalones('8escalones.db')
+base_datos._crear_tablas()
+    
+#base_datos = DAO8Escalones('8escalones.bd')
 #base_datos._crear_tablas()
+
