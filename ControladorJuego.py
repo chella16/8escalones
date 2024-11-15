@@ -38,6 +38,8 @@ class ControladorJuego():
         self.__lista_van_a_aprox=None
         self.__BD=DAO8Escalones("8escalones.db")
         self.cargar_jugadores()
+        self.vista.signalIniciarJuego.connect(self.ejecutar_escalon)
+        
     def continuar_ronda(self):
         global pausa
         pausa= False
@@ -50,20 +52,22 @@ class ControladorJuego():
             self.__BD.alta_participante(jugador)
     
     def ronda(self):
+        global i
         #itera sobre los x jugadores y reparte pregunta (que pregunta esta en escalon)
-        #for jugador, pregunta in zip(self.__lista_sobrevivientes,self.__escalon_actual.get_lista_preguntas[i+1:]):
-            #self.__pausa=True
-            #while self.__pausa==True:
+        for jugador, pregunta in zip(self.__lista_sobrevivientes,self.__escalon_actual.get_lista_preguntas_comunes()[i:]):
+            self.__pausa=True
+            i+=1
+            while self.__pausa==True:
                 #espera hasta q clickee
             
-        #self.__rondas_actuales+=1
-        pass
+        self.__rondas_actuales+=1
         
     def pregunta_aproximacion(self):
         pass
     
         
     def ejecutar_escalon(self):
+        i=0
         #tema_random=random.choice=self.__lista_temas
         #self.__lista_temas.remove(tema_random)
         #self.__escalon_actual=Escalon(tema_random)
@@ -107,11 +111,13 @@ class ControladorJuego():
 class State_con_preg_de_aprox:
         
     def eliminacion(self):
+        #ejecutar pregunta aproximacion
+        #matar al que responda mas alejado
         pass
         
 class State_sin_preg_eliminacion:
         
     def eliminacion(self):
-        pass
+        pass#matar jugador con menos strikes
         
     
