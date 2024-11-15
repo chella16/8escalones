@@ -178,19 +178,7 @@ class DAO8Escalones:
     def mostrar_tematicas (self):
         self.crear_conexion()
         c = self._conexion.cursor()
-        print (f"tabla de temas: ...")
-        c.execute ("SELECT * FROM temas")
-        resu = c.fetchall()
-        for t in resu:
-            print (t)
-        self.cerrar_conexion()
+        c.execute ("UPDATE participantes SET (nombre_participante) = ? WHERE nombre_participante = nombre_buscado",(nombre_nuevo, nombre_buscado))
     
-    def eliminar_todas_tematicas (self):
-        self.crear_conexion()
-        c = self._conexion.cursor()
-        c.execute ("DELETE FROM temas")
-        c.execute("DELETE FROM sqlite_sequence WHERE name = 'temas'")
-        self.comitear_cambios()
-        self.cerrar_conexion()
-#base_datos = DAO8Escalones('8escalones.db')
-#base_datos._crear_tablas()
+base_datos = DAO8Escalones('8escalones.bd')
+base_datos._crear_tablas()

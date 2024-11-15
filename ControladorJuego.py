@@ -1,6 +1,7 @@
 from VistaJuego import VistaJuego
-from modelo_8escalones.clases.jugador.jugador import Jugador
-
+from jugador import Jugador
+from escalon import Escalon
+from base_de_datos.conexiones_bd import DAO8Escalones
 #POSIBLES CASOS POR ESCALON:
 #a)PARA TOTALIDADES: Responden todos bien/ responden todos mal/ responden  todos 1 de dos: 
 #Si responden todos bien(o todos mal o todos una de dos) se hace una pregunta de aproximacion y pasan los x jugadores mas cercanos, el mas alejado se elimina
@@ -31,23 +32,32 @@ class ControladorJuego():
         self.__rondas_actuales=0
         self.__lista_temas=[]#lista de temas tienen que ser por lo menos 8 porque hay 8 escalones y no se deben repetir
         self.__escalon_actual=Escalon()
-        self.__estado_actual=
+        self.__estado_actual=None
         self.__contador_preguntas=0
         self.__pausa_jugador=True
+        self.__lista_van_a_aprox=None
+        self.__BD=DAO8Escalones()
+        
     def continuar_ronda(self):
         global pausa
         pausa= False
+        
+    def cargar_temas(self):
+        pass
     
     def cargar_jugadores(self):
-        pass #DAO cargar jugador 
+        for jugador in self.__lista_sobrevivientes:
+            self.__BD.crear_participante(jugador.get_nombre())
     
     def ronda(self):
-        pass #itera sobre los x jugadores y reparte pregunta (que pregunta esta en escalon)
-        #for jugador, pregunta in zip(jugadores,escalon.get_lista_preguntas[i+1:])
+        #itera sobre los x jugadores y reparte pregunta (que pregunta esta en escalon)
+        #for jugador, pregunta in zip(self.__lista_sobrevivientes,self.__escalon_actual.get_lista_preguntas[i+1:]):
             #self.__pausa=True
             #while self.__pausa==True:
                 #espera hasta q clickee
+            
         #self.__rondas_actuales+=1
+        pass
         
     def pregunta_aproximacion(self):
         pass
@@ -60,11 +70,48 @@ class ControladorJuego():
         #self.__escalon_actual.set_escalon()
         #for ronda in range(2):
             #self.ronda()
+        #self.eliminacion()
         #self.__rondas_actuales=0
-        #aca se ejecuta si hay preguntas de aproximacion y se hace la eliminacion
         pass
+
+    def comparar_strikes(self):
+        
+        #max_strike=jugadores[1].get_strikes()
+        #self.__lista_van_a_aproximacion.append(jugadores[1])
+        #for jugador in jugadores[2:]
+            #if jugador.get_strikes() >= max_strike
+                #lista_van_a_aproximacion.append(jugador)
+                #max_strike=jugador.get_strikes()
+        pass
+    
+    def __limpiar_lista_strikes(self, max_strikes):#va en la de arriba
+        
+        #for jugador in lista_van_a_aproximacion:
+            #if jugador.get_strikes<max_strikes
+                #lista_van_a_aproximacion.remove(jugador)
+        pass
+    
+    def set_estado(self):
+        #if len(self.__lista_van_a_aprox)>1
+            #self.__estado_actual=State_con_preg_aprox()
+        #else:
+            #self.__estado_actual=State_sin_preg_aprox()
+        pass   
     
     def eliminacion(self):
+        #self.__estado_actual.eliminacion()
+        #self.__estado_eliminacion=None
         pass
+        
     
+class State_con_preg_de_aprox:
+        
+    def eliminacion(self):
+        pass
+        
+class State_sin_preg_eliminacion:
+        
+    def eliminacion(self):
+        pass
+        
     
