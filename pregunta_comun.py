@@ -1,3 +1,4 @@
+
 from pregunta import Pregunta
 
 class Pregunta_comun(Pregunta):#Una pregunta común tiene: opciones, y el método adecuado para obtener la info de la BD
