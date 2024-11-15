@@ -77,27 +77,32 @@ class DAO8Escalones:
             self.cerrar_conexion()
     ###########################################################################################################
     def alta_participante (self, participante):
-        #tener en cuenta que puede ser que se tenga que comparar de minusculas
         nombre_participante_aux = participante.get_nombre()
         self.crear_conexion()
         c = self._conexion.cursor()
-        c.execute ("SELECT 1 FROM participantes WHERE nombre_participante = ?", (nombre_participante_aux,))
+        c.execute ("SELECT 1 FROM participantes WHERE LOWER(nombre_participante) = LOWER(?)", (nombre_participante_aux,))
         resu = c.fetchone
         if resu:
-            c.execute("SELECT id_participante FROM participantes WHERE nombre_participante = ?", (nombre_participante_aux,))
-            resu = c.fetchone
-            print (resu)
-            participante.set_id(resu)
+            print(f"Se encontro coincidencia de {nombre_participante_aux}")
+            c.execute("SELECT id_participante FROM participantes WHERE LOWER(nombre_participante) = LOWER(?)", (nombre_participante_aux,))
         else:
+            print(f"Como no se encontro coincidencia de {nombre_participante_aux} se va a insertar")
             c.execute("INSERT INTO participantes (nombre_participante) VALUES (?)", (nombre_participante_aux,))
-            self._conexion.commit()
+            c.execute("SELECT id_participante FROM participantes WHERE LOWER(nombre_participante) = LOWER(?)", (nombre_participante_aux,))
+            
+        resu = c.fetchone
+        id_participante = resu[0]
+        participante.set_id(id_participante)
+        self.comitear_cambios()
         self.cerrar_conexion()
     
-    def modificar_participante (self, nombre_buscado, nombre_nuevo): #esto lo deberia modificar depsues
+    def modificar_participante (self, participante_buscado, nombre_nuevo): #esto lo deberia modificar depsues
+        id_participante_buscado = participante_buscado.get_id()
         self.crear_conexion()
         c = self._conexion.cursor()
-        c.execute ("UPDATE participantes SET (nombre_participante) = ? WHERE nombre_participante = nombre_buscado",(nombre_nuevo, nombre_buscado))
-        self._conexion.commit()
+        c.execute ("UPDATE participantes SET (nombre_participante) = ? WHERE id_participante = ?",(nombre_nuevo, id_participante_buscado))
+        self.comitear_cambios()
+        self.cerrar_conexion()
     
     def baja_participante (self, nombre_eliminar, id_eliminar):
         #suponiendo que desde la interfaz se pickeó desde una lista el usuario que se quiere eliminar y se almacena su id
@@ -129,7 +134,7 @@ class DAO8Escalones:
         id_dificultad_preg = resu[0]
         
         c.execute("""INSERT INTO preguntas (desarrollo_pregunta, rta_correcta, lista_opciones, id_tema, id_dificultad)
-        VALUES (?, ?, ?, ?, ?)""",(desarrollo_preg, rtacorrecta_preg, listaopciones_preg, id_tematica_preg, id_dificultad_preg))
+        VALUES (?, ?, ?, ?, ?)""",(desarrollo_preg, rtacorrecta_preg, listaopciones_preg, id_tematica_preg, dificultad_preg))
         self.comitear_cambios()
         self.cerrar_conexion()
     

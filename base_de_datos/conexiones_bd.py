@@ -77,27 +77,32 @@ class DAO8Escalones:
             self.cerrar_conexion()
     ###########################################################################################################
     def alta_participante (self, participante):
-        #tener en cuenta que puede ser que se tenga que comparar de minusculas
         nombre_participante_aux = participante.get_nombre()
         self.crear_conexion()
         c = self._conexion.cursor()
-        c.execute ("SELECT 1 FROM participantes WHERE nombre_participante = ?", (nombre_participante_aux,))
+        c.execute ("SELECT 1 FROM participantes WHERE LOWER(nombre_participante) = LOWER(?)", (nombre_participante_aux,))
         resu = c.fetchone
         if resu:
-            c.execute("SELECT id_participante FROM participantes WHERE nombre_participante = ?", (nombre_participante_aux,))
-            resu = c.fetchone
-            print (resu)
-            participante.set_id(resu)
+            print(f"Se encontro coincidencia de {nombre_participante_aux}")
+            c.execute("SELECT id_participante FROM participantes WHERE LOWER(nombre_participante) = LOWER(?)", (nombre_participante_aux,))
         else:
+            print(f"Como no se encontro coincidencia de {nombre_participante_aux} se va a insertar")
             c.execute("INSERT INTO participantes (nombre_participante) VALUES (?)", (nombre_participante_aux,))
-            self._conexion.commit()
+            c.execute("SELECT id_participante FROM participantes WHERE LOWER(nombre_participante) = LOWER(?)", (nombre_participante_aux,))
+            
+        resu = c.fetchone
+        id_participante = resu[0]
+        participante.set_id(id_participante)
+        self.comitear_cambios()
         self.cerrar_conexion()
     
-    def modificar_participante (self, nombre_buscado, nombre_nuevo): #esto lo deberia modificar depsues
+    def modificar_participante (self, participante_buscado, nombre_nuevo): #esto lo deberia modificar depsues
+        id_participante_buscado = participante_buscado.get_id()
         self.crear_conexion()
         c = self._conexion.cursor()
-        c.execute ("UPDATE participantes SET (nombre_participante) = ? WHERE nombre_participante = nombre_buscado",(nombre_nuevo, nombre_buscado))
-        self._conexion.commit()
+        c.execute ("UPDATE participantes SET (nombre_participante) = ? WHERE id_participante = ?",(nombre_nuevo, id_participante_buscado))
+        self.comitear_cambios()
+        self.cerrar_conexion()
     
     def baja_participante (self, nombre_eliminar, id_eliminar):
         #suponiendo que desde la interfaz se pickeó desde una lista el usuario que se quiere eliminar y se almacena su id
@@ -110,32 +115,60 @@ class DAO8Escalones:
     ###########################################################################################################
     def alta_pregunta_normal (self, pregunta_normal):
         #suponiendo que desde la interfaz ya se eligió cual tema de pregunta va a ser y la dificultad
+        self.crear_conexion()
+        
         desarrollo_preg = pregunta_normal.get_consigna()
         rtacorrecta_preg = pregunta_normal.get_rta()
-        listaopciones_preg = pregunta_normal.get_opciones()
-        tematica_preg = pregunta_normal.get_consigna()
+        listaopciones = pregunta_normal.get_opciones()
+        listaopciones_preg = json.dumps(listaopciones)
+        tematica_preg = pregunta_normal.get_tematica()
         dificultad_preg = pregunta_normal.get_dificultad()
+        
+        c = self._conexion.cursor()
+        c.execute ("SELECT id_tema FROM temas WHERE nombre_tema = (?)", (tematica_preg,))
+        resu = c.fetchone()
+        id_tematica_preg = resu[0]
+        
+        c.execute("SELECT id_dificultad FROM dificultades WHERE nombre_dificultad = (?)", (dificultad_preg,))
+        resu = c.fetchone()
+        id_dificultad_preg = resu[0]
+        
+        c.execute("""INSERT INTO preguntas (desarrollo_pregunta, rta_correcta, lista_opciones, id_tema, id_dificultad)
+        VALUES (?, ?, ?, ?, ?)""",(desarrollo_preg, rtacorrecta_preg, listaopciones_preg, id_tematica_preg, dificultad_preg))
+        self.comitear_cambios()
+        self.cerrar_conexion()
+    
+    def mostrar_lista_de_preguntas (self):
         self.crear_conexion()
         c = self._conexion.cursor()
-        c.execute ("""INSERT INTO preguntas (desarrollo_pregunta, rta_correcta, lista_opciones, id_tema, id_dificultad)
-                VALUES (?,?,?,?,?),""", (desarrollo_preg, rtacorrecta_preg, listaopciones_preg, tematica_preg, dificultad_preg))
-        self._conexion.commit()
+        c.execute("SELECT * from preguntas")
+        resu = c.fetchall()
+        for t in resu:
+            print (t)
+        self.cerrar_conexion()
     
+    def eliminar_todas_preguntas(self):
+        self.crear_conexion()
+        c = self._conexion
+        c.execute("DELETE FROM preguntas")
+        c.execute("DELETE FROM sqlite_sequence WHERE name = 'preguntas'")
+        self.comitear_cambios()
+        self.cerrar_conexion()
     
     ###########################################################################################################
     def alta_tematica (self, tematica):
         nombre_tema_aux = tematica.get_nombre_tematica()
         self.crear_conexion()
         c = self._conexion.cursor()
-        c.execute ("SELECT 1 FROM temas WHERE nombre_tema = ?", (nombre_tema_aux,))
+        c.execute ("SELECT 1 FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tema_aux,))
         resu = c.fetchone()
         if resu:
             print (f"se encontro coincidencias de: {nombre_tema_aux}")
-            c.execute("SELECT id_tema FROM temas WHERE nombre_tema = ?", (nombre_tema_aux,))
+            c.execute("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tema_aux,))
         else:
             print (f"como no se encontro coincidencia se va a insertar: {nombre_tema_aux}")
             c.execute("INSERT INTO temas (nombre_tema) VALUES (?)", (nombre_tema_aux,))
-            c.execute ("SELECT id_tema FROM temas WHERE nombre_tema =?", (nombre_tema_aux,))
+            c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) =LOWER(?)", (nombre_tema_aux,))
         resu = c.fetchone()
         id_tema = resu[0]
         tematica.set_id_tematica (id_tema)
@@ -150,6 +183,14 @@ class DAO8Escalones:
         resu = c.fetchall()
         for t in resu:
             print (t)
-        self.cerrar_conexion
-base_datos = DAO8Escalones('8escalones.db')
-base_datos._crear_tablas()
+        self.cerrar_conexion()
+    
+    def eliminar_todas_tematicas (self):
+        self.crear_conexion()
+        c = self._conexion.cursor()
+        c.execute ("DELETE FROM temas")
+        c.execute("DELETE FROM sqlite_sequence WHERE name = 'temas'")
+        self.comitear_cambios()
+        self.cerrar_conexion()
+#base_datos = DAO8Escalones('8escalones.db')
+#base_datos._crear_tablas()
