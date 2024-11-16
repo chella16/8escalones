@@ -214,7 +214,7 @@ class DAO8Escalones:
         
         self.crear_conexion()
         c = self._conexion.cursor()
-        c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?) AND lista_opciones IS NOT NULL", (nombre_tema,))
+        c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tema,))
         resu = c.fetchone()
         id_tema_buscado = resu[0]
         
@@ -223,8 +223,8 @@ class DAO8Escalones:
         id_dificultad_buscada = resu[0]
         
         c.execute ("""SELECT id_pregunta, desarrollo_pregunta, rta_correcta, lista_opciones 
-                FROM preguntas WHERE id_tema = (?) AND id_dificultad = (?) ORDER BY RANDOM()""", 
-                (id_tema_buscado, id_dificultad_buscada,))
+                FROM preguntas WHERE id_tema = (?) AND id_dificultad = (?) AND lista_opciones IS NOT NULL
+                ORDER BY RANDOM()""", (id_tema_buscado, id_dificultad_buscada,))
         lista_preguntas = c.fetchall()
         
         for id_pregunta, desarrollo_pregunta, rta_correcta, lista_opciones in lista_preguntas:
