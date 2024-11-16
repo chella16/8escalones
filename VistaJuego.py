@@ -79,9 +79,16 @@ class PreguntaWidget(QWidget):
         mainLayout.addWidget(fondo)
         mainLayout.addLayout(layoutRespuestas)
         self.setLayout(mainLayout)
+        
+    def setPreguntaYOpciones(self,pregunta:str,opciones:list):
+        self.labelPregunta.setText(pregunta)
+        self.btnRtaA.setText(opciones[0])
+        self.btnRtaB.setText(opciones[1])
+        self.btnRtaC.setText(opciones[2])
+        self.btnRtaD.setText(opciones[3])
+    
 
 
-#class DialogRta(Q
         
 class WidgetEscalon(QWidget):
     def __init__(self, nroEscalon):
@@ -169,6 +176,10 @@ class CustomDialogRespuesta(QDialog): #Dialog que salta cuando se selecciona una
         layout.addWidget(message)
         layout.addWidget(self.buttonBox)
         self.setLayout(layout)
+    
+    def mostrar(self):
+        return self.exec_()
+
 
 class WidgetPregAproximacion(QWidget):
     def __init__(self):
