@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout,QGridLayout, QLabel, QPushButton, QWidget
+from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout,QGridLayout, QLabel, QPushButton, QWidget, QDialogButtonBox, QDialog
 from PyQt6.QtCore import Qt,pyqtSignal,QUrl
 from PyQt6.QtGui import QPixmap,QIcon,QPalette,QColor,QFont
 from MainWindow import *
@@ -154,12 +154,29 @@ class WidgetEscalones(QWidget):
         self.actualNroEscalon += 1
         self.cambiarColor(self.actualNroEscalon) 
 
+class CustomDialogRespuesta(QDialog): #Dialog que salta cuando se selecciona una opcion al responder la pregunta
+    def __init__(self, rta:str, parent=None): #el parametro rta seria "Incorrecto" o "Correcto" dependiendo que se le pasa como parametro
+        super().__init__(parent)
+        self.setWindowTitle("Los 8 Escalones")
+
+        QBtn = QDialogButtonBox.StandardButton.Ok 
+
+        self.buttonBox = QDialogButtonBox(QBtn)
+        self.buttonBox.accepted.connect(self.accept) #Que ocurre si pone Ok despues de recibir el mensaje? esto se tendria que enviar al controlador?
+                                                    #si se pone ok, entonces se tiene que continuar la ronda?
+        layout = QVBoxLayout()
+        message = QLabel(rta) #aca iria incorrecto o correcto
+        layout.addWidget(message)
+        layout.addWidget(self.buttonBox)
+        self.setLayout(layout)
 
 class VistaJuego(MainWindow):
     #signalOp1 = pyqtSignal
     #signalOp2 = pyqtSignal(str)
     #signalOp3 = pyqtSignal()
-    #signalOp4 
+    #signalOp4 = pyqtSignal()
+    
+    signalIniciarJuego = pyqtSignal()
     _listaIconos = ["Images/PlayersIcons/playerIcon1.jpg",
                     "Images/PlayersIcons/playerIcon2.jpg",
                     "Images/PlayersIcons/playerIcon3.jpg",
@@ -184,6 +201,9 @@ class VistaJuego(MainWindow):
         self.setJugadores()
         self.crearLayout()
         self.setCentralWidget(self.labelFondo)
+        
+        #Manejo de signals
+        self.btnIniciar.clicked.connect(self.signalIniciarJuego.emit)
         
     
     def setJugadores(self):

@@ -35,12 +35,27 @@ class ControladorJuego():
         self.__estado_actual=None
         self.__contador_preguntas=0
         self.__pausa_jugador=True
+        self.__pregunta_actual = None #para saber que pregunta es la que esta respondiendo el usuario en el momento que se emite algun signalOp
         self.__lista_van_a_aprox=None
         self.__BD=DAO8Escalones("8escalones.db")
         self.cargar_jugadores()
-    def continuar_ronda(self):
-        global pausa
-        pausa= False
+        
+        #Conexion signals
+        self.vista.signalIniciarJuego.connect(self.ejecutar_escalon)
+        self.vista.signalOp1.connect(self.contestar_pregunta)
+        self.vista.signalOp2.connect(self.contestar_pregunta)
+        self.vista.signalOp3.connect(self.contestar_pregunta)
+        self.vista.signalOp4.connect(self.contestar_pregunta)
+        
+    def contestar_pregunta(self,rta_usuario):
+        #comparar la rta_usuario con self.__pregunta_actual
+        if self.__pregunta_actual.verificar_respuesta(rta_usuario): #caso que es correcta la rta
+            pass#se muestra el Dialog con el texto Correcto
+        else:
+            pass# se muestra el Dialog con el texto Incorrecto
+        self.__pausa= False
+        
+        
         
     def cargar_temas(self):
         pass
@@ -49,14 +64,21 @@ class ControladorJuego():
         for jugador in self.__lista_sobrevivientes:
             self.__BD.alta_participante(jugador)
     
-    def ronda(self):
+    def resetRondaActuales(self):
+        self.__rondas_actuales=0
+
+    def ronda(self,nro_preg_actual):
         #itera sobre los x jugadores y reparte pregunta (que pregunta esta en escalon)
-        #for jugador, pregunta in zip(self.__lista_sobrevivientes,self.__escalon_actual.get_lista_preguntas[i+1:]):
+        #for jugador, pregunta in zip(self.__lista_sobrevivientes,self.__escalon_actual.get_lista_preguntas()[nro_preg_actual:]):
             #self.__pausa=True
-            #while self.__pausa==True:
+            #self.__pregunta_actual = pregunta
+            #while self.__pausa:
                 #espera hasta q clickee
-            
-        #self.__rondas_actuales+=1
+                
+            #nro_preg_actual += 1
+        
+        #self.__rondas_actuales+=1 #para ver en la vista? aca va el emit para modificar la vista
+        #return nro_preg_actual
         pass
         
     def pregunta_aproximacion(self):
@@ -68,10 +90,11 @@ class ControladorJuego():
         #self.__lista_temas.remove(tema_random)
         #self.__escalon_actual=Escalon(tema_random)
         #self.__escalon_actual.set_escalon()
+        #nro_preg_actual = 0
         #for ronda in range(2):
-            #self.ronda()
+            #nro_preg_actual = self.ronda(nro_preg_actual)
         #self.eliminacion()
-        #self.__rondas_actuales=0
+        #self.resetRondaActuales()
         pass
 
     def comparar_strikes(self):
