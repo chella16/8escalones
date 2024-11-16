@@ -200,7 +200,13 @@ class WidgetPregAproximacion(QWidget):
         self.rtaUser.setPlaceholderText("Ingresa tu respuesta aquí")
         self.rtaUser.setAlignment(Qt.AlignmentFlag.AlignCenter)  
         
- #!!!!       #self.rtaUser.returnPressed.connect()#al presionar enter se envia la rta mediante el slot al controlador
+ #!!!!       #self.rtaUser.returnPressed.connect()#al presionar enter se envia la rta mediante el slot al controlador, deberia primero pasar x un metodo que se fije si el str esta bien
+    
+    def verificarInput(self):
+        if self.rtaUser.text() == "" or " " in self.rtaUser.text():
+            self.rtaUser.setPlaceholderText("Ingrese una respuesta sin espacios en blanco")
+            return
+        # aca se emitira una signal para el controlador con la rta o algo asi
         
     def crearLayout(self):
         #darle un fondo a el texto de la pregunta
