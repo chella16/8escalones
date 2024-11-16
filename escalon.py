@@ -1,6 +1,7 @@
 from pregunta import Pregunta
 from pregunta_comun import Pregunta_comun
 from pregunta_aproximacion import Pregunta_aproximacion
+from base_de_datos.conexiones_bd import DAO8Escalones
 import random
 class Escalon:
     
@@ -8,30 +9,23 @@ class Escalon:
     #una vez que al escalón se le pasó el tema correspondiente, este es removido de self.__lista_temas_disponibles del controlador
     #por cada instancia de juego se vuelve a repetir el proceso
     
-    def __init__(self): 
-        self.__tema=None
+    def __init__(self, tema, dificultad): 
+        self.__tema=tema
         self.__lista_preguntas_comunes=[] 
         self.__pregunta_aproximacion=None
+        self.__dificultad=dificultad
         
     #podria modularizar las 2 consultas para que no quede un metodo tan extenso   
         
-    def __cargar_lista_preguntas_comunes(self, tema):
-        #select * from preguntas_comunes where id_categoria = 'tema' order by random
-        for _ in range(18):
-            #voy avanzando en la tabla
-            #nombro variables producto de la consulta
-            pregunta_comun=Pregunta_comun(tema)#esas variables producidas por la consulta pasan como parámetro de la pregunta
-            self.__lista_preguntas_comunes.append(pregunta_comun)
+    def __cargar_lista_preguntas_comunes(self,bd):
+        bd.descargar_preguntas_normales(self.__tema, self.__dificultad)
     
-    def __cargar_pregunta_aproximacion(self, tema):
-        #select * from preguntas_aproximacion where id_categoria = 'tema' order by random
-        #nombro variables producto de la consulta
-        pregunta_aproximacion=Pregunta_aproximacion(tema)#esas variables producidas por la consulta pasan como parámetro de la pregunta
-        self.__pregunta_aproximacion=pregunta_aproximacion
+    def __cargar_pregunta_aproximacion(self,bd):
+        bd.descargar_preguntas_aproximacion(self.__tema, self.__dificultad)
         
-    def set_escalon(self):#el controlador interactua con esto y con los get si se quisiera
-        self.__cargar_lista_preguntas_comunes(self.__tema)
-        self.__cargar_pregunta_aproximacion(self.__tema)
+    def set_escalon(self,bd):#el controlador interactua con esto y con los get si se quisiera
+        self.__cargar_lista_preguntas_comunes(bd)
+        self.__cargar_pregunta_aproximacion(bd)
     
     def get_lista_preguntas_comunes(self):
         return self.__lista_preguntas_comunes

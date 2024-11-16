@@ -2,6 +2,8 @@ from VistaJuego import VistaJuego
 from jugador import Jugador
 from escalon import Escalon
 from base_de_datos.conexiones_bd import DAO8Escalones
+import random
+import time
 #POSIBLES CASOS POR ESCALON:
 #a)PARA TOTALIDADES: Responden todos bien/ responden todos mal/ responden  todos 1 de dos: 
 #Si responden todos bien(o todos mal o todos una de dos) se hace una pregunta de aproximacion y pasan los x jugadores mas cercanos, el mas alejado se elimina
@@ -31,15 +33,17 @@ class ControladorJuego():
         self.__lista_sobrevivientes=[Jugador(x) for x in listaJugadores]
         self.__rondas_actuales=0
         self.__lista_temas=[]#lista de temas tienen que ser por lo menos 8 porque hay 8 escalones y no se deben repetir
-        self.__escalon_actual=Escalon()
+        self.__escalon_actual=None
         self.__estado_actual=None
         self.__contador_preguntas=0
         self.__pausa_jugador=True
         self.__pregunta_actual = None #para saber que pregunta es la que esta respondiendo el usuario en el momento que se emite algun signalOp
-        self.__lista_van_a_aprox=None
+        self.__lista_van_a_aproximacion=None
         self.__BD=DAO8Escalones("8escalones.db")
-        self.cargar_jugadores()
-        
+        self.__cargar_jugadores()
+        self.__cargar_temas()
+        self.__dificultad='Normal'
+        self.__respuesta_actual_correcta=None
         #Conexion signals
         self.vista.signalIniciarJuego.connect(self.ejecutar_escalon)
         self.vista.signalOp1.connect(self.contestar_pregunta)
@@ -47,18 +51,22 @@ class ControladorJuego():
         self.vista.signalOp3.connect(self.contestar_pregunta)
         self.vista.signalOp4.connect(self.contestar_pregunta)
         
+    def __actualizar_vista_rta(self, pregunta):
+        self.vista.setPreguntaYOpciones(pregunta.get_consigna(),pregunta.get_opciones())
+        
     def contestar_pregunta(self,rta_usuario):
         #comparar la rta_usuario con self.__pregunta_actual
         if self.__pregunta_actual.verificar_respuesta(rta_usuario): #caso que es correcta la rta
-            pass#se muestra el Dialog con el texto Correcto
+            self.__respuesta_actual_correcta=True#se muestra el Dialog con el texto Correcto
         else:
-            pass# se muestra el Dialog con el texto Incorrecto
+            self.__respuesta_actual_correcta=False# se muestra el Dialog con el texto Incorrecto
         self.__pausa= False
 
-    def cargar_temas(self):
-        self.__BD.descar
+    def __cargar_temas(self):
+        lista_tematicas=self.__BD.descargar_tematicas()
+        self.__lista_temas=lista_tematicas
     
-    def cargar_jugadores(self):
+    def __cargar_jugadores(self):
         for jugador in self.__lista_sobrevivientes:
             self.__BD.alta_participante(jugador)
     
@@ -67,50 +75,52 @@ class ControladorJuego():
 
     def ronda(self,nro_preg_actual):
         #itera sobre los x jugadores y reparte pregunta (que pregunta esta en escalon)
-        #for jugador, pregunta in zip(self.__lista_sobrevivientes,self.__escalon_actual.get_lista_preguntas()[nro_preg_actual:]):
-            #self.__pausa=True
-            #self.__pregunta_actual = pregunta
-            #while self.__pausa:
-                #espera hasta q clickee
-                
-            #nro_preg_actual += 1
+        for jugador, pregunta in zip(self.__lista_sobrevivientes,self.__escalon_actual.get_lista_preguntas()[nro_preg_actual:]):
+            self.__pausa=True
+            self.__pregunta_actual = pregunta
+            self.__actualizar_vista_rta(self.__pregunta_actual)
+            while self.__pausa:
+                time.sleep(0.1)#espera hasta q clickee  
+            if not self.__respuesta_actual_correcta:
+                jugador.set_strikes()#le aumenta 1 strike
+            nro_preg_actual += 1
         
-        #self.__rondas_actuales+=1 #para ver en la vista? aca va el emit para modificar la vista
-        #return nro_preg_actual
-        pass
+        self.__rondas_actuales+=1 #para ver en la vista? aca va el emit para modificar la vista
+        return nro_preg_actual
+        
         
     def pregunta_aproximacion(self):
         pass
     
         
     def ejecutar_escalon(self):
-        #tema_random=random.choice=self.__lista_temas
-        #self.__lista_temas.remove(tema_random)
-        #self.__escalon_actual=Escalon(tema_random)
-        #self.__escalon_actual.set_escalon()
-        #nro_preg_actual = 0
-        #for ronda in range(2):
-            #nro_preg_actual = self.ronda(nro_preg_actual)
-        #self.eliminacion()
-        #self.resetRondaActuales()
-        pass
+        tema_random=random.choice(self.__lista_temas)
+        self.__lista_temas.remove(tema_random)
+        self.__escalon_actual=Escalon(tema_random, self.__dificultad)
+        self.__escalon_actual.set_escalon(self.__BD)#hay q ver si chela hizo la bajada de preguntas
+        nro_preg_actual = 0
+        for ronda in range(2):
+            nro_preg_actual = self.ronda(nro_preg_actual)
+
+        self.comparar_strikes()
+        self.eliminacion()
+        self.resetRondaActuales()
 
     def comparar_strikes(self):
         
-        #max_strike=jugadores[1].get_strikes()
-        #self.__lista_van_a_aproximacion.append(jugadores[1])
-        #for jugador in jugadores[2:]
-            #if jugador.get_strikes() >= max_strike
-                #lista_van_a_aproximacion.append(jugador)
-                #max_strike=jugador.get_strikes()
-        pass
+        max_strikes=self.__lista_sobrevivientes[1].get_strikes()
+        self.__lista_van_a_aproximacion.append(self.__lista_sobrevivientes[1])
+        for jugador in self.__lista_sobrevivientes[2:]:
+            if jugador.get_strikes() >= max_strikes:
+                self.__lista_van_a_aproximacion.append(jugador)
+                max_strikes=jugador.get_strikes()
+        self.__limpiar_lista_strikes(max_strikes)
     
     def __limpiar_lista_strikes(self, max_strikes):#va en la de arriba
         
-        #for jugador in lista_van_a_aproximacion:
-            #if jugador.get_strikes<max_strikes
-                #lista_van_a_aproximacion.remove(jugador)
-        pass
+        for jugador in self.__lista_van_a_aproximacion:
+            if jugador.get_strikes<max_strikes:
+                self.__lista_van_a_aproximacion.remove(jugador)
     
     def set_estado(self):
         #if len(self.__lista_van_a_aprox)>1
@@ -120,9 +130,9 @@ class ControladorJuego():
         pass   
     
     def eliminacion(self):
-        #self.__estado_actual.eliminacion()
-        #self.__estado_eliminacion=None
-        pass
+        self.__estado_actual.eliminacion()
+        self.__estado_eliminacion=None
+        
         
     
 class State_con_preg_de_aprox:
