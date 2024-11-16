@@ -215,10 +215,12 @@ class DAO8Escalones:
         self.crear_conexion()
         c = self._conexion.cursor()
         c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tema,))
-        id_tema_buscado = c.fetchone()
+        resu = c.fetchone()
+        id_tema_buscado = resu[0]
         
         c.execute("SELECT id_dificultad FROM dificultades WHERE LOWER(nombre_dificultad) = LOWER(?)", (dificultad_buscada,))
-        id_dificultad_buscada = c.fetchone()
+        resu = c.fetchone()
+        id_dificultad_buscada = resu[0]
         
         c.execute ("""SELECT id_pregunta, desarrollo_pregunta, rta_correcta, lista_opciones 
                 FROM preguntas WHERE id_tema = (?) AND id_dificultad = (?) ORDER BY RANDOM()""", 
@@ -243,19 +245,24 @@ class DAO8Escalones:
         self.crear_conexion()
         c = self._conexion.cursor()
         c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tema,))
-        id_tema_buscado = c.fetchone()
+        resu = c.fetchone()
+        id_tema_buscado = resu[0]
         
         c.execute("SELECT id_dificultad FROM dificultades WHERE LOWER(nombre_dificultad) = LOWER(?)", (dificultad_buscada,))
-        id_dificultad_buscada = c.fetchone()
+        resu = c.fetchone()
+        id_dificultad_buscada = resu[0]
         
         c.execute("SELECT id_pregunta FROM preguntas WHERE id_dificultad = (?) AND id_tema = (?) AND lista_opciones IS NULL", (id_dificultad_buscada, id_tema_buscado,))
-        id_pregunta = c.fetchone()
+        resu = c.fetchone()
+        id_pregunta = resu[0]
         
         c.execute("SELECT desarrollo_pregunta FROM preguntas WHERE id_pregunta = (?)", (id_pregunta,))
-        desarrollo_preg = c.fetchone()
+        resu = c.fetchone()
+        desarrollo_preg = resu[0]
         
         c.execute("SELECT rta_correcta FROM preguntas WHERE id_pregunta = (?)", (id_pregunta,))
-        rta_correcta = c.fetchone()
+        resu = c.fetchone()
+        rta_correcta = resu[0]
         
         pregunta_aux = Pregunta_aproximacion(id_tema_buscado, desarrollo_preg, rta_correcta, id_dificultad_buscada)
         pregunta_aux.set_id(id_pregunta)
