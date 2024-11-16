@@ -142,6 +142,29 @@ class DAO8Escalones:
         self.comitear_cambios()
         self.cerrar_conexion()
     
+    def alta_pregunta_aproximacion (self, pregunta_aprox):
+        #suponiendo que desde la interfaz ya se eligió cual tema de pregunta va a ser y la dificultad
+        self.crear_conexion()
+        
+        desarrollo_preg = pregunta_aprox.get_consigna()
+        rtacorrecta_preg = pregunta_aprox.get_rta()
+        tematica_preg = pregunta_aprox.get_tematica()
+        dificultad_preg = pregunta_aprox.get_dificultad()
+        
+        c = self._conexion.cursor()
+        c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (tematica_preg,))
+        resu = c.fetchone()
+        id_tematica_preg = resu[0]
+        
+        c.execute("SELECT id_dificultad FROM dificultades WHERE LOWER(nombre_dificultad) = LOWER(?)", (dificultad_preg,))
+        resu = c.fetchone()
+        id_dificultad_preg = resu[0]
+        
+        c.execute("""INSERT INTO preguntas (desarrollo_pregunta, rta_correcta, id_tema, id_dificultad)
+        VALUES (?, ?, ?, ?, ?)""",(desarrollo_preg, rtacorrecta_preg, id_tematica_preg, id_dificultad_preg))
+        self.comitear_cambios()
+        self.cerrar_conexion()
+    
     def modificar_pregunta (self, pregunta, nuevo_desarrollo):
         id_preg_modificar = pregunta.get_id()
         self.crear_conexion()
