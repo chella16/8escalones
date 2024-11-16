@@ -22,6 +22,15 @@ base_datos = DAO8Escalones('8escalones.db')
 #base_datos.mostrar_dificultades()
 #base_datos.eliminar_todas_preguntas()
 
-participante1 = Jugador("hola")
-base_datos.alta_participante(participante1)
+#participante1 = Jugador("hola")
+#participante2 = Jugador("DUKI")
+#participante3 = Jugador("DONTOLIVer")
 
+#nuevo_nombre = "nuevo nombre hoLIWIS"
+#base_datos.alta_participante(participante1)
+#base_datos.alta_participante(participante2)
+#base_datos.alta_participante(participante3) 
+#base_datos.modificar_participante(participante1, nuevo_nombre)# sino ejecuto el alta prticipante no se puede matchear por id tener en cuenta al momento de hacer los abm
+#base_datos.baja_participante(participante3) #tener en cuenta que se necesita el objeto antes de ejecutar esto XD
+
+pregunta1 = Pregunta_comun("deportes", "pregunta deportes?", "rta_correcta", "1", "")

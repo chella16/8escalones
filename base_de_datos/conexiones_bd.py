@@ -195,8 +195,6 @@ class DAO8Escalones:
         self.cerrar_conexion()
     
     ########################################## DIFICULTADES #################################################################
-    
-<<<<<<< HEAD
     def alta_dificultad (self):
         self.crear_conexion()
         c = self._conexion.cursor()
@@ -225,9 +223,6 @@ class DAO8Escalones:
         for t in resu:
             print (t)
         self.cerrar_conexion()
-base_datos = DAO8Escalones('8escalones.db')
-base_datos._crear_tablas()
-    
 #base_datos = DAO8Escalones('8escalones.bd')
 #base_datos._crear_tablas()
 

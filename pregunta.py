@@ -25,3 +25,6 @@ class Pregunta(ABC): #Una pregunta a nivel general tiene: consigna, respuesta co
     
     def set_id (self, id):
         self._id = id
+    
+    def get_id (self):
+        return self._id
