@@ -1,6 +1,6 @@
 import sqlite3
 import json
-#from pregunta_aproximacion import Pregunta_aproximacion
+from pregunta_aproximacion import Pregunta_aproximacion
 from tematica import Tematica
 from pregunta_comun import Pregunta_comun
 from pregunta_aproximacion import Pregunta_aproximacion

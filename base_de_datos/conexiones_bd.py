@@ -1,6 +1,6 @@
 import sqlite3
 import json
-#from pregunta_aproximacion import Pregunta_aproximacion
+from pregunta_aproximacion import Pregunta_aproximacion
 from tematica import Tematica
 from pregunta_comun import Pregunta_comun
 from pregunta_aproximacion import Pregunta_aproximacion
@@ -223,8 +223,8 @@ class DAO8Escalones:
         id_dificultad_buscada = resu[0]
         
         c.execute ("""SELECT id_pregunta, desarrollo_pregunta, rta_correcta, lista_opciones 
-                FROM preguntas WHERE id_tema = (?) AND id_dificultad = (?) AND lista_opciones IS NOT NULL
-                ORDER BY RANDOM()""", (id_tema_buscado, id_dificultad_buscada,))
+                FROM preguntas WHERE id_tema = (?) AND id_dificultad = (?) AND lista_opciones IS NOT NULL ORDER BY RANDOM()""", 
+                (id_tema_buscado, id_dificultad_buscada,))
         lista_preguntas = c.fetchall()
         
         for id_pregunta, desarrollo_pregunta, rta_correcta, lista_opciones in lista_preguntas:
@@ -246,32 +246,22 @@ class DAO8Escalones:
         c = self._conexion.cursor()
         c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tema,))
         resu = c.fetchone()
-        if resu is None:
-            raise ValueError(f"No se encontró el tema con nombre: {nombre_tema}")
         id_tema_buscado = resu[0]
         
         c.execute("SELECT id_dificultad FROM dificultades WHERE LOWER(nombre_dificultad) = LOWER(?)", (dificultad_buscada,))
         resu = c.fetchone()
-        if resu is None:
-            raise ValueError(f"No se encontró la dificultad con nombre: {dificultad_buscada}")
         id_dificultad_buscada = resu[0]
         
         c.execute("SELECT id_pregunta FROM preguntas WHERE id_dificultad = (?) AND id_tema = (?) AND lista_opciones IS NULL", (id_dificultad_buscada, id_tema_buscado,))
         resu = c.fetchone()
-        if resu is None:
-            raise ValueError(f"No se encontró una pregunta para el tema '{nombre_tema}' y dificultad '{dificultad_buscada}' sin opciones.")
         id_pregunta = resu[0]
         
         c.execute("SELECT desarrollo_pregunta FROM preguntas WHERE id_pregunta = (?)", (id_pregunta,))
         resu = c.fetchone()
-        if resu is None:
-            raise ValueError(f"No se encontró el desarrollo de la pregunta con id: {id_pregunta}")
         desarrollo_preg = resu[0]
         
         c.execute("SELECT rta_correcta FROM preguntas WHERE id_pregunta = (?)", (id_pregunta,))
         resu = c.fetchone()
-        if resu is None:
-            raise ValueError(f"No se encontró la respuesta correcta de la pregunta con id: {id_pregunta}")
         rta_correcta = resu[0]
         
         pregunta_aux = Pregunta_aproximacion(id_tema_buscado, desarrollo_preg, rta_correcta, id_dificultad_buscada)
@@ -331,7 +321,7 @@ class DAO8Escalones:
         self.crear_conexion()
         c = self._conexion.cursor()
         c.execute ("SELECT nombre_tema FROM temas")
-        lista_aux = [fila[0] for fila in c.fetchall()]
+        lista_aux = c.fetchall()
         return lista_aux
     
     def eliminar_todas_tematicas (self):
