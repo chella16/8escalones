@@ -54,11 +54,9 @@ class ControladorJuego():
         else:
             pass# se muestra el Dialog con el texto Incorrecto
         self.__pausa= False
-        
-        
-        
+
     def cargar_temas(self):
-        pass
+        self.__BD.descar
     
     def cargar_jugadores(self):
         for jugador in self.__lista_sobrevivientes:
