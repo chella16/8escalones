@@ -321,7 +321,7 @@ class DAO8Escalones:
         self.crear_conexion()
         c = self._conexion.cursor()
         c.execute ("SELECT nombre_tema FROM temas")
-        lista_aux = c.fetchall()
+        lista_aux = [fila[0] for fila in c.fetchall()]
         return lista_aux
     
     def eliminar_todas_tematicas (self):
