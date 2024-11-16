@@ -1,17 +1,7 @@
 import sqlite3
 import json
-<<<<<<< Updated upstream
-<<<<<<< HEAD
 #from pregunta_aproximacion import Pregunta_aproximacion
 from tematica import Tematica
-=======
-from pregunta_comun import Pregunta_comun
-from tematica import Tematica
-
->>>>>>> f285693336b9ffa40be8b2acfc396b74bc18bcd1
-=======
-from tematica import Tematica
->>>>>>> Stashed changes
 
 class DAO8Escalones:
     def __init__ (self, nombre_BD):
@@ -49,7 +39,7 @@ class DAO8Escalones:
                     id_participante_ganador INTEGER,
                     FOREIGN KEY (id_participante_ganador) REFERENCES participantes(id_participante))
                     """)
-            c.execute(""" CREATE TABLE IF NOT EXISTS "participaciones"
+            c.execute(""" CREATE TABLE IF NOT EXISTS participaciones
                     ("id_participante"	INTEGER NOT NULL,
                     "id_partida"	INTEGER NOT NULL,
                     PRIMARY KEY("id_participante","id_partida"),
@@ -101,29 +91,29 @@ class DAO8Escalones:
             print(f"Como no se encontro coincidencia de {nombre_participante_aux} se va a insertar")
             c.execute("INSERT INTO participantes (nombre_participante) VALUES (?)", (nombre_participante_aux,))
             c.execute("SELECT id_participante FROM participantes WHERE LOWER(nombre_participante) = LOWER(?)", (nombre_participante_aux,))
-            
         resu = c.fetchone()
         id_participante = resu[0]
         participante.set_id(id_participante)
         self.comitear_cambios()
         self.cerrar_conexion()
     
-    def modificar_participante (self, participante_buscado, nombre_nuevo): #esto lo deberia modificar depsues
+    def modificar_participante (self, participante_buscado, nombre_nuevo):
         id_participante_buscado = participante_buscado.get_id()
         self.crear_conexion()
         c = self._conexion.cursor()
-        c.execute ("UPDATE participantes SET (nombre_participante) = ? WHERE id_participante = ?",(nombre_nuevo, id_participante_buscado))
+        c.execute ("UPDATE participantes SET (nombre_participante) = ? WHERE id_participante = ?",(nombre_nuevo, id_participante_buscado,))
         self.comitear_cambios()
         self.cerrar_conexion()
     
-    def baja_participante (self, nombre_eliminar, id_eliminar):
-        #suponiendo que desde la interfaz se pickeó desde una lista el usuario que se quiere eliminar y se almacena su id
-        #si en realidad se quiere hacer un input del nombre que se quiere eliminar entonces esta forma seria correcta
+    def baja_participante (self, jugador_eliminar):
+        id_jugador_eliminar = jugador_eliminar.get_id()
         self.crear_conexion()
         c = self._conexion.cursor()
-        c.execute("DELETE FROM participantes WHERE nombre_participante = ?", (nombre_eliminar,))
-        #c.execute("DELETE FROM participantes WHERE id_participante = ?", (id_eliminar,))
-        self._conexion.commit()
+        c.execute("DELETE FROM participantes WHERE id_participante = ?", (id_jugador_eliminar,))
+        c.execute("DELETE FROM sqlite_sequence WHERE name = 'participantes'")
+        self.comitear_cambios()
+        self.cerrar_conexion()
+        
     ########################################## PREGUNTAS #################################################################
     def alta_pregunta_normal (self, pregunta_normal):
         #suponiendo que desde la interfaz ya se eligió cual tema de pregunta va a ser y la dificultad
@@ -150,13 +140,20 @@ class DAO8Escalones:
         self.comitear_cambios()
         self.cerrar_conexion()
     
-    def mostrar_lista_de_preguntas (self):
+    def modificar_pregunta (self, pregunta, nuevo_desarrollo):
+        id_preg_modificar = pregunta.get_id()
         self.crear_conexion()
-        c = self._conexion.cursor()
-        c.execute("SELECT * from preguntas")
-        resu = c.fetchall()
-        for t in resu:
-            print (t)
+        c = self._conexion
+        c.execute("UPDATE preguntas SET (desarrollo_pregunta) = ? WHERE id_pregunta = ?",(nuevo_desarrollo, id_preg_modificar,))
+        self.comitear_cambios()
+        self.cerrar_conexion()
+    
+    def baja_pregunta (self, pregunta_eliminar):
+        id_preg_eliminar = pregunta_eliminar.get_id()
+        self.crear_conexion()
+        c = self._conexion
+        c.execute("DELETE FROM preguntas WHERE id_pregunta = (?)", (id_preg_eliminar))
+        self.comitear_cambios()
         self.cerrar_conexion()
     
     def eliminar_todas_preguntas(self):
@@ -167,7 +164,6 @@ class DAO8Escalones:
         self.comitear_cambios()
         self.cerrar_conexion()
     
-<<<<<<< Updated upstream
     def eliminar_preguntas_categorias(self, id_tema_eliminar):
         self.crear_conexion()
         c = self._conexion
@@ -187,7 +183,7 @@ class DAO8Escalones:
             if cantidad == 2: #deberia ser 18 pero por prueba es 2
                 if id_pregunta not in preguntas_usadas:
                     lista_opciones_aux = [json.loads(fila[0]) for fila in lista_opciones]
-                    pregunta_aux = Pregunta_comun(id_tema_buscado, desarrollo_pregunta, rta_correcta, id_dificultad_buscado, lista_opciones_aux)
+                    pregunta_aux = Pregunta_aproximacion(id_tema_buscado, desarrollo_pregunta, rta_correcta, id_dificultad_buscado, lista_opciones_aux)
                     pregunta_aux.set_id(id_pregunta)
                     lista_aux.append(pregunta_aux)
                     preguntas_usadas.add(id_pregunta)
@@ -214,8 +210,6 @@ class DAO8Escalones:
         
         return lista_aux
     
-=======
->>>>>>> Stashed changes
     ########################################### TEMATICAS ################################################################
     def alta_tematica (self, tematica):
         nombre_tema_aux = tematica.get_nombre_tematica()
@@ -233,6 +227,22 @@ class DAO8Escalones:
         resu = c.fetchone()
         id_tema = resu[0]
         tematica.set_id_tematica (id_tema)
+        self.comitear_cambios()
+        self.cerrar_conexion()
+    
+    def modificar_tematica (self, tema_buscado, nombre_nuevo_tema):
+        id_tema_buscado = tema_buscado.get_id_tematica()
+        self.crear_conexion()
+        c = self._conexion.cursor()
+        c.execute ("UPDATE temas SET (nombre_tema) = ? WHERE id_tema = ?",(nombre_nuevo_tema, id_tema_buscado,))
+        self.comitear_cambios()
+        self.cerrar_conexion()
+    
+    def eliminar_tematica (self, id_tema_eliminar):
+        self.eliminar_preguntas_categorias(id_tema_eliminar) #para eliminar en cascada las preguntas que tiene esa categoria
+        self.crear_conexion()
+        c = self._conexion.cursor()
+        c.execute ("DELETE FROM temas WHERE id_tema = (?)", (id_tema_eliminar,))
         self.comitear_cambios()
         self.cerrar_conexion()
     
@@ -274,7 +284,6 @@ class DAO8Escalones:
         self.comitear_cambios()
         self.cerrar_conexion()
     
-    
     def mostrar_dificultades (self):
         self.crear_conexion()
         c = self._conexion.cursor()
@@ -284,23 +293,10 @@ class DAO8Escalones:
         for t in resu:
             print (t)
         self.cerrar_conexion()
-<<<<<<< Updated upstream
-<<<<<<< HEAD
 base_datos = DAO8Escalones('8escalones.db')
 #base_datos._crear_tablas()
 
 #tematica=Tematica("Arte y Música")
 base_datos.eliminar_tematica(1)
-=======
-#base_datos = DAO8Escalones('8escalones.db')
-#base_datos._crear_tablas()
->>>>>>> f285693336b9ffa40be8b2acfc396b74bc18bcd1
-=======
-        
-base_datos = DAO8Escalones('8escalones.db')
-#base_datos._crear_tablas()
 
-tematica= Tematica("Entretenimiento")
-base_datos.alta_tematica(tematica)
 
->>>>>>> Stashed changes
