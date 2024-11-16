@@ -94,18 +94,13 @@ class ControladorJuego(QObject):
             self.__pausa=True
             self.__pregunta_actual = pregunta
             self.__actualizar_vista_rta(self.__pregunta_actual)
-<<<<<<< HEAD
-            #while self.__pausa:
-                #time.sleep(0.1)#espera hasta q clickee  
-=======
             
             event_loop = QEventLoop()
             self.signalContinuar.connect(event_loop.quit) 
-            while self.__pausa:
-                event_loop.exec()
+            #while self.__pausa:
+                #event_loop.exec()
             
             
->>>>>>> 257f7dc9aebf38234a4373da9d04c50a6698b969
             if not self.__respuesta_actual_correcta:
                 jugador.set_strikes()#le aumenta 1 strike
             nro_preg_actual += 1
@@ -126,7 +121,7 @@ class ControladorJuego(QObject):
         nro_preg_actual = 0
         for ronda in range(2):
             nro_preg_actual = self.ronda(nro_preg_actual)
-        self.comparar_strikes()
+        self.comparar_strikes()#despues de esto la lista de jugadores q van a aproximacion y esta lista para verificar la eliminacion
         #self.eliminacion()
         self.resetRondaActuales()
 
@@ -147,11 +142,10 @@ class ControladorJuego(QObject):
                 self.__lista_van_a_aproximacion.remove(jugador)
     
     def set_estado(self):
-        #if len(self.__lista_van_a_aprox)>1
-            #self.__estado_actual=State_con_preg_aprox()
-        #else:
-            #self.__estado_actual=State_sin_preg_aprox()
-        pass   
+        if len(self.__lista_van_a_aproximacion)>1:
+            self.__estado_actual=State_con_preg_de_aprox()
+        else:
+            self.__estado_actual=State_sin_preg_eliminacion()  
     
     def eliminacion(self):
         self.__estado_actual.eliminacion()
@@ -168,7 +162,8 @@ class ControladorJuego(QObject):
         for pregunta in self.__escalon_actual.get_lista_preguntas_comunes():
             print("itera")
             print(pregunta)
-    
+            
+
 class State_con_preg_de_aprox:
         
     def eliminacion(self):
@@ -177,9 +172,4 @@ class State_con_preg_de_aprox:
 class State_sin_preg_eliminacion:
         
     def eliminacion(self):
-        pass
-        
-
-
-
-    
+        pass 
