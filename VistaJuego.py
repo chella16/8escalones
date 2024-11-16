@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout,QGridLayout, QLabel, QPushButton, QWidget, QDialogButtonBox, QDialog
+from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout,QGridLayout, QLabel, QPushButton, QWidget, QDialogButtonBox, QDialog,QLineEdit
 from PyQt6.QtCore import Qt,pyqtSignal,QUrl
 from PyQt6.QtGui import QPixmap,QIcon,QPalette,QColor,QFont
 from MainWindow import *
@@ -170,11 +170,48 @@ class CustomDialogRespuesta(QDialog): #Dialog que salta cuando se selecciona una
         layout.addWidget(self.buttonBox)
         self.setLayout(layout)
 
+class WidgetPregAproximacion(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setFixedSize(500,200)
+        self.crearBtns()
+        self.crearLayout()
+    
+    def crearBtns(self):
+        # Crear el label de la pregunta
+        self.labelPreguntaArpox = QLabel("Pregunta de Aproximación") #va a ser cargada desde la BD
+        self.labelPreguntaArpox.setFont(QFont("Arial", 12))
+        self.labelPreguntaArpox.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.labelPreguntaArpox.setWordWrap(True) #para que el label realice el salto de linea cuando la preg es larga
+
+        # Crear Input para Rta del usuario
+        self.rtaUser = QLineEdit() 
+        self.rtaUser.setPlaceholderText("Ingresa tu respuesta aquí")
+        self.rtaUser.setAlignment(Qt.AlignmentFlag.AlignCenter)  
+        
+ #!!!!       #self.rtaUser.returnPressed.connect()#al presionar enter se envia la rta mediante el slot al controlador
+        
+    def crearLayout(self):
+        #darle un fondo a el texto de la pregunta
+        fondo = widgetDeFondoConColor(255,255,255,255)
+        fondo.setFixedHeight(100)
+        layoutFondo = QVBoxLayout()
+        layoutFondo.addWidget(self.labelPreguntaArpox)
+        fondo.setLayout(layoutFondo)
+        
+        mainLayout = QVBoxLayout()
+        mainLayout.addWidget(fondo)
+        mainLayout.addWidget(self.rtaUser)
+        
+        self.setLayout(mainLayout)
+
+
+
 class VistaJuego(MainWindow):
-    #signalOp1 = pyqtSignal
-    #signalOp2 = pyqtSignal(str)
-    #signalOp3 = pyqtSignal()
-    #signalOp4 = pyqtSignal()
+    signalOp1 = pyqtSignal(str)
+    signalOp2 = pyqtSignal(str)
+    signalOp3 = pyqtSignal(str)
+    signalOp4 = pyqtSignal(str)
     
     signalIniciarJuego = pyqtSignal()
     _listaIconos = ["Images/PlayersIcons/playerIcon1.jpg",
@@ -191,10 +228,11 @@ class VistaJuego(MainWindow):
         super().__init__("Images/FondoJuego.jpg",1000,600)
         
         self.listaJugadores = listaJugadores #usada en setJugadores para setear el nombre de los jugadores en la interfaz
-        
         self.btnIniciar = QPushButton("Iniciar Partida")
         self.listaWidgetsJugadores = [] #contiene los widgetEscalones del juego, para poder acceder a cada uno de ellos, escalon en indice 0 de esta lista es = escalon nro 1
         self.preguntaWidget = PreguntaWidget() #Widget de las preguntas
+        self.preguntaAproximacionWidget = WidgetPregAproximacion()  # Wiidget de aproximación
+        self.preguntaAproximacionWidget.hide() #todavia no se debe mostrar 
         self.escalonesWidget = WidgetEscalones() #Widget de los Escalones
         
         self.setCentralWidget(self.labelFondo)
@@ -204,11 +242,21 @@ class VistaJuego(MainWindow):
         
         #Manejo de signals
         self.btnIniciar.clicked.connect(self.signalIniciarJuego.emit)
-        
     
+    
+    def cambiarWidget(self):
+        #Alterna entre el widget de preguntas estándar y el de aproximación.
+        #Este método será llamado mediante una señal desde el controlador.
+        if self.preguntaWidget.isVisible():  
+            self.preguntaWidget.hide()       
+            self.preguntaAproximacionWidget.show()  
+        else:
+            self.preguntaAproximacionWidget.hide()  
+            self.preguntaWidget.show()           
+
     def setJugadores(self):
         random.shuffle(self._listaIconos)
-        for i in range(9):
+        for i in range(len(self.listaJugadores)):
             self.listaWidgetsJugadores.append(PlayerWidget(self.listaJugadores[i],self._listaIconos[i])) 
        
     def crearLayout(self):
@@ -221,9 +269,8 @@ class VistaJuego(MainWindow):
         
         #config posiciones de los subWidgets
         mainLayout.addWidget(self.preguntaWidget,0,0)
+        mainLayout.addWidget(self.preguntaAproximacionWidget, 0, 0)
         mainLayout.addWidget(self.escalonesWidget,0,1)
         mainLayout.addLayout(layoutPlayers,1,0)
         mainLayout.addWidget(self.btnIniciar,2,0,1,1,alignment=Qt.AlignmentFlag.AlignLeft)
         self.labelFondo.setLayout(mainLayout)
-
-  

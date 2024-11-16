@@ -1,8 +1,7 @@
 import sqlite3
 import json
-from pregunta_comun import Pregunta_comun
+#from pregunta_aproximacion import Pregunta_aproximacion
 from tematica import Tematica
-
 
 class DAO8Escalones:
     def __init__ (self, nombre_BD):
@@ -290,5 +289,10 @@ class DAO8Escalones:
         for t in resu:
             print (t)
         self.cerrar_conexion()
-#base_datos = DAO8Escalones('8escalones.db')
+base_datos = DAO8Escalones('8escalones.db')
 #base_datos._crear_tablas()
+
+#tematica=Tematica("Arte y Música")
+base_datos.eliminar_tematica(1)
+
+
