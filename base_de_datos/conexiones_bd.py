@@ -193,6 +193,7 @@ class DAO8Escalones:
         c.execute("DELETE FROM sqlite_sequence WHERE name = 'temas'")
         self.comitear_cambios()
         self.cerrar_conexion()
+        
     
     ########################################## DIFICULTADES #################################################################
 
@@ -224,6 +225,12 @@ class DAO8Escalones:
         for t in resu:
             print (t)
         self.cerrar_conexion()
+<<<<<<< Updated upstream
 #base_datos = DAO8Escalones('8escalones.bd')
+=======
+#base_datos = DAO8Escalones('8escalones.db')
+#base_datos._crear_tablas()
+    
+>>>>>>> Stashed changes
 #base_datos._crear_tablas()
 
