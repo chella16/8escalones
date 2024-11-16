@@ -3,9 +3,9 @@ from pregunta import Pregunta
 
 class Pregunta_comun(Pregunta):#Una pregunta común tiene: opciones, y el método adecuado para obtener la info de la BD
 
-    def __init__(self, tema, consigna, rta, dificultad):
+    def __init__(self, tema, consigna, rta, dificultad, opciones):
         super().__init__(tema, consigna, rta, dificultad)
-        self.__opciones = []
+        self.__opciones = opciones
     
     def get_opciones(self):
         return self.__opciones
