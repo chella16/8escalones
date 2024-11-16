@@ -67,6 +67,16 @@ class DAO8Escalones:
                     FOREIGN KEY (id_tema) REFERENCES temas(id_tema),
                     FOREIGN KEY (id_dificultad) REFERENCES dificultades(id_dificultad))
                     """)
+            #c.execute ("""
+                    #CREATE TABLE IF NOT EXISTS pregunta_aproximacion (
+                    #id_pregunta INTEGER PRIMARY KEY AUTOINCREMENT,
+                    #desarrollo_pregunta TEXT,
+                    #rta_correcta TEXT,
+                    #id_tema INTEGER,
+                    #id_dificultad INTEGER,
+                    #FOREIGN KEY (id_tema) REFERENCES temas(id_tema),
+                    #FOREIGN KEY (id_dificultad) REFERENCES dificultades(id_dificultad))
+                    #""")
             c.execute ("""
                     CREATE TABLE IF NOT EXISTS administradores (
                     id_administrador INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -160,8 +170,8 @@ class DAO8Escalones:
         resu = c.fetchone()
         id_dificultad_preg = resu[0]
         
-        c.execute("""INSERT INTO preguntas (desarrollo_pregunta, rta_correcta, id_tema, id_dificultad)
-        VALUES (?, ?, ?, ?, ?)""",(desarrollo_preg, rtacorrecta_preg, id_tematica_preg, id_dificultad_preg))
+        c.execute("""INSERT INTO preguntas (desarrollo_pregunta, rta_correcta, lista_opciones, id_tema, id_dificultad)
+        VALUES (?, ?, ?, ?, ?)""",(desarrollo_preg, rtacorrecta_preg, None,  id_tematica_preg, id_dificultad_preg))
         self.comitear_cambios()
         self.cerrar_conexion()
     
