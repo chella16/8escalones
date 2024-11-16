@@ -79,8 +79,8 @@ class ControladorJuego():
             self.__pausa=True
             self.__pregunta_actual = pregunta
             self.__actualizar_vista_rta(self.__pregunta_actual)
-            while self.__pausa:
-                time.sleep(0.1)#espera hasta q clickee  
+            #while self.__pausa:
+                #time.sleep(0.1)#espera hasta q clickee  
             if not self.__respuesta_actual_correcta:
                 jugador.set_strikes()#le aumenta 1 strike
             nro_preg_actual += 1
