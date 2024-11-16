@@ -3,6 +3,7 @@ import json
 #from pregunta_aproximacion import Pregunta_aproximacion
 from tematica import Tematica
 from pregunta_comun import Pregunta_comun
+from pregunta_aproximacion import Pregunta_aproximacion
 
 class DAO8Escalones:
     def __init__ (self, nombre_BD):
@@ -173,31 +174,71 @@ class DAO8Escalones:
         self.comitear_cambios()
         self.cerrar_conexion()
     
-    def descargar_preguntas (self, id_tema_buscado, id_dificultad_buscado):
+    def descargar_preguntas_normales (self, nombre_tema, dificultad_buscada):
         lista_aux = []
         cantidad = 0
         preguntas_usadas = set()
         
         self.crear_conexion()
         c = self._conexion.cursor()
+        c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tema,))
+        id_tema_buscado = c.fetchone()
+        
+        c.execute("SELECT id_dificultad FROM dificultades WHERE LOWER(nombre_dificultad) = LOWER(?)", (dificultad_buscada,))
+        id_dificultad_buscada = c.fetchone()
+        
         c.execute ("""SELECT id_pregunta, desarrollo_pregunta, rta_correcta, lista_opciones 
                 FROM preguntas WHERE id_tema = (?) AND id_dificultad = (?) ORDER BY RANDOM()""", 
-                (id_tema_buscado, id_dificultad_buscado,))
+                (id_tema_buscado, id_dificultad_buscada,))
         lista_preguntas = c.fetchall()
         
         for id_pregunta, desarrollo_pregunta, rta_correcta, lista_opciones in lista_preguntas:
             cantidad = cantidad + 1
             if id_pregunta not in preguntas_usadas:
                 lista_opciones_aux = json.loads(lista_opciones)
-                pregunta_aux = Pregunta_comun(id_tema_buscado, desarrollo_pregunta, rta_correcta, id_dificultad_buscado, lista_opciones_aux)
+                pregunta_aux = Pregunta_comun(id_tema_buscado, desarrollo_pregunta, rta_correcta, id_dificultad_buscada, lista_opciones_aux)
                 pregunta_aux.set_id(id_pregunta)
                 lista_aux.append(pregunta_aux)
                 print("cargando pregunta...")
                 preguntas_usadas.add(id_pregunta)
-            if cantidad == 3: #deberia ser 18 pero por prueba es 2
+            if cantidad == 19: #deberia ser 18 pero por prueba es 2
                 break
         print("retornando...")
         return lista_aux
+    
+    def descargar_preguntas_aproximacion (self, nombre_tema, dificultad_buscada):
+        lista_aux = []
+        cantidad = 0
+        preguntas_usadas = set()
+        
+        self.crear_conexion()
+        c = self._conexion.cursor()
+        c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tema,))
+        id_tema_buscado = c.fetchone()
+        
+        c.execute("SELECT id_dificultad FROM dificultades WHERE LOWER(nombre_dificultad) = LOWER(?)", (dificultad_buscada,))
+        id_dificultad_buscada = c.fetchone()
+        
+        self.crear_conexion()
+        c = self._conexion.cursor()
+        c.execute ("""SELECT id_pregunta, desarrollo_pregunta, rta_correcta
+                FROM preguntas WHERE id_tema = (?) AND id_dificultad = (?) AND lista_opciones IS NULL ORDER BY RANDOM()""", 
+                (id_tema_buscado, id_dificultad_buscada,))
+        lista_preguntas = c.fetchall()
+        
+        for id_pregunta, desarrollo_pregunta, rta_correcta in lista_preguntas:
+            cantidad = cantidad + 1
+            if id_pregunta not in preguntas_usadas:
+                pregunta_aux = Pregunta_aproximacion(id_tema_buscado, desarrollo_pregunta, rta_correcta, id_dificultad_buscada)
+                pregunta_aux.set_id(id_pregunta)
+                lista_aux.append(pregunta_aux)
+                print("cargando pregunta...")
+                preguntas_usadas.add(id_pregunta)
+            if cantidad == 1: #cada tema tiene 1 pero lo dejo asi por las dudas
+                break
+        print("retornando...")
+        return lista_aux
+    
     
     ########################################### TEMATICAS ################################################################
     def alta_tematica (self, tematica):
