@@ -86,6 +86,9 @@ class PreguntaWidget(QWidget):
         self.btnRtaB.setText(opciones[1])
         self.btnRtaC.setText(opciones[2])
         self.btnRtaD.setText(opciones[3])
+    
+    def getOpciones(self):
+        return [self.btnRtaA.text(),self.btnRtaB.text(),self.btnRtaC.text(),self.btnRtaD.text()]
        
     
 
@@ -225,7 +228,7 @@ class WidgetPregAproximacion(QWidget):
 
 
 
-class VistaJuego(MainWindow):
+class VistaJuego(MainWindow):  
     signalOp1 = pyqtSignal(str)
     signalOp2 = pyqtSignal(str)
     signalOp3 = pyqtSignal(str)
@@ -260,6 +263,10 @@ class VistaJuego(MainWindow):
         
         #Manejo de signals
         self.btnIniciar.clicked.connect(self.signalIniciarJuego.emit)
+        self.preguntaWidget.btnRtaA.clicked.connect(self.getRtaA)
+        self.preguntaWidget.btnRtaB.clicked.connect(self.getRtaB)
+        self.preguntaWidget.btnRtaC.clicked.connect(self.getRtaC)
+        self.preguntaWidget.btnRtaD.clicked.connect(self.getRtaD)
     
     def setPreguntaYOpciones(self,pregunta:str,opciones:list):
         self.preguntaWidget.setPreguntaYOpciones(pregunta,opciones)
@@ -294,3 +301,19 @@ class VistaJuego(MainWindow):
         mainLayout.addLayout(layoutPlayers,1,0)
         mainLayout.addWidget(self.btnIniciar,2,0,1,1,alignment=Qt.AlignmentFlag.AlignLeft)
         self.labelFondo.setLayout(mainLayout)
+
+    def getRtaA(self):
+        rta = self.preguntaWidget.getOpciones()[0]
+        self.signalOp1.emit(rta)
+        
+    def getRtaB(self):
+        rta = self.preguntaWidget.getOpciones()[1]
+        self.signalOp2.emit(rta)
+        
+    def getRtaC(self):
+        rta = self.preguntaWidget.getOpciones()[2]
+        self.signalOp3.emit(rta)
+        
+    def getRtaD(self):
+        rta = self.preguntaWidget.getOpciones()[3]
+        self.signalOp4.emit(rta)

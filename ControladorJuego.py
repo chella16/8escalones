@@ -56,7 +56,7 @@ class ControladorJuego(QObject):
         self.vista.signalOp4.connect(self.contestar_pregunta)
         
         
-        self.signalContinuar.connect(self.continuar_juego)
+        
 
         
     def __actualizar_vista_rta(self, pregunta):
@@ -71,9 +71,11 @@ class ControladorJuego(QObject):
         self.__pausa= False
         self.signalContinuar.emit()
 
-    def continuar_juego(self):
+
+    def continuar_juego(self): #me parece que esto esta al pedo
             # Este método se usa para conectar con la señal y manejar la pausa
             pass
+        
     
     def __cargar_temas(self):
         lista_tematicas=self.__BD.descargar_tematicas()
@@ -95,7 +97,10 @@ class ControladorJuego(QObject):
             
             event_loop = QEventLoop()
             self.signalContinuar.connect(event_loop.quit) 
-            print("aaa")
+            while self.__pausa:
+                event_loop.exec()
+            
+            
             if not self.__respuesta_actual_correcta:
                 jugador.set_strikes()#le aumenta 1 strike
             nro_preg_actual += 1
