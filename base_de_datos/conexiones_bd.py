@@ -226,6 +226,16 @@ class DAO8Escalones:
             print (t)
         self.cerrar_conexion()
 
+<<<<<<< Updated upstream
 #base_datos = DAO8Escalones('8escalones.db')
 #base_datos._crear_tablas()
     
+=======
+
+#base_datos = DAO8Escalones('8escalones.bd')
+#base_datos = DAO8Escalones('8escalones.db')
+#base_datos._crear_tablas()
+    
+#base_datos._crear_tablas()
+
+>>>>>>> Stashed changes

@@ -38,5 +38,10 @@ opciones_preg1.append("rta_correcta")
 opciones_preg1.append("opcion1")
 opciones_preg1.append("opcion2")
 opciones_preg1.append("opcion3")
+<<<<<<< Updated upstream
 pregunta1 = Pregunta_comun("deportes", "pregunta deportes?", "rta correcta", "1", opciones_preg1)
 pregunta1.mostrar_info_preg()
+=======
+pregunta1 = Pregunta_comun("deportes", "pregunta deportes?", "rta_correcta", "1", opciones_preg1)
+pregunta1.mostrar_info_preg
+>>>>>>> Stashed changes
