@@ -16,11 +16,11 @@ class Jugador:
     def get_estado(self) -> str:
         return self.__eliminado
     
-    #def set_strikes(self):
-        #self.__strikes+=1
+    def set_strikes(self):
+        self.__strikes+=1
     
-    #def get_strikes(self):
-        #return self.__strikes
+    def get_strikes(self):
+        return self.__strikes
         
     #def reset_strikes(self):
         #self.__strikes=0
