@@ -67,6 +67,16 @@ class DAO8Escalones:
                     FOREIGN KEY (id_tema) REFERENCES temas(id_tema),
                     FOREIGN KEY (id_dificultad) REFERENCES dificultades(id_dificultad))
                     """)
+            #c.execute ("""
+                    #CREATE TABLE IF NOT EXISTS pregunta_aproximacion (
+                    #id_pregunta INTEGER PRIMARY KEY AUTOINCREMENT,
+                    #desarrollo_pregunta TEXT,
+                    #rta_correcta TEXT,
+                    #id_tema INTEGER,
+                    #id_dificultad INTEGER,
+                    #FOREIGN KEY (id_tema) REFERENCES temas(id_tema),
+                    #FOREIGN KEY (id_dificultad) REFERENCES dificultades(id_dificultad))
+                    #""")
             c.execute ("""
                     CREATE TABLE IF NOT EXISTS administradores (
                     id_administrador INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -160,8 +170,8 @@ class DAO8Escalones:
         resu = c.fetchone()
         id_dificultad_preg = resu[0]
         
-        c.execute("""INSERT INTO preguntas (desarrollo_pregunta, rta_correcta, id_tema, id_dificultad)
-        VALUES (?, ?, ?, ?, ?)""",(desarrollo_preg, rtacorrecta_preg, id_tematica_preg, id_dificultad_preg))
+        c.execute("""INSERT INTO preguntas (desarrollo_pregunta, rta_correcta, lista_opciones, id_tema, id_dificultad)
+        VALUES (?, ?, ?, ?, ?)""",(desarrollo_preg, rtacorrecta_preg, None,  id_tematica_preg, id_dificultad_preg))
         self.comitear_cambios()
         self.cerrar_conexion()
     
@@ -173,11 +183,11 @@ class DAO8Escalones:
         self.comitear_cambios()
         self.cerrar_conexion()
     
-    def baja_pregunta (self, pregunta_eliminar):
-        id_preg_eliminar = pregunta_eliminar.get_id()
+    def baja_pregunta (self, id_preg_eliminar):
+        #id_preg_eliminar = pregunta_eliminar.get_id()
         self.crear_conexion()
         c = self._conexion
-        c.execute("DELETE FROM preguntas WHERE id_pregunta = (?)", (id_preg_eliminar))
+        c.execute("DELETE FROM preguntas WHERE id_pregunta = (?)", (id_preg_eliminar,))
         self.comitear_cambios()
         self.cerrar_conexion()
     
@@ -205,10 +215,12 @@ class DAO8Escalones:
         self.crear_conexion()
         c = self._conexion.cursor()
         c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tema,))
-        id_tema_buscado = c.fetchone()
+        resu = c.fetchone()
+        id_tema_buscado = resu[0]
         
         c.execute("SELECT id_dificultad FROM dificultades WHERE LOWER(nombre_dificultad) = LOWER(?)", (dificultad_buscada,))
-        id_dificultad_buscada = c.fetchone()
+        resu = c.fetchone()
+        id_dificultad_buscada = resu[0]
         
         c.execute ("""SELECT id_pregunta, desarrollo_pregunta, rta_correcta, lista_opciones 
                 FROM preguntas WHERE id_tema = (?) AND id_dificultad = (?) ORDER BY RANDOM()""", 
@@ -229,38 +241,33 @@ class DAO8Escalones:
         print("retornando...")
         return lista_aux
     
-    def descargar_preguntas_aproximacion (self, nombre_tema, dificultad_buscada):
-        lista_aux = []
-        cantidad = 0
-        preguntas_usadas = set()
-        
+    def descargar_pregunta_aproximacion (self, nombre_tema, dificultad_buscada):
         self.crear_conexion()
         c = self._conexion.cursor()
         c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tema,))
-        id_tema_buscado = c.fetchone()
+        resu = c.fetchone()
+        id_tema_buscado = resu[0]
         
         c.execute("SELECT id_dificultad FROM dificultades WHERE LOWER(nombre_dificultad) = LOWER(?)", (dificultad_buscada,))
-        id_dificultad_buscada = c.fetchone()
+        resu = c.fetchone()
+        id_dificultad_buscada = resu[0]
         
-        self.crear_conexion()
-        c = self._conexion.cursor()
-        c.execute ("""SELECT id_pregunta, desarrollo_pregunta, rta_correcta
-                FROM preguntas WHERE id_tema = (?) AND id_dificultad = (?) AND lista_opciones IS NULL ORDER BY RANDOM()""", 
-                (id_tema_buscado, id_dificultad_buscada,))
-        lista_preguntas = c.fetchall()
+        c.execute("SELECT id_pregunta FROM preguntas WHERE id_dificultad = (?) AND id_tema = (?) AND lista_opciones IS NULL", (id_dificultad_buscada, id_tema_buscado,))
+        resu = c.fetchone()
+        id_pregunta = resu[0]
         
-        for id_pregunta, desarrollo_pregunta, rta_correcta in lista_preguntas:
-            cantidad = cantidad + 1
-            if id_pregunta not in preguntas_usadas:
-                pregunta_aux = Pregunta_aproximacion(id_tema_buscado, desarrollo_pregunta, rta_correcta, id_dificultad_buscada)
-                pregunta_aux.set_id(id_pregunta)
-                lista_aux.append(pregunta_aux)
-                print("cargando pregunta...")
-                preguntas_usadas.add(id_pregunta)
-            if cantidad == 1: #cada tema tiene 1 pero lo dejo asi por las dudas
-                break
+        c.execute("SELECT desarrollo_pregunta FROM preguntas WHERE id_pregunta = (?)", (id_pregunta,))
+        resu = c.fetchone()
+        desarrollo_preg = resu[0]
+        
+        c.execute("SELECT rta_correcta FROM preguntas WHERE id_pregunta = (?)", (id_pregunta,))
+        resu = c.fetchone()
+        rta_correcta = resu[0]
+        
+        pregunta_aux = Pregunta_aproximacion(id_tema_buscado, desarrollo_preg, rta_correcta, id_dificultad_buscada)
+        pregunta_aux.set_id(id_pregunta)
         print("retornando...")
-        return lista_aux
+        return pregunta_aux
     
     
     ########################################### TEMATICAS ################################################################
