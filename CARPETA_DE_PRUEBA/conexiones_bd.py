@@ -1,10 +1,7 @@
 import sqlite3
 import json
-<<<<<<< Updated upstream
-from pregunta_aproximacion import Pregunta_aproximacion
-=======
+#from pregunta_aproximacion import Pregunta_aproximacion
 from tematica import Tematica
->>>>>>> Stashed changes
 
 class DAO8Escalones:
     def __init__ (self, nombre_BD):
@@ -299,5 +296,5 @@ class DAO8Escalones:
 base_datos = DAO8Escalones('8escalones.db')
 #base_datos._crear_tablas()
 
-tematica=Tematica("Arte y Música")
-base_datos.alta_tematica(tematica)
+#tematica=Tematica("Arte y Música")
+base_datos.eliminar_tematica(1)
