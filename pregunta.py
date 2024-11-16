@@ -28,3 +28,6 @@ class Pregunta(ABC): #Una pregunta a nivel general tiene: consigna, respuesta co
     
     def get_id (self):
         return self._id
+    
+    def __str__(self):
+        return f"{self._consigna}"

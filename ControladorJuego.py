@@ -38,7 +38,7 @@ class ControladorJuego():
         self.__contador_preguntas=0
         self.__pausa_jugador=True
         self.__pregunta_actual = None #para saber que pregunta es la que esta respondiendo el usuario en el momento que se emite algun signalOp
-        self.__lista_van_a_aproximacion=None
+        self.__lista_van_a_aproximacion=[]
         self.__BD=DAO8Escalones("8escalones.db")
         self.__cargar_jugadores()
         self.__cargar_temas()
@@ -52,6 +52,7 @@ class ControladorJuego():
         self.vista.signalOp4.connect(self.contestar_pregunta)
         
     def __actualizar_vista_rta(self, pregunta):
+        print("entró3")
         self.vista.setPreguntaYOpciones(pregunta.get_consigna(),pregunta.get_opciones())
         
     def contestar_pregunta(self,rta_usuario):
@@ -75,11 +76,14 @@ class ControladorJuego():
 
     def ronda(self,nro_preg_actual):
         #itera sobre los x jugadores y reparte pregunta (que pregunta esta en escalon)
-        for jugador, pregunta in zip(self.__lista_sobrevivientes,self.__escalon_actual.get_lista_preguntas()[nro_preg_actual:]):
+        print("entró1(LLEGO HASTA ACA)")
+        for jugador, pregunta in zip(self.__lista_sobrevivientes,self.__escalon_actual.get_lista_preguntas_comunes()[nro_preg_actual:]):
+            print("entró2")
             self.__pausa=True
             self.__pregunta_actual = pregunta
             self.__actualizar_vista_rta(self.__pregunta_actual)
             while self.__pausa:
+                print("a")
                 time.sleep(0.1)#espera hasta q clickee  
             if not self.__respuesta_actual_correcta:
                 jugador.set_strikes()#le aumenta 1 strike
@@ -96,13 +100,15 @@ class ControladorJuego():
     def ejecutar_escalon(self):
         tema_random=random.choice(self.__lista_temas)
         self.__lista_temas.remove(tema_random)
-        self.__escalon_actual=Escalon(tema_random, self.__dificultad)
+        self.__escalon_actual=Escalon("Cine y Televisión", self.__dificultad)
         self.__escalon_actual.set_escalon(self.__BD)#hay q ver si chela hizo la bajada de preguntas
+        self.print_preguntas()
+        print("AAAA?")
         nro_preg_actual = 0
         for ronda in range(2):
             nro_preg_actual = self.ronda(nro_preg_actual)
         self.comparar_strikes()
-        self.eliminacion()
+        #self.eliminacion()
         self.resetRondaActuales()
 
     def comparar_strikes(self):
@@ -118,7 +124,7 @@ class ControladorJuego():
     def __limpiar_lista_strikes(self, max_strikes):#va en la de arriba
         
         for jugador in self.__lista_van_a_aproximacion:
-            if jugador.get_strikes<max_strikes:
+            if jugador.get_strikes()<max_strikes:
                 self.__lista_van_a_aproximacion.remove(jugador)
     
     def set_estado(self):
@@ -132,7 +138,17 @@ class ControladorJuego():
         self.__estado_actual.eliminacion()
         self.__estado_eliminacion=None
         
-        
+#############################PRINTS PARA PROBAR######################################
+
+    def print_sobrevivientes(self):
+        for sobreviviente in self.__lista_sobrevivientes:
+            print(sobreviviente.get_nombre())
+            
+    def print_preguntas(self):
+        print("se frena antes")
+        for pregunta in self.__escalon_actual.get_lista_preguntas_comunes():
+            print("itera")
+            print(pregunta)
     
 class State_con_preg_de_aprox:
         
@@ -144,4 +160,7 @@ class State_sin_preg_eliminacion:
     def eliminacion(self):
         pass
         
+
+
+
     
