@@ -214,7 +214,7 @@ class DAO8Escalones:
         
         self.crear_conexion()
         c = self._conexion.cursor()
-        c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tema,))
+        c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?) AND lista_opciones IS NOT NULL", (nombre_tema,))
         resu = c.fetchone()
         id_tema_buscado = resu[0]
         
