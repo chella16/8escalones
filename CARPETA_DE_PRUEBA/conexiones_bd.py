@@ -128,7 +128,7 @@ class DAO8Escalones:
         dificultad_preg = pregunta_normal.get_dificultad()
         
         c = self._conexion.cursor()
-        c.execute ("SELECT id_tema FROM temas WHERE nombre_tema = (?)", (tematica_preg,))
+        c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (tematica_preg,))
         resu = c.fetchone()
         id_tematica_preg = resu[0]
         
@@ -173,42 +173,30 @@ class DAO8Escalones:
         self.comitear_cambios()
         self.cerrar_conexion()
     
-    def bajar_preguntas (self, id_tema_buscado, id_dificultad_buscado):
+    def descargar_preguntas (self, id_tema_buscado, id_dificultad_buscado):
         lista_aux = []
+        cantidad = 0
+        preguntas_usadas = set()
+        
         self.crear_conexion()
         c = self._conexion.cursor()
-        c.execute ("SELECT * FROM preguntas WHERE d_tema = (?), id_dificultad = (?) ORDER BY RANDOM()", (id_tema_buscado, id_dificultad_buscado,))
+        c.execute ("""SELECT id_pregunta, desarrollo_pregunta, rta_correcta, lista_opciones 
+                FROM preguntas WHERE id_tema = (?) AND id_dificultad = (?) ORDER BY RANDOM()""", 
+                (id_tema_buscado, id_dificultad_buscado,))
         lista_preguntas = c.fetchall()
-        preguntas_usadas = set()
+        
         for id_pregunta, desarrollo_pregunta, rta_correcta, lista_opciones in lista_preguntas:
-            if cantidad == 2: #deberia ser 18 pero por prueba es 2
-                if id_pregunta not in preguntas_usadas:
-                    lista_opciones_aux = [json.loads(fila[0]) for fila in lista_opciones]
-                    pregunta_aux = Pregunta_comun(id_tema_buscado, desarrollo_pregunta, rta_correcta, id_dificultad_buscado, lista_opciones_aux)
-                    pregunta_aux.set_id(id_pregunta)
-                    lista_aux.append(pregunta_aux)
-                    preguntas_usadas.add(id_pregunta)
-                cantidad = cantidad +1
+            cantidad = cantidad + 1
+            if id_pregunta not in preguntas_usadas:
+                lista_opciones_aux = json.loads(lista_opciones)
+                pregunta_aux = Pregunta_comun(id_tema_buscado, desarrollo_pregunta, rta_correcta, id_dificultad_buscado, lista_opciones_aux)
+                pregunta_aux.set_id(id_pregunta)
+                lista_aux.append(pregunta_aux)
+                print("cargando pregunta...")
+                preguntas_usadas.add(id_pregunta)
+            if cantidad == 3: #deberia ser 18 pero por prueba es 2
                 break
-        return lista_aux
-        
-        #for i in range(2):
-            #c.execute ("SELECT id_pregunta FROM preguntas WHERE id_tema = (?), id_dificultad = (?) ORDER BY RANDOM() LIMIT 1;", (id_tema_buscado, id_dificultad_buscado,))
-            #resultado = c.fetchone()
-            #id_preg = resultado [0]
-            
-            #c.execute ("SELECT desarrollo_pregunta FROM preguntas WHERE id_pregunta = (?), id_dificultad = (?)", (id_preg, id_dificultad_buscado,))
-            #resultado = c.fetchone()
-            #consigna_preg = resultado[0]
-            
-            #c.execute ("SELECT rta_correcta FROM preguntas WHERE id_pregunta = (?), id_dificultad = (?)", (id_preg, id_dificultad_buscado,))
-            #resultado = c.fetchone()
-            #rta_correcta = resultado[0]
-            
-            #c.execute ("SELECT lista_opciones FROM preguntas WHERE id_pregunta = (?), id_dificultad = (?)", (id_preg, id_dificultad_buscado,))
-            #resultado = c.fetchall()
-            #listas_opciones = [json.loads(fila[0]) for fila in resultado]
-        
+        print("retornando...")
         return lista_aux
     
     ########################################### TEMATICAS ################################################################
@@ -256,6 +244,14 @@ class DAO8Escalones:
         for t in resu:
             print (t)
         self.cerrar_conexion()
+    
+    def descargar_tematicas (self):
+        lista_aux = []
+        self.crear_conexion()
+        c = self._conexion.cursor()
+        c.execute ("SELECT nombre_tema FROM temas")
+        lista_aux = c.fetchall()
+        return lista_aux
     
     def eliminar_todas_tematicas (self):
         self.crear_conexion()
