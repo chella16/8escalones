@@ -10,6 +10,7 @@ class ControladorInicial():
 
     def __init__(self): 
         self.vista = VentanaInicial()
+        
         self.vista.show()
         
         #controladores a los que puede transicionar
