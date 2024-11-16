@@ -101,7 +101,6 @@ class ControladorJuego():
         nro_preg_actual = 0
         for ronda in range(2):
             nro_preg_actual = self.ronda(nro_preg_actual)
-
         self.comparar_strikes()
         self.eliminacion()
         self.resetRondaActuales()
