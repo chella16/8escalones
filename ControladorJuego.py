@@ -52,7 +52,6 @@ class ControladorJuego():
         self.vista.signalOp4.connect(self.contestar_pregunta)
         
     def __actualizar_vista_rta(self, pregunta):
-        print("entró3")
         self.vista.setPreguntaYOpciones(pregunta.get_consigna(),pregunta.get_opciones())
         
     def contestar_pregunta(self,rta_usuario):
@@ -76,14 +75,11 @@ class ControladorJuego():
 
     def ronda(self,nro_preg_actual):
         #itera sobre los x jugadores y reparte pregunta (que pregunta esta en escalon)
-        print("entró1(LLEGO HASTA ACA)")
         for jugador, pregunta in zip(self.__lista_sobrevivientes,self.__escalon_actual.get_lista_preguntas_comunes()[nro_preg_actual:]):
-            print("entró2")
             self.__pausa=True
             self.__pregunta_actual = pregunta
             self.__actualizar_vista_rta(self.__pregunta_actual)
             while self.__pausa:
-                print("a")
                 time.sleep(0.1)#espera hasta q clickee  
             if not self.__respuesta_actual_correcta:
                 jugador.set_strikes()#le aumenta 1 strike
@@ -102,8 +98,6 @@ class ControladorJuego():
         self.__lista_temas.remove(tema_random)
         self.__escalon_actual=Escalon("Cine y Televisión", self.__dificultad)
         self.__escalon_actual.set_escalon(self.__BD)#hay q ver si chela hizo la bajada de preguntas
-        self.print_preguntas()
-        print("AAAA?")
         nro_preg_actual = 0
         for ronda in range(2):
             nro_preg_actual = self.ronda(nro_preg_actual)

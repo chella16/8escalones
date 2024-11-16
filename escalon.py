@@ -18,10 +18,10 @@ class Escalon:
     #podria modularizar las 2 consultas para que no quede un metodo tan extenso   
         
     def __cargar_lista_preguntas_comunes(self,bd):
-        bd.descargar_preguntas_normales(self.__tema, self.__dificultad)
+        self.__lista_preguntas_comunes=bd.descargar_preguntas_normales(self.__tema, self.__dificultad)
     
     def __cargar_pregunta_aproximacion(self,bd):
-        bd.descargar_pregunta_aproximacion(self.__tema, self.__dificultad)
+        self.__pregunta_aproximacion=bd.descargar_pregunta_aproximacion(self.__tema, self.__dificultad)
         
     def set_escalon(self,bd):#el controlador interactua con esto y con los get si se quisiera
         self.__cargar_lista_preguntas_comunes(bd)
@@ -33,3 +33,5 @@ class Escalon:
     
     def get_pregunta_aproximacion(self):
         return self.__pregunta_aproximacion
+    
+    

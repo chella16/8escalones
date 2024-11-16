@@ -25,3 +25,6 @@ class ControladorLoginAdmin():
             self.controladorAdmin = ControladorAdmin(self)
         else:
             self.controladorAdmin.vista.show()
+            
+    
+    
