@@ -183,8 +183,8 @@ class DAO8Escalones:
         self.comitear_cambios()
         self.cerrar_conexion()
     
-    def baja_pregunta (self, pregunta_eliminar):
-        id_preg_eliminar = pregunta_eliminar.get_id()
+    def baja_pregunta (self, id_preg_eliminar):
+        #id_preg_eliminar = pregunta_eliminar.get_id()
         self.crear_conexion()
         c = self._conexion
         c.execute("DELETE FROM preguntas WHERE id_pregunta = (?)", (id_preg_eliminar))
