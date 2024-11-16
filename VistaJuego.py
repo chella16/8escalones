@@ -262,7 +262,7 @@ class VistaJuego(MainWindow):
         self.setCentralWidget(self.labelFondo)
         
         #Manejo de signals
-        self.btnIniciar.clicked.connect(self.signalIniciarJuego.emit)
+        self.btnIniciar.clicked.connect(lambda :(self.btnIniciar.hide(),self.signalIniciarJuego.emit()))
         self.preguntaWidget.btnRtaA.clicked.connect(self.getRtaA)
         self.preguntaWidget.btnRtaB.clicked.connect(self.getRtaB)
         self.preguntaWidget.btnRtaC.clicked.connect(self.getRtaC)

@@ -97,8 +97,8 @@ class ControladorJuego(QObject):
             
             event_loop = QEventLoop()
             self.signalContinuar.connect(event_loop.quit) 
-            #while self.__pausa:
-                #event_loop.exec()
+            while self.__pausa:
+                event_loop.exec()
             
             
             if not self.__respuesta_actual_correcta:
@@ -107,10 +107,6 @@ class ControladorJuego(QObject):
         
         self.__rondas_actuales+=1 #para ver en la vista? aca va el emit para modificar la vista
         return nro_preg_actual
-        
-        
-    def pregunta_aproximacion(self):
-        pass
     
         
     def ejecutar_escalon(self):
@@ -122,7 +118,8 @@ class ControladorJuego(QObject):
         for ronda in range(2):
             nro_preg_actual = self.ronda(nro_preg_actual)
         self.comparar_strikes()#despues de esto la lista de jugadores q van a aproximacion y esta lista para verificar la eliminacion
-        #self.eliminacion()
+        self.set_estado_partida()
+        self.eliminacion()
         self.resetRondaActuales()
 
     def comparar_strikes(self):
@@ -141,15 +138,25 @@ class ControladorJuego(QObject):
             if jugador.get_strikes()<max_strikes:
                 self.__lista_van_a_aproximacion.remove(jugador)
     
-    def set_estado(self):
+    def set_estado_partida(self):
         if len(self.__lista_van_a_aproximacion)>1:
             self.__estado_actual=State_con_preg_de_aprox()
         else:
-            self.__estado_actual=State_sin_preg_eliminacion()  
+            self.__estado_actual=State_sin_preg_eliminacion() 
+    
+    def reset_lista_van_aprox(self):
+        self.__lista_van_a_aproximacion.clear()
     
     def eliminacion(self):
         self.__estado_actual.eliminacion()
         self.__estado_eliminacion=None
+        self.reset_lista_van_aprox()
+        
+    def get_lista_sobrevivientes(self):
+        return self.__lista_sobrevivientes
+    
+    def get_lista_lista_van_a_aproximacion(self):
+        return self.__lista_van_a_aproximacion
         
 #############################PRINTS PARA PROBAR######################################
 
@@ -165,11 +172,20 @@ class ControladorJuego(QObject):
             
 
 class State_con_preg_de_aprox:
+    
+    def __init__(self, controlador):
+        self.__instancia_de_juego=controlador
         
     def eliminacion(self):
         pass
         
 class State_sin_preg_eliminacion:
+    
+    def __init__(self, controlador):
+        self.__instancia_de_juego=controlador
         
     def eliminacion(self):
-        pass 
+        jugador_eliminado=self.__instancia_de_juego.get_lista_van_a_aproximacion()[0]#agarra al unico jugador que debería haber
+        self.__instancia_de_juego.get_lista_sobrevivientes().remove(jugador_eliminado)#elimino a ese jugador
+        #pintar jugador de rojo en la vista
+        
