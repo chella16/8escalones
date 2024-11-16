@@ -1,4 +1,5 @@
 from pregunta_comun import Pregunta_comun
+from pregunta_aproximacion import Pregunta_aproximacion
 from conexiones_bd import DAO8Escalones
 from tematica import Tematica
 from jugador import Jugador
@@ -38,19 +39,21 @@ base_datos = DAO8Escalones('8escalones.db')
 #opciones_preg1.append("opcion1")
 #opciones_preg1.append("opcion2")
 #opciones_preg1.append("opcion3")
-#pregunta1 = Pregunta_comun("deportes", "pregunta deportes1?", "rta correcta1", "Normal", opciones_preg1)
+#pregunta1 = Pregunta_comun("deportes", "pregunta deportes17?", "rta correcta1", "Normal", opciones_preg1)
 #pregunta1.mostrar_info_preg()
 #opciones_preg2 = []
 #opciones_preg2.append("rta_correcta")
-#opciones_preg2.append("opcion1")
-#opciones_preg2.append("opcion2")
+##opciones_preg2.append("opcion2")
 #opciones_preg2.append("opcion3")
-#pregunta2 = Pregunta_comun("deportes", "pregunta deportes2?", "rta correcta2", "Normal", opciones_preg2)
+#pregunta2 = Pregunta_comun("deportes", "pregunta deportes18?", "rta correcta2", "Normal", opciones_preg2)
 #pregunta2.mostrar_info_preg()
 #base_datos.alta_pregunta_normal(pregunta2)
+#base_datos.alta_pregunta_normal(pregunta1)
 #print ("subido con exito")
+#pregunta3 = Pregunta_aproximacion("deportes", "pregunta aproximacion?", "100", "normal")
+#base_datos.alta_pregunta_aproximacion(pregunta3)
 
 lista_preg = []
-lista_preg = base_datos.descargar_preguntas(1, 1)
+lista_preg = base_datos.descargar_preguntas_normales('deportes', 'normal')
 for p in lista_preg:
     p.mostrar_info_preg()
