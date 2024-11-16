@@ -18,7 +18,7 @@ class PlayerWidget(QWidget):
         self.labelName = QLabel(text=self._nombreJugador)
         self.crearLayout()
     
-    @property
+    @property 
     def nombreJugador(self):
         return self._nombreJugador
     
@@ -86,6 +86,7 @@ class PreguntaWidget(QWidget):
         self.btnRtaB.setText(opciones[1])
         self.btnRtaC.setText(opciones[2])
         self.btnRtaD.setText(opciones[3])
+       
     
 
 

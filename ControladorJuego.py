@@ -4,6 +4,8 @@ from escalon import Escalon
 from base_de_datos.conexiones_bd import DAO8Escalones
 import random
 import time
+from PyQt6.QtCore import pyqtSignal, QEventLoop,QObject
+
 #POSIBLES CASOS POR ESCALON:
 #a)PARA TOTALIDADES: Responden todos bien/ responden todos mal/ responden  todos 1 de dos: 
 #Si responden todos bien(o todos mal o todos una de dos) se hace una pregunta de aproximacion y pasan los x jugadores mas cercanos, el mas alejado se elimina
@@ -25,8 +27,10 @@ import time
 #8)
 
 
-class ControladorJuego():
+class ControladorJuego(QObject):
+    signalContinuar = pyqtSignal()
     def __init__(self,contrAnterior,listaJugadores):
+        super().__init__()
         self.vista = VistaJuego(listaJugadores)
         self.vista.show()
         self.contrAnterior = contrAnterior
@@ -51,6 +55,10 @@ class ControladorJuego():
         self.vista.signalOp3.connect(self.contestar_pregunta)
         self.vista.signalOp4.connect(self.contestar_pregunta)
         
+        
+        self.signalContinuar.connect(self.continuar_juego)
+
+        
     def __actualizar_vista_rta(self, pregunta):
         self.vista.setPreguntaYOpciones(pregunta.get_consigna(),pregunta.get_opciones())
         
@@ -61,7 +69,12 @@ class ControladorJuego():
         else:
             self.__respuesta_actual_correcta=False# se muestra el Dialog con el texto Incorrecto
         self.__pausa= False
+        self.signalContinuar.emit()
 
+    def continuar_juego(self):
+            # Este método se usa para conectar con la señal y manejar la pausa
+            pass
+    
     def __cargar_temas(self):
         lista_tematicas=self.__BD.descargar_tematicas()
         self.__lista_temas=lista_tematicas
@@ -79,8 +92,10 @@ class ControladorJuego():
             self.__pausa=True
             self.__pregunta_actual = pregunta
             self.__actualizar_vista_rta(self.__pregunta_actual)
-            while self.__pausa:
-                time.sleep(0.1)#espera hasta q clickee  
+            
+            event_loop = QEventLoop()
+            self.signalContinuar.connect(event_loop.quit) 
+            print("aaa")
             if not self.__respuesta_actual_correcta:
                 jugador.set_strikes()#le aumenta 1 strike
             nro_preg_actual += 1
