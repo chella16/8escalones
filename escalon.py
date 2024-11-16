@@ -21,7 +21,7 @@ class Escalon:
         bd.descargar_preguntas_normales(self.__tema, self.__dificultad)
     
     def __cargar_pregunta_aproximacion(self,bd):
-        bd.descargar_preguntas_aproximacion(self.__tema, self.__dificultad)
+        bd.descargar_pregunta_aproximacion(self.__tema, self.__dificultad)
         
     def set_escalon(self,bd):#el controlador interactua con esto y con los get si se quisiera
         self.__cargar_lista_preguntas_comunes(bd)
