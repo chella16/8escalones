@@ -1,7 +1,13 @@
 import sqlite3
 import json
+<<<<<<< HEAD
 #from pregunta_aproximacion import Pregunta_aproximacion
 from tematica import Tematica
+=======
+from pregunta_comun import Pregunta_comun
+from tematica import Tematica
+
+>>>>>>> f285693336b9ffa40be8b2acfc396b74bc18bcd1
 
 class DAO8Escalones:
     def __init__ (self, nombre_BD):
@@ -183,7 +189,7 @@ class DAO8Escalones:
             if cantidad == 2: #deberia ser 18 pero por prueba es 2
                 if id_pregunta not in preguntas_usadas:
                     lista_opciones_aux = [json.loads(fila[0]) for fila in lista_opciones]
-                    pregunta_aux = Pregunta_aproximacion(id_tema_buscado, desarrollo_pregunta, rta_correcta, id_dificultad_buscado, lista_opciones_aux)
+                    pregunta_aux = Pregunta_comun(id_tema_buscado, desarrollo_pregunta, rta_correcta, id_dificultad_buscado, lista_opciones_aux)
                     pregunta_aux.set_id(id_pregunta)
                     lista_aux.append(pregunta_aux)
                     preguntas_usadas.add(id_pregunta)
@@ -293,8 +299,13 @@ class DAO8Escalones:
         for t in resu:
             print (t)
         self.cerrar_conexion()
+<<<<<<< HEAD
 base_datos = DAO8Escalones('8escalones.db')
 #base_datos._crear_tablas()
 
 #tematica=Tematica("Arte y Música")
 base_datos.eliminar_tematica(1)
+=======
+#base_datos = DAO8Escalones('8escalones.db')
+#base_datos._crear_tablas()
+>>>>>>> f285693336b9ffa40be8b2acfc396b74bc18bcd1
