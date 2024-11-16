@@ -29,6 +29,7 @@ class Escalon:
     
     def get_lista_preguntas_comunes(self):
         return self.__lista_preguntas_comunes
+            
     
     def get_pregunta_aproximacion(self):
         return self.__pregunta_aproximacion

@@ -102,6 +102,8 @@ class ControladorJuego():
         self.__lista_temas.remove(tema_random)
         self.__escalon_actual=Escalon("Cine y Televisión", self.__dificultad)
         self.__escalon_actual.set_escalon(self.__BD)#hay q ver si chela hizo la bajada de preguntas
+        self.print_preguntas()
+        print("AAAA?")
         nro_preg_actual = 0
         for ronda in range(2):
             nro_preg_actual = self.ronda(nro_preg_actual)
@@ -136,7 +138,17 @@ class ControladorJuego():
         self.__estado_actual.eliminacion()
         self.__estado_eliminacion=None
         
-        
+#############################PRINTS PARA PROBAR######################################
+
+    def print_sobrevivientes(self):
+        for sobreviviente in self.__lista_sobrevivientes:
+            print(sobreviviente.get_nombre())
+            
+    def print_preguntas(self):
+        print("se frena antes")
+        for pregunta in self.__escalon_actual.get_lista_preguntas_comunes():
+            print("itera")
+            print(pregunta)
     
 class State_con_preg_de_aprox:
         
@@ -148,4 +160,7 @@ class State_sin_preg_eliminacion:
     def eliminacion(self):
         pass
         
+
+
+
     
