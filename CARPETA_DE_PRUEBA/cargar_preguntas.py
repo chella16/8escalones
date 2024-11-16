@@ -1,40 +1,106 @@
 from conexiones_bd import DAO8Escalones
 from pregunta_comun import Pregunta_comun
+#from pregunta_aproximacion import Pregunta_aproximacion
 
 bd=DAO8Escalones("8escalones.db") 
-p=Pregunta_comun("Cine y Televisión", "¿Cuál fue la primera película de Disney?", "A) Blanca Nieves y los Siete Enanitos", "Normal", ["A) Blanca Nieves y los Siete Enanitos", "B) Pinocho", "C) Dumbo", "D) Fantasía"])
+consigna = "¿Cuál fue la primera película de Disney?"
+respuesta = "Blanca Nieves y los Siete Enanitos"
+opciones = ["Blanca Nieves y los Siete Enanitos", "Pinocho", "Dumbo", "Fantasía"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿En qué año se estrenó 'El Padrino'?", "B) 1972", "Normal", ["A) 1970", "B) 1972", "C) 1974", "D) 1976"])
+consigna = "¿En qué año se estrenó 'El Padrino'?"
+respuesta = "1972"
+opciones = ["1970", "1972", "1974", "1976"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿Quién interpreta a Harry Potter en la saga de películas?", "A) Daniel Radcliffe", "Normal", ["A) Daniel Radcliffe", "B) Elijah Wood", "C) Tom Felton", "D) Rupert Grint"])
+consigna = "¿Quién interpreta a Harry Potter en la saga de películas?"
+respuesta = "Daniel Radcliffe"
+opciones = ["Daniel Radcliffe", "Elijah Wood", "Tom Felton", "Rupert Grint"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿Cuál es el personaje principal de la serie 'Breaking Bad'?", "B) Walter White", "Normal", ["A) Saul Goodman", "B) Walter White", "C) Jesse Pinkman", "D) Hank Schrader"])
+consigna = "¿Cuál es el personaje principal de la serie 'Breaking Bad'?"
+respuesta = "Walter White"
+opciones = ["Saul Goodman", "Walter White", "Jesse Pinkman", "Hank Schrader"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿Quién dirigió 'Jurassic Park'?", "B) Steven Spielberg", "Normal", ["A) George Lucas", "B) Steven Spielberg", "C) James Cameron", "D) Ridley Scott"])
+consigna = "¿Quién dirigió 'Jurassic Park'?"
+respuesta = "Steven Spielberg"
+opciones = ["George Lucas", "Steven Spielberg", "James Cameron", "Ridley Scott"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿Cuál de estos personajes es un villano en la saga de Star Wars?", "C) Darth Vader", "Normal", ["A) Luke Skywalker", "B) Han Solo", "C) Darth Vader", "D) Obi-Wan Kenobi"])
+consigna = "¿Cuál de estos personajes es un villano en la saga de Star Wars?"
+respuesta = "Darth Vader"
+opciones = ["Luke Skywalker", "Han Solo", "Darth Vader", "Obi-Wan Kenobi"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿Quién interpretó a Jack en la película 'Titanic'?", "C) Leonardo DiCaprio", "Normal", ["A) Matt Damon", "B) Brad Pitt", "C) Leonardo DiCaprio", "D) Tom Cruise"])
+consigna = "¿Quién interpretó a Jack en la película 'Titanic'?"
+respuesta = "Leonardo DiCaprio"
+opciones = ["Matt Damon", "Brad Pitt", "Leonardo DiCaprio", "Tom Cruise"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿Cuál es el nombre del villano en 'Los Vengadores' (2012)?", "A) Loki", "Normal", ["A) Loki", "B) Thanos", "C) Ultron", "D) Magneto"])
+consigna = "¿Cuál es el nombre del villano en 'Los Vengadores' (2012)?"
+respuesta = "Loki"
+opciones = ["Loki", "Thanos", "Ultron", "Magneto"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿Qué serie popular presenta a un grupo de amigos que viven en Nueva York?", "A) Friends", "Normal", ["A) Friends", "B) How I Met Your Mother", "C) The Big Bang Theory", "D) Seinfeld"])
+consigna = "¿Qué serie popular presenta a un grupo de amigos que viven en Nueva York?"
+respuesta = "Friends"
+opciones = ["Friends", "How I Met Your Mother", "The Big Bang Theory", "Seinfeld"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿En qué película escuchamos la frase 'Hasta la vista, baby'?", "A) Terminator", "Normal", ["A) Terminator", "B) Depredador", "C) Commando", "D) Total Recall"])
+consigna = "¿En qué película escuchamos la frase 'Hasta la vista, baby'?"
+respuesta = "Terminator"
+opciones = ["Terminator", "Depredador", "Commando", "Total Recall"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿Qué director es conocido por su estilo de 'terror psicológico' en películas como Psicosis y Los Pájaros?", "A) Alfred Hitchcock", "Normal", ["A) Alfred Hitchcock", "B) Stanley Kubrick", "C) Roman Polanski", "D) Wes Craven"])
+consigna = "¿Qué director es conocido por su estilo de 'terror psicológico' en películas como Psicosis y Los Pájaros?"
+respuesta = "Alfred Hitchcock"
+opciones = ["Alfred Hitchcock", "Stanley Kubrick", "Roman Polanski", "Wes Craven"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿Cuál es la primera película de la saga de Marvel?", "B) Iron Man", "Normal", ["A) Capitán América", "B) Iron Man", "C) Thor", "D) Hulk"])
+consigna = "¿Cuál es la primera película de la saga de Marvel?"
+respuesta = "Iron Man"
+opciones = ["Capitán América", "Iron Man", "Thor", "Hulk"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿Quién es el protagonista de la serie 'The Mandalorian'?", "C) Mando", "Normal", ["A) Han Solo", "B) Kylo Ren", "C) Mando", "D) Yoda"])
+consigna = "¿Quién es el protagonista de la serie 'The Mandalorian'?"
+respuesta = "Mando"
+opciones = ["Han Solo", "Kylo Ren", "Mando", "Yoda"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿Qué película animada de Disney-Pixar presenta a una niña llamada Riley y sus emociones?", "B) Intensa-Mente", "Normal", ["A) Valiente", "B) Intensa-Mente", "C) Up", "D) Toy Story"])
+consigna = "¿Qué película animada de Disney-Pixar presenta a una niña llamada Riley y sus emociones?"
+respuesta = "Intensa-Mente"
+opciones = ["Valiente", "Intensa-Mente", "Up", "Toy Story"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿Quién protagoniza 'La Máscara'?", "B) Jim Carrey", "Normal", ["A) Robin Williams", "B) Jim Carrey", "C) Mike Myers", "D) Adam Sandler"])
+consigna = "¿Quién protagoniza 'La Máscara'?"
+respuesta = "Jim Carrey"
+opciones = ["Robin Williams", "Jim Carrey", "Mike Myers", "Adam Sandler"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿Cuál es la famosa canción de El guardaespaldas interpretada por Whitney Houston?", "A) I Will Always Love You", "Normal", ["A) I Will Always Love You", "B) I Have Nothing", "C) Run to You", "D) Queen of the Night"])
+consigna = "¿Cuál es la famosa canción de El guardaespaldas interpretada por Whitney Houston?"
+respuesta = "I Will Always Love You"
+opciones = ["I Will Always Love You", "I Have Nothing", "Run to You", "Queen of the Night"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿Cuál de estas películas ganó el Oscar a Mejor Película en 1994?", "A) Forrest Gump", "Normal", ["A) Forrest Gump", "B) Pulp Fiction", "C) Cadena Perpetua", "D) Cuatro Bodas y un Funeral"])
+consigna = "¿Cuál de estas películas ganó el Oscar a Mejor Película en 1994?"
+respuesta = "Forrest Gump"
+opciones = ["Forrest Gump", "Pulp Fiction", "Cadena Perpetua", "Cuatro Bodas y un Funeral"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
+
 bd.alta_pregunta_normal(p)
-p=Pregunta_comun("Cine y Televisión", "¿Cuál de estas películas está basada en una novela de Stephen King?", "A) El Resplandor", "Normal", ["A) El Resplandor", "B) Matrix", "C) Jurassic Park", "D) El Padrino"])
+consigna = "¿Cuál de estas películas está basada en una novela de Stephen King?"
+respuesta = "El Resplandor"
+opciones = ["El Resplandor", "Matrix", "Jurassic Park", "El Padrino"]
+p = Pregunta_comun("Cine y Televisión", consigna, respuesta, "Normal", opciones)
+
 bd.alta_pregunta_normal(p)
+
+
+
+
+"""pa=Pregunta_aproximacion(
+    tema="Cine y Televisión",
+    consigna="¿En qué año se estrenó la primera película de Star Wars?",
+    "1977",
+    dificultad="Normal")"""
