@@ -5,8 +5,8 @@ from pregunta_aproximacion import Pregunta_aproximacion
 bd=DAO8Escalones("8escalones.db") 
 
 
+#bd.baja_pregunta("19")
 
+pa=Pregunta_aproximacion("Cine y Televisión","¿En qué año se estrenó la primera película de Star Wars?","1977","Normal")
 
-pa=Pregunta_comun("Cine y Televisión","¿En qué año se estrenó la primera película de Star Wars?","1977","Normal", None)
-
-bd.alta_pregunta_normal(pa)
+bd.alta_pregunta_aproximacion(pa)
