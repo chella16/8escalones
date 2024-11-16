@@ -260,6 +260,8 @@ class VistaJuego(MainWindow):
         #Manejo de signals
         self.btnIniciar.clicked.connect(self.signalIniciarJuego.emit)
     
+    def setPreguntaYOpciones(self,pregunta:str,opciones:list):
+        self.preguntaWidget.setPreguntaYOpciones(pregunta,opciones)
     
     def cambiarWidget(self):
         #Alterna entre el widget de preguntas estándar y el de aproximación.
@@ -275,7 +277,7 @@ class VistaJuego(MainWindow):
         random.shuffle(self._listaIconos)
         for i in range(len(self.listaJugadores)):
             self.listaWidgetsJugadores.append(PlayerWidget(self.listaJugadores[i],self._listaIconos[i])) 
-       
+    
     def crearLayout(self):
         mainLayout = QGridLayout()
         
