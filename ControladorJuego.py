@@ -27,8 +27,8 @@ from PyQt6.QtCore import pyqtSignal, QEventLoop,QObject
 #8)
 
 
-class ControladorJuego(QObject):
-    signalContinuar = pyqtSignal()
+class ControladorJuego():
+   
     def __init__(self,contrAnterior,listaJugadores):
         super().__init__()
         self.vista = VistaJuego(listaJugadores)
@@ -40,7 +40,7 @@ class ControladorJuego(QObject):
         self.__escalon_actual=None
         self.__estado_actual=None
         self.__contador_preguntas=0
-        self.__pausa_jugador=True
+        
         self.__pregunta_actual = None #para saber que pregunta es la que esta respondiendo el usuario en el momento que se emite algun signalOp
         self.__lista_van_a_aproximacion=[]
         self.__BD=DAO8Escalones("8escalones.db")
@@ -64,17 +64,12 @@ class ControladorJuego(QObject):
         
     def contestar_pregunta(self,rta_usuario):
         #comparar la rta_usuario con self.__pregunta_actual
+        print(self.__pregunta_actual.verificar_respuesta(rta_usuario))
         if self.__pregunta_actual.verificar_respuesta(rta_usuario): #caso que es correcta la rta
             self.__respuesta_actual_correcta=True#se muestra el Dialog con el texto Correcto
         else:
             self.__respuesta_actual_correcta=False# se muestra el Dialog con el texto Incorrecto
-        self.__pausa= False
-        self.signalContinuar.emit()
-
-
-    def continuar_juego(self): #me parece que esto esta al pedo
-            # Este método se usa para conectar con la señal y manejar la pausa
-            pass
+        
         
     
     def __cargar_temas(self):
@@ -91,14 +86,15 @@ class ControladorJuego(QObject):
     def ronda(self,nro_preg_actual):
         #itera sobre los x jugadores y reparte pregunta (que pregunta esta en escalon)
         for jugador, pregunta in zip(self.__lista_sobrevivientes,self.__escalon_actual.get_lista_preguntas_comunes()[nro_preg_actual:]):
-            self.__pausa=True
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            listaNombresSobrevivientes= [nombre.get_nombre() for nombre in self.__lista_sobrevivientes]
             self.__pregunta_actual = pregunta
             self.__actualizar_vista_rta(self.__pregunta_actual)
-            
-            event_loop = QEventLoop()
-            self.signalContinuar.connect(event_loop.quit) 
-            while self.__pausa:
-                event_loop.exec()
+            self.vista.cambiarColorJugador(listaNombresSobrevivientes,jugador.get_nombre(),0,255,0)
+            self.vista.cronometroWidget.iniciarCronometro() #se crea un cronometro por cada jugador, ya que es un hilo y un mismo hilo no se puede ejecutar mas de una vez
+            eventLoop = QEventLoop()
+            self.vista.cronometroWidget.signalJugadorTerminoTurno.connect(eventLoop.quit)   
+            eventLoop.exec()
             
             
             if not self.__respuesta_actual_correcta:
@@ -123,14 +119,23 @@ class ControladorJuego(QObject):
         self.resetRondaActuales()
 
     def comparar_strikes(self):
-        
-        max_strikes=self.__lista_sobrevivientes[1].get_strikes()
-        self.__lista_van_a_aproximacion.append(self.__lista_sobrevivientes[1])
-        for jugador in self.__lista_sobrevivientes[2:]:
+        max_strikes=self.__lista_sobrevivientes[0].get_strikes()
+        self.__lista_van_a_aproximacion.append(self.__lista_sobrevivientes[0])
+        for jugador in self.__lista_sobrevivientes[1:]:
             if jugador.get_strikes() >= max_strikes:
                 self.__lista_van_a_aproximacion.append(jugador)
                 max_strikes=jugador.get_strikes()
+                
+                print(f"-> {jugador.get_nombre()} {jugador.get_strikes()}")
+             
+        for jugador in self.__lista_van_a_aproximacion: #ver como esta la vista antes de __limpiar_lista_strikes
+            print(jugador.get_nombre())
+               
         self.__limpiar_lista_strikes(max_strikes)
+        
+        for jugador in self.__lista_van_a_aproximacion:
+            print(jugador.get_nombre())
+        
     
     def __limpiar_lista_strikes(self, max_strikes):#va en la de arriba
         
@@ -139,10 +144,11 @@ class ControladorJuego(QObject):
                 self.__lista_van_a_aproximacion.remove(jugador)
     
     def set_estado_partida(self):
+        print(len(self.__lista_van_a_aproximacion))
         if len(self.__lista_van_a_aproximacion)>1:
-            self.__estado_actual=State_con_preg_de_aprox()
+            self.__estado_actual=State_con_preg_de_aprox(self)
         else:
-            self.__estado_actual=State_sin_preg_eliminacion() 
+            self.__estado_actual=State_sin_preg_eliminacion(self) 
     
     def reset_lista_van_aprox(self):
         self.__lista_van_a_aproximacion.clear()
@@ -187,5 +193,6 @@ class State_sin_preg_eliminacion:
     def eliminacion(self):
         jugador_eliminado=self.__instancia_de_juego.get_lista_van_a_aproximacion()[0]#agarra al unico jugador que debería haber
         self.__instancia_de_juego.get_lista_sobrevivientes().remove(jugador_eliminado)#elimino a ese jugador
+        print(jugador_eliminado.get_nombre())
         #pintar jugador de rojo en la vista
         

@@ -1,10 +1,77 @@
 from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout,QGridLayout, QLabel, QPushButton, QWidget, QDialogButtonBox, QDialog,QLineEdit
-from PyQt6.QtCore import Qt,pyqtSignal,QUrl
-from PyQt6.QtGui import QPixmap,QIcon,QPalette,QColor,QFont
+from PyQt6.QtCore import Qt,pyqtSignal,QThread
+from PyQt6.QtGui import QPalette,QColor,QFont,QPixmap 
 from MainWindow import *
 import random
 
+class Cronometro(QThread): #tiene un start, luego muere
+    signalActualizarTiempo = pyqtSignal(int)  
+    signalDetener = pyqtSignal()
 
+    def __init__(self,tiempoLim=30): #por default 30seg
+        super().__init__()
+        self.tiempoLim = tiempoLim
+        self.tiempoRes = tiempoLim
+        self.detenerHilo = False  
+        
+    def run(self):
+        while not self.detenerHilo:  
+            self.msleep(1000) #pausa de 1s
+            self.tiempoRes -= 1 #decrece
+
+            self.signalActualizarTiempo.emit(self.tiempoRes) #informar a la vista para actualizarla  
+            if self.tiempoRes <= 0: 
+                self.quit() 
+                self.detener()
+            
+    def detener(self): #funcion para detner el hilo
+        self.detenerHilo = True
+        self.signalDetener.emit()
+        
+class WidgetCronometro(QWidget): #conectado con iniciar partida, en la vista se manejaria el cronometro en un metodo siguienteJugador que pare el cronometro y lo inicie nuevamente 
+    signalJugadorTerminoTurno = pyqtSignal()
+    
+    def __init__(self,tiempoLim):
+        super().__init__() 
+        self.setFixedHeight(50)
+        self.tiempoLim = tiempoLim
+        self.labelTiempo = QLabel(f"Tiempo: {self.tiempoLim} s",self)
+        self.cronometro = None
+
+        self.crearLayout()
+    
+    def crearLayout(self):
+        fuente = QFont("Arial Black", 12, QFont.Weight.Bold)
+        self.labelTiempo.setFont(fuente)
+        
+        fondo = widgetDeFondoConColor(0,255,0,255)
+        layoutFondo = QVBoxLayout()
+        layoutFondo.addWidget(self.labelTiempo)
+        fondo.setLayout(layoutFondo)
+        
+        mainLayout =QVBoxLayout()
+        mainLayout.addWidget(fondo)
+        self.setLayout(mainLayout)
+    
+        
+    def iniciarCronometro(self): #por cada jugador se debe volver a crear un obj Cronometro, ya que el hilo muere 
+        self.cronometro = Cronometro(self.tiempoLim)
+        self.cronometro.signalDetener.connect(self.signalJugadorTerminoTurno.emit)
+        self.cronometro.signalActualizarTiempo.connect(self.actualizarTiempo) #para que se update la interfaz
+        self.cronometro.start()
+    
+    def pararCronometro(self): #para parar el cronometro desd el controlador cuando el user contesta
+        if self.cronometro: #para que no intente parar un cronometro que no existe (de tipo None)
+            self.cronometro.detener()
+            self.cronometro.quit()  #finaliza el hilo de manera controlada
+            self.cronometro.wait()  #espera a que el hilo termine antes de seguir
+            self.cronometro = None  
+
+    def actualizarTiempo(self, tiempo):
+        print(tiempo)
+        self.labelTiempo.setText(f"Tiempo: {tiempo} s")
+        
+        
 class PlayerWidget(QWidget):
     def __init__(self,nombreJugador:str,urlIcon:str):
         super().__init__()
@@ -255,6 +322,8 @@ class VistaJuego(MainWindow):
         self.preguntaAproximacionWidget = WidgetPregAproximacion()  # Wiidget de aproximación
         self.preguntaAproximacionWidget.hide() #todavia no se debe mostrar 
         self.escalonesWidget = WidgetEscalones() #Widget de los Escalones
+        self.cronometroWidget =WidgetCronometro(30)
+        self.cronometroWidget.hide()
         
         self.setCentralWidget(self.labelFondo)
         self.setJugadores()
@@ -262,7 +331,7 @@ class VistaJuego(MainWindow):
         self.setCentralWidget(self.labelFondo)
         
         #Manejo de signals
-        self.btnIniciar.clicked.connect(lambda :(self.btnIniciar.hide(),self.signalIniciarJuego.emit()))
+        self.btnIniciar.clicked.connect(lambda :(self.cronometroWidget.show(),self.btnIniciar.hide(),self.signalIniciarJuego.emit()))
         self.preguntaWidget.btnRtaA.clicked.connect(self.getRtaA)
         self.preguntaWidget.btnRtaB.clicked.connect(self.getRtaB)
         self.preguntaWidget.btnRtaC.clicked.connect(self.getRtaC)
@@ -286,6 +355,15 @@ class VistaJuego(MainWindow):
         for i in range(len(self.listaJugadores)):
             self.listaWidgetsJugadores.append(PlayerWidget(self.listaJugadores[i],self._listaIconos[i])) 
     
+    def cambiarColorJugador(self,listaNombreSobrevivientes,nombreJugador,red,green,blue): #para que el controlador le cambie el color al jugador actual
+        for widget in self.listaWidgetsJugadores:
+            if widget.nombreJugador not in listaNombreSobrevivientes:
+                continue #ya que no esta en la lista de sobrevivientes, no lo quiero pintar, ya tiene definido su color (Rojo xq esta eliminado)
+            if widget.nombreJugador == nombreJugador:
+                widget.setColorFondo(0,255,0)
+            else:
+                widget.setColorFondo(200,200,200)
+            
     def crearLayout(self):
         mainLayout = QGridLayout()
         
@@ -293,27 +371,31 @@ class VistaJuego(MainWindow):
         for player in self.listaWidgetsJugadores:
             layoutPlayers.addWidget(player)
         
-        
         #config posiciones de los subWidgets
         mainLayout.addWidget(self.preguntaWidget,0,0)
         mainLayout.addWidget(self.preguntaAproximacionWidget, 0, 0)
         mainLayout.addWidget(self.escalonesWidget,0,1)
         mainLayout.addLayout(layoutPlayers,1,0)
-        mainLayout.addWidget(self.btnIniciar,2,0,1,1,alignment=Qt.AlignmentFlag.AlignLeft)
+        mainLayout.addWidget(self.btnIniciar,2,0,alignment=Qt.AlignmentFlag.AlignLeft)
+        mainLayout.addWidget(self.cronometroWidget,2,0,alignment=Qt.AlignmentFlag.AlignLeft)
         self.labelFondo.setLayout(mainLayout)
 
     def getRtaA(self):
+        self.cronometroWidget.pararCronometro()
         rta = self.preguntaWidget.getOpciones()[0]
         self.signalOp1.emit(rta)
         
     def getRtaB(self):
+        self.cronometroWidget.pararCronometro()
         rta = self.preguntaWidget.getOpciones()[1]
         self.signalOp2.emit(rta)
         
     def getRtaC(self):
+        self.cronometroWidget.pararCronometro()
         rta = self.preguntaWidget.getOpciones()[2]
         self.signalOp3.emit(rta)
         
     def getRtaD(self):
+        self.cronometroWidget.pararCronometro()
         rta = self.preguntaWidget.getOpciones()[3]
         self.signalOp4.emit(rta)
