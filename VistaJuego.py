@@ -355,7 +355,7 @@ class VistaJuego(MainWindow):
         for i in range(len(self.listaJugadores)):
             self.listaWidgetsJugadores.append(PlayerWidget(self.listaJugadores[i],self._listaIconos[i])) 
     
-    def cambiarColorJugador(self,listaNombreSobrevivientes,nombreJugador,red,green,blue): #para que el controlador le cambie el color al jugador actual
+    def cambiarColorJugadorRonda(self,listaNombreSobrevivientes,nombreJugador): #metodo para que avance entre los jugadores
         for widget in self.listaWidgetsJugadores:
             if widget.nombreJugador not in listaNombreSobrevivientes:
                 continue #ya que no esta en la lista de sobrevivientes, no lo quiero pintar, ya tiene definido su color (Rojo xq esta eliminado)
@@ -363,7 +363,12 @@ class VistaJuego(MainWindow):
                 widget.setColorFondo(0,255,0)
             else:
                 widget.setColorFondo(200,200,200)
-            
+    
+    def cambiarColorJugadorEliminado(self,nombreJugador):
+        for widget in self.listaWidgetsJugadores:
+            if widget.nombreJugador == nombreJugador:
+                widget.setColorFondo(255,0,0) #rojo
+                
     def crearLayout(self):
         mainLayout = QGridLayout()
         

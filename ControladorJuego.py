@@ -86,11 +86,11 @@ class ControladorJuego():
     def ronda(self,nro_preg_actual):
         #itera sobre los x jugadores y reparte pregunta (que pregunta esta en escalon)
         for jugador, pregunta in zip(self.__lista_sobrevivientes,self.__escalon_actual.get_lista_preguntas_comunes()[nro_preg_actual:]):
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            
             listaNombresSobrevivientes= [nombre.get_nombre() for nombre in self.__lista_sobrevivientes]
             self.__pregunta_actual = pregunta
             self.__actualizar_vista_rta(self.__pregunta_actual)
-            self.vista.cambiarColorJugador(listaNombresSobrevivientes,jugador.get_nombre(),0,255,0)
+            self.vista.cambiarColorJugadorRonda(listaNombresSobrevivientes,jugador.get_nombre()) 
             self.vista.cronometroWidget.iniciarCronometro() #se crea un cronometro por cada jugador, ya que es un hilo y un mismo hilo no se puede ejecutar mas de una vez
             eventLoop = QEventLoop()
             self.vista.cronometroWidget.signalJugadorTerminoTurno.connect(eventLoop.quit)   
@@ -119,30 +119,17 @@ class ControladorJuego():
         self.resetRondaActuales()
 
     def comparar_strikes(self):
-        max_strikes=self.__lista_sobrevivientes[0].get_strikes()
-        self.__lista_van_a_aproximacion.append(self.__lista_sobrevivientes[0])
-        for jugador in self.__lista_sobrevivientes[1:]:
-            if jugador.get_strikes() >= max_strikes:
-                self.__lista_van_a_aproximacion.append(jugador)
+        max_strikes = 0
+        for jugador in self.__lista_sobrevivientes:
+            if jugador.get_strikes() > max_strikes:
                 max_strikes=jugador.get_strikes()
-                
-                print(f"-> {jugador.get_nombre()} {jugador.get_strikes()}")
-             
-        for jugador in self.__lista_van_a_aproximacion: #ver como esta la vista antes de __limpiar_lista_strikes
-            print(jugador.get_nombre())
-               
+         
         self.__limpiar_lista_strikes(max_strikes)
-        
-        for jugador in self.__lista_van_a_aproximacion:
-            print(jugador.get_nombre())
-        
-    
+
     def __limpiar_lista_strikes(self, max_strikes):#va en la de arriba
+        self.__lista_van_a_aproximacion = [jugador for jugador in self.__lista_sobrevivientes if jugador.get_strikes() == max_strikes]
         
-        for jugador in self.__lista_van_a_aproximacion:
-            if jugador.get_strikes()<max_strikes:
-                self.__lista_van_a_aproximacion.remove(jugador)
-    
+        
     def set_estado_partida(self):
         print(len(self.__lista_van_a_aproximacion))
         if len(self.__lista_van_a_aproximacion)>1:
@@ -161,7 +148,7 @@ class ControladorJuego():
     def get_lista_sobrevivientes(self):
         return self.__lista_sobrevivientes
     
-    def get_lista_lista_van_a_aproximacion(self):
+    def get_lista_van_a_aproximacion(self):
         return self.__lista_van_a_aproximacion
         
 #############################PRINTS PARA PROBAR######################################
@@ -187,12 +174,11 @@ class State_con_preg_de_aprox:
         
 class State_sin_preg_eliminacion:
     
-    def __init__(self, controlador):
+    def __init__(self, controlador:ControladorJuego):
         self.__instancia_de_juego=controlador
         
     def eliminacion(self):
         jugador_eliminado=self.__instancia_de_juego.get_lista_van_a_aproximacion()[0]#agarra al unico jugador que debería haber
         self.__instancia_de_juego.get_lista_sobrevivientes().remove(jugador_eliminado)#elimino a ese jugador
-        print(jugador_eliminado.get_nombre())
-        #pintar jugador de rojo en la vista
+        self.__instancia_de_juego.vista.cambiarColorJugadorEliminado(jugador_eliminado.get_nombre()) #pintar jugador de rojo en la vista
         
