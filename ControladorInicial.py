@@ -35,7 +35,7 @@ class ControladorInicial():
             self.controladorOpciones = ControladorOpciones(self)
         else:
             self.controladorOpciones.vista.show()
-
+            
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)

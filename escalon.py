@@ -1,8 +1,4 @@
-from pregunta import Pregunta
-from pregunta_comun import Pregunta_comun
-from pregunta_aproximacion import Pregunta_aproximacion
-from base_de_datos.conexiones_bd import DAO8Escalones
-import random
+
 class Escalon:
     
     #el tema esta en la lista de temas del controlador del juego, se hace un random choice del tema y se le pasa como parámetro al escalon
@@ -12,7 +8,7 @@ class Escalon:
     def __init__(self, tema, dificultad): 
         self.__tema=tema
         self.__lista_preguntas_comunes=[] 
-        self.__pregunta_aproximacion=None
+        self.__lista_preguntas_aproximacion=[]
         self.__dificultad=dificultad
         
     #podria modularizar las 2 consultas para que no quede un metodo tan extenso   
@@ -21,7 +17,7 @@ class Escalon:
         self.__lista_preguntas_comunes=bd.descargar_preguntas_normales(self.__tema, self.__dificultad)
     
     def __cargar_pregunta_aproximacion(self,bd):
-        self.__pregunta_aproximacion=bd.descargar_pregunta_aproximacion(self.__tema, self.__dificultad)
+        self.__lista_preguntas_aproximacion=bd.descargar_pregunta_aproximacion(self.__tema, self.__dificultad)
         
     def set_escalon(self,bd):#el controlador interactua con esto y con los get si se quisiera
         self.__cargar_lista_preguntas_comunes(bd)
@@ -32,6 +28,6 @@ class Escalon:
             
     
     def get_pregunta_aproximacion(self):
-        return self.__pregunta_aproximacion
+        return self.__lista_preguntas_aproximacion
     
     

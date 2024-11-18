@@ -52,10 +52,10 @@ class WidgetCronometro(QWidget): #conectado con iniciar partida, en la vista se 
         mainLayout =QVBoxLayout()
         mainLayout.addWidget(fondo)
         self.setLayout(mainLayout)
-    
+   
         
     def iniciarCronometro(self): #por cada jugador se debe volver a crear un obj Cronometro, ya que el hilo muere 
-        self.cronometro = Cronometro(self.tiempoLim)
+        self.cronometro = Cronometro(30)
         self.cronometro.signalDetener.connect(self.signalJugadorTerminoTurno.emit)
         self.cronometro.signalActualizarTiempo.connect(self.actualizarTiempo) #para que se update la interfaz
         self.cronometro.start()
@@ -215,7 +215,7 @@ class WidgetEscalones(QWidget):
     def crearLayout(self):
         layout = QVBoxLayout()
         layout.setSpacing(0)       # Sin espacio entre los escalones
-        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setContentsMargins(0, 0, 0, 0) 
         
         for escalon in reversed(self.listaEscalonesWidgets):
             layout.addWidget(escalon)
@@ -253,6 +253,7 @@ class CustomDialogRespuesta(QDialog): #Dialog que salta cuando se selecciona una
 
 
 class WidgetPregAproximacion(QWidget):
+
     def __init__(self):
         super().__init__()
         self.setFixedSize(500,200)
@@ -269,15 +270,7 @@ class WidgetPregAproximacion(QWidget):
         # Crear Input para Rta del usuario
         self.rtaUser = QLineEdit() 
         self.rtaUser.setPlaceholderText("Ingresa tu respuesta aquí")
-        self.rtaUser.setAlignment(Qt.AlignmentFlag.AlignCenter)  
-        
- #!!!!       #self.rtaUser.returnPressed.connect()#al presionar enter se envia la rta mediante el slot al controlador, deberia primero pasar x un metodo que se fije si el str esta bien
-    
-    def verificarInput(self):
-        if self.rtaUser.text() == "" or " " in self.rtaUser.text():
-            self.rtaUser.setPlaceholderText("Ingrese una respuesta sin espacios en blanco")
-            return
-        # aca se emitira una signal para el controlador con la rta o algo asi
+        self.rtaUser.setAlignment(Qt.AlignmentFlag.AlignCenter)      
         
     def crearLayout(self):
         #darle un fondo a el texto de la pregunta
@@ -292,14 +285,42 @@ class WidgetPregAproximacion(QWidget):
         mainLayout.addWidget(self.rtaUser)
         
         self.setLayout(mainLayout)
+    
+    def setPreguntaAprox(self,pregunta):
+        self.labelPreguntaArpox.setText(pregunta)
 
 
+class WidgetStrikesJugador(QWidget):
+    def __init__(self):
+        super().__init__() 
+        self.setFixedHeight(50)
+        self.cantPreguntas = 2
+        self.labelStrikes = QLabel(f"Errores: 0/{self.cantPreguntas}",self)
+        self.crearLayout()
+    
+    def crearLayout(self):
+        fuente = QFont("Arial Black", 10, QFont.Weight.Bold)
+        self.labelStrikes.setFont(fuente)
+        
+        fondo = widgetDeFondoConColor(255,255,0,255)
+        layoutFondo = QVBoxLayout()
+        layoutFondo.addWidget(self.labelStrikes)
+        fondo.setLayout(layoutFondo)
+        
+        mainLayout =QVBoxLayout()
+        mainLayout.addWidget(fondo)
+        self.setLayout(mainLayout)
+    
+    def actualizarStrikes(self,strikes):
+        self.labelStrikes.setText(f"Errores: {strikes}/{self.cantPreguntas}")
+   
 
 class VistaJuego(MainWindow):  
     signalOp1 = pyqtSignal(str)
     signalOp2 = pyqtSignal(str)
     signalOp3 = pyqtSignal(str)
     signalOp4 = pyqtSignal(str)
+    signalRtaAprox = pyqtSignal(str)
     
     signalIniciarJuego = pyqtSignal()
     _listaIconos = ["Images/PlayersIcons/playerIcon1.jpg",
@@ -324,6 +345,8 @@ class VistaJuego(MainWindow):
         self.escalonesWidget = WidgetEscalones() #Widget de los Escalones
         self.cronometroWidget =WidgetCronometro(30)
         self.cronometroWidget.hide()
+        self.strikesWidget = WidgetStrikesJugador()
+        self.strikesWidget.hide()
         
         self.setCentralWidget(self.labelFondo)
         self.setJugadores()
@@ -331,15 +354,30 @@ class VistaJuego(MainWindow):
         self.setCentralWidget(self.labelFondo)
         
         #Manejo de signals
-        self.btnIniciar.clicked.connect(lambda :(self.cronometroWidget.show(),self.btnIniciar.hide(),self.signalIniciarJuego.emit()))
+        self.btnIniciar.clicked.connect(lambda :(self.cronometroWidget.show(),self.strikesWidget.show(),self.btnIniciar.hide(),self.signalIniciarJuego.emit()))
         self.preguntaWidget.btnRtaA.clicked.connect(self.getRtaA)
         self.preguntaWidget.btnRtaB.clicked.connect(self.getRtaB)
         self.preguntaWidget.btnRtaC.clicked.connect(self.getRtaC)
         self.preguntaWidget.btnRtaD.clicked.connect(self.getRtaD)
+        
+        self.preguntaAproximacionWidget.rtaUser.returnPressed.connect(self.verificarInputAprox)#al presionar enter se envia la rta mediante el slot al controlador, deberia primero pasar x un metodo que se fije si el str esta bien
+        #Limpiar el input cuando se presiona enter
     
+    def mostrarStrikes(self,strikes):
+        self.strikesWidget.actualizarStrikes(strikes) 
+        
+    def ocultarStrikes(self):
+        self.strikesWidget.hide()
+        
     def setPreguntaYOpciones(self,pregunta:str,opciones:list):
         self.preguntaWidget.setPreguntaYOpciones(pregunta,opciones)
+        
+    def subirEscalon(self):
+        self.escalonesWidget.subirEscalon()
     
+    def setWidgetPregAprox(self,preguntaAprox):
+        self.preguntaAproximacionWidget.setPreguntaAprox(preguntaAprox)
+        
     def cambiarWidget(self):
         #Alterna entre el widget de preguntas estándar y el de aproximación.
         #Este método será llamado mediante una señal desde el controlador.
@@ -354,13 +392,14 @@ class VistaJuego(MainWindow):
         random.shuffle(self._listaIconos)
         for i in range(len(self.listaJugadores)):
             self.listaWidgetsJugadores.append(PlayerWidget(self.listaJugadores[i],self._listaIconos[i])) 
+            
     
-    def cambiarColorJugadorRonda(self,listaNombreSobrevivientes,nombreJugador): #metodo para que avance entre los jugadores
+    def cambiarColorJugadorRonda(self,listaNombreSobrevivientes,nombreJugador,red,green,blue): #metodo para que avance entre los jugadores
         for widget in self.listaWidgetsJugadores:
             if widget.nombreJugador not in listaNombreSobrevivientes:
                 continue #ya que no esta en la lista de sobrevivientes, no lo quiero pintar, ya tiene definido su color (Rojo xq esta eliminado)
             if widget.nombreJugador == nombreJugador:
-                widget.setColorFondo(0,255,0)
+                widget.setColorFondo(red,green,blue)
             else:
                 widget.setColorFondo(200,200,200)
     
@@ -375,14 +414,17 @@ class VistaJuego(MainWindow):
         layoutPlayers = QHBoxLayout()
         for player in self.listaWidgetsJugadores:
             layoutPlayers.addWidget(player)
-        
+        subLayout = QHBoxLayout()
+        subLayout.addWidget(self.cronometroWidget)
+        subLayout.addWidget(self.strikesWidget)
+
         #config posiciones de los subWidgets
         mainLayout.addWidget(self.preguntaWidget,0,0)
         mainLayout.addWidget(self.preguntaAproximacionWidget, 0, 0)
         mainLayout.addWidget(self.escalonesWidget,0,1)
         mainLayout.addLayout(layoutPlayers,1,0)
         mainLayout.addWidget(self.btnIniciar,2,0,alignment=Qt.AlignmentFlag.AlignLeft)
-        mainLayout.addWidget(self.cronometroWidget,2,0,alignment=Qt.AlignmentFlag.AlignLeft)
+        mainLayout.addLayout(subLayout,2,0,alignment=Qt.AlignmentFlag.AlignLeft)
         self.labelFondo.setLayout(mainLayout)
 
     def getRtaA(self):
@@ -404,3 +446,13 @@ class VistaJuego(MainWindow):
         self.cronometroWidget.pararCronometro()
         rta = self.preguntaWidget.getOpciones()[3]
         self.signalOp4.emit(rta)
+    
+    def verificarInputAprox(self): #se activa este metodo cuando el user ingresa enter en el input de su pregunta de aproximacion
+        rta = self.preguntaAproximacionWidget.rtaUser.text()
+        self.preguntaAproximacionWidget.rtaUser.clear()
+        if rta == "" or " " in rta:
+            self.preguntaAproximacionWidget.rtaUser.setPlaceholderText("Ingrese una respuesta sin espacios en blanco")
+            return
+        self.cronometroWidget.pararCronometro()
+        self.signalRtaAprox.emit(rta)
+       
