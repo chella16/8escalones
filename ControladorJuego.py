@@ -56,8 +56,8 @@ class ControladorJuego():
         self.vista.signalOp4.connect(self.contestar_pregunta)
         
         
-        
-
+        ###POR AHORA XQ NO ESTAN TODOS LOS ESCALONES######
+        self.__lista_temas_aux=["Cine y Televisión","Cultura General"]
         
     def __actualizar_vista_rta(self, pregunta):
         self.vista.setPreguntaYOpciones(pregunta.get_consigna(),pregunta.get_opciones())
@@ -106,9 +106,9 @@ class ControladorJuego():
     
         
     def ejecutar_escalon(self):
-        tema_random=random.choice(self.__lista_temas)
-        self.__lista_temas.remove(tema_random)
-        self.__escalon_actual=Escalon("Cine y Televisión", self.__dificultad)
+        tema_random=random.choice(self.__lista_temas_aux)
+        self.__lista_temas_aux.remove(tema_random)
+        self.__escalon_actual=Escalon(tema_random, self.__dificultad)
         self.__escalon_actual.set_escalon(self.__BD)#hay q ver si chela hizo la bajada de preguntas
         nro_preg_actual = 0
         for ronda in range(2):
