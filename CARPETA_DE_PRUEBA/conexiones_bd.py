@@ -171,7 +171,7 @@ class DAO8Escalones:
         id_dificultad_buscada = resu[0]
         
         c.execute ("""SELECT id_pregunta, desarrollo_pregunta, rta_correcta, lista_opciones 
-                FROM preguntas WHERE id_tema = (?) AND id_dificultad = (?) AND lista_opciones IS NOT ORDER BY RANDOM()""", 
+                FROM preguntas WHERE id_tema = (?) AND id_dificultad = (?) AND lista_opciones IS NOT NULL ORDER BY RANDOM()""", 
                 (id_tema_buscado, id_dificultad_buscada,))
         lista_preguntas = c.fetchall()
         

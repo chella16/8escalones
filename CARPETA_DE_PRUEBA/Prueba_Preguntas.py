@@ -28,7 +28,7 @@ base_datos.alta_tematica(tematica1)
 
 #base_datos.alta_pregunta_normal(pregunta1)
 #base_datos.mostrar_lista_de_preguntas()
-base_datos.alta_dificultad()
+#base_datos.alta_dificultad()
 #base_datos.mostrar_dificultades()
 #base_datos.eliminar_todas_preguntas()
 

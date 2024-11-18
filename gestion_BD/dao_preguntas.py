@@ -1,6 +1,10 @@
 import sqlite3
 import json
+import sys
+import os
 from interfaz_dao import Interfaz_DAO
+sys.path.append(os.path.abspath("8escalones"))
+from preguntas import Pregunta_aproximacion, Pregunta_comun
 
 class DAO_Preguntas(Interfaz_DAO):
     
@@ -133,10 +137,10 @@ class DAO_Preguntas(Interfaz_DAO):
         self._BD.cerrar_conexion()
     
     #############################################################################################
-    def descargar_preguntas_normales (self, nombre_tema, dificultad_buscada):
+    def descargar_preguntas_comunes (self, nombre_tema, dificultad_buscada):
         lista_aux = []
         cantidad = 0
-        preguntas_usadas = set()
+        preguntas_usadas = set() ##capaz que es al pedo esto pq no se repite ninguna preg XD
         
         conexion = self._BD.get_conexion()
         c= conexion.cursor()
@@ -149,8 +153,8 @@ class DAO_Preguntas(Interfaz_DAO):
         id_dificultad_buscada = resu[0]
         
         c.execute ("""SELECT id_pregunta, desarrollo_pregunta, rta_correcta, lista_opciones 
-                FROM preguntas WHERE id_tema = (?) AND id_dificultad = (?) AND lista_opciones IS NOT ORDER BY RANDOM()""", 
-                (id_tema_buscado, id_dificultad_buscada,))
+                FROM preguntas WHERE id_tema = (?) AND id_dificultad = (?) AND lista_opciones IS NOT NULL
+                ORDER BY RANDOM()""", (id_tema_buscado, id_dificultad_buscada,))
         lista_preguntas = c.fetchall()
         
         for id_pregunta, desarrollo_pregunta, rta_correcta, lista_opciones in lista_preguntas:
@@ -162,37 +166,37 @@ class DAO_Preguntas(Interfaz_DAO):
                 lista_aux.append(pregunta_aux)
                 print("cargando pregunta...")
                 preguntas_usadas.add(id_pregunta)
-            if cantidad == 19: #deberia ser 18 pero por prueba es 2
+            if cantidad == 19: #nose si esta tan bueno que sean 19, capaz para reusarlo estaria bueno devolverla completa
                 break
         print("retornando...")
-        conexion.commit()
         self._BD.cerrar_conexion()
         return lista_aux
     
-    def descargar_pregunta_aproximacion (self, nombre_tema, dificultad_buscada):
-        self.crear_conexion()
-        c = self._conexion.cursor()
+    def descargar_preguntas_aproximacion (self, nombre_tema, dificultad_buscada):
+        lista_aux = []
+        preguntas_usadas = set()
+        
+        conexion = self._BD.get_conexion()
+        c= conexion.cursor()
         c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tema,))
         resu = c.fetchone()
         id_tema_buscado = resu[0]
         
-        c.execute("SELECT id_dificultad FROM dificultades WHERE LOWER(nombre_dificultad) = LOWER(?)", (dificultad_buscada,))
+        c.execute("SELECT id_dificultad FROM dificultades WHERE LOWER(nombre_dificultad) = LOWER(?)",(dificultad_buscada,))
         resu = c.fetchone()
         id_dificultad_buscada = resu[0]
         
-        c.execute("SELECT id_pregunta FROM preguntas WHERE id_dificultad = (?) AND id_tema = (?) AND lista_opciones IS NULL", (id_dificultad_buscada, id_tema_buscado,))
-        resu = c.fetchone()
-        id_pregunta = resu[0]
+        c.execute("""SELECT id_pregunta, desarrollo_pregunta, rta_correcta 
+                FROM preguntas WHERE id_dificultad = (?) AND id_tema = (?) AND lista_opciones IS NULL""",
+                (id_dificultad_buscada, id_tema_buscado,))
+        lista_preguntas = c.fetchall()
         
-        c.execute("SELECT desarrollo_pregunta FROM preguntas WHERE id_pregunta = (?)", (id_pregunta,))
-        resu = c.fetchone()
-        desarrollo_preg = resu[0]
-        
-        c.execute("SELECT rta_correcta FROM preguntas WHERE id_pregunta = (?)", (id_pregunta,))
-        resu = c.fetchone()
-        rta_correcta = resu[0]
-        
-        pregunta_aux = Pregunta_aproximacion(id_tema_buscado, desarrollo_preg, rta_correcta, id_dificultad_buscada)
-        pregunta_aux.set_id(id_pregunta)
-        print("retornando...")
-        return pregunta_aux
+        for id_pregunta, desarrollo_pregunta, rta_correcta in lista_preguntas:
+            if id_pregunta not in preguntas_usadas:
+                pregunta_aux = Pregunta_aproximacion(id_tema_buscado, desarrollo_pregunta, rta_correcta, id_dificultad_buscada)
+                pregunta_aux.set_id(id_pregunta)
+                lista_aux.append(pregunta_aux)
+                print("cargando pregunta...")
+                preguntas_usadas.add(id_pregunta)
+        self._BD.cerrar_conexion()
+        return lista_aux

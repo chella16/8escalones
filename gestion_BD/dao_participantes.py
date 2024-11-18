@@ -1,7 +1,7 @@
 import sqlite3
-from interfaz_abm import Interfaz_ABM
+from interfaz_dao import Interfaz_DAO
 
-class ABM_Participante (Interfaz_ABM):
+class DAO_Participantes (Interfaz_DAO):
     
     def __init__(self, bd):
         super().__init__(bd)
