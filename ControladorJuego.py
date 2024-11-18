@@ -1,7 +1,10 @@
 from VistaJuego import VistaJuego
 from jugador import Jugador
 from escalon import Escalon
-from base_de_datos.conexiones_bd import DAO8Escalones
+from base_datos import Base_Datos_8Escalones
+from dao_temas import DAO_Temas
+from dao_participantes import DAO_Participantes
+from dao_preguntas import DAO_Preguntas
 import random
 import time
 from PyQt6.QtCore import pyqtSignal, QEventLoop,QObject
@@ -41,7 +44,7 @@ class ControladorJuego():
         
         self.__pregunta_actual = None #para saber que pregunta es la que esta respondiendo el usuario en el momento que se emite algun signalOp
         self.__lista_van_a_aproximacion=[]
-        self.__BD=DAO8Escalones("8escalones.db")
+        self.__BD=Base_Datos_8Escalones("8escalones.db")
         self.__cargar_jugadores()
         self.__cargar_temas()
         self.__dificultad='Normal'
@@ -77,12 +80,14 @@ class ControladorJuego():
     
     
     def __cargar_temas(self):
-        lista_tematicas=self.__BD.descargar_tematicas()
+        bd=DAO_Temas(self.__BD)
+        lista_tematicas=bd.descargar_temas()
         self.__lista_temas=lista_tematicas
     
     def __cargar_jugadores(self):
+        bd=DAO_Participantes(self.__BD)
         for jugador in self.__lista_sobrevivientes:
-            self.__BD.alta_participante(jugador)
+            bd.alta(jugador)
     
 
     def ronda(self,nro_preg_actual):
@@ -110,7 +115,8 @@ class ControladorJuego():
         tema_random=random.choice(self.__lista_temas_aux)
         self.__lista_temas_aux.remove(tema_random)
         self.__escalon_actual=Escalon(tema_random, self.__dificultad)
-        self.__escalon_actual.set_escalon(self.__BD)#hay q ver si chela hizo la bajada de preguntas
+        bd=DAO_Preguntas(self.__BD)
+        self.__escalon_actual.set_escalon(bd)#hay q ver si chela hizo la bajada de preguntas
         nro_preg_actual = 0
         for ronda in range(2):
             nro_preg_actual = self.ronda(nro_preg_actual)
