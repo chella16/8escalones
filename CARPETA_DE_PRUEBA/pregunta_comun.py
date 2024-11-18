@@ -19,5 +19,8 @@ class Pregunta_comun(Pregunta):#Una pregunta común tiene: opciones, y el métod
     
     def mostrar_info_preg (self):
         print (f"""ID pregunta = {self._id}; Tema = {self._tematica}, Pregunta = {self._consigna},
-            Rta Correcta = {self._respuesta_correcta}, Dificultad = {self._dificultad},
-            Opciones = {self.__opciones}""")
+            Rta Correcta = {self._respuesta_correcta}, Dificultad = {self._dificultad}""")
+        print("Opciones=")
+        lista = self.get_opciones()
+        for opcion in lista:
+            print (opcion)

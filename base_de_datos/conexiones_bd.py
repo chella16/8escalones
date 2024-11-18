@@ -1,14 +1,15 @@
 import sqlite3
 import json
-from pregunta_aproximacion import Pregunta_aproximacion
+#from pregunta_aproximacion import Pregunta_aproximacion
 from tematica import Tematica
 from pregunta_comun import Pregunta_comun
 from pregunta_aproximacion import Pregunta_aproximacion
 
 class DAO8Escalones:
-    def __init__ (self, nombre_BD):
+    def __init__ (self, nombre_BD, bd):
         self.nombre_BD = nombre_BD
         self._conexion = ""
+        self._BD = bd
     
     def crear_conexion (self):
         self._conexion = sqlite3.connect(self.nombre_BD)
@@ -19,81 +20,13 @@ class DAO8Escalones:
     
     def comitear_cambios (self):
         self._conexion.commit()
-    
-    def _crear_tablas (self):
-        try:
-            self.crear_conexion()
-            c = self._conexion.cursor()
-            c.execute(""" CREATE TABLE IF NOT EXISTS participantes
-                    (id_participante INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nombre_participante TEXT)
-                    """)
-            c.execute (""" CREATE TABLE IF NOT EXISTS dificultades
-                    (id_dificultad INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nombre_dificultad TEXT)
-                    """)
-            c.execute (""" CREATE TABLE IF NOT EXISTS temas
-                    (id_tema INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nombre_tema TEXT)
-                    """)
-            c.execute("""CREATE TABLE IF NOT EXISTS partidas
-                    (id_partida INTEGER PRIMARY KEY AUTOINCREMENT,
-                    id_participante_ganador INTEGER,
-                    FOREIGN KEY (id_participante_ganador) REFERENCES participantes(id_participante))
-                    """)
-            c.execute(""" CREATE TABLE IF NOT EXISTS participaciones
-                    ("id_participante"	INTEGER NOT NULL,
-                    "id_partida"	INTEGER NOT NULL,
-                    PRIMARY KEY("id_participante","id_partida"),
-                    CONSTRAINT "participante" FOREIGN KEY("id_participante") REFERENCES "participantes"("id_participante"),
-                    CONSTRAINT "partida" FOREIGN KEY("id_partida") REFERENCES "partidas"("id_partida"));
-                    """)
-            c.execute("""
-                    CREATE TABLE IF NOT EXISTS escalon (
-                    nro_escalon INTEGER PRIMARY KEY,
-                    id_partida INTEGER,
-                    id_tema INTEGER,
-                    FOREIGN KEY (id_partida) REFERENCES partida(id_partida),
-                    FOREIGN KEY (id_tema) REFERENCES temas(id_tema))
-                    """)
-            c.execute ("""
-                    CREATE TABLE IF NOT EXISTS preguntas (
-                    id_pregunta INTEGER PRIMARY KEY AUTOINCREMENT,
-                    desarrollo_pregunta TEXT,
-                    rta_correcta TEXT,
-                    lista_opciones TEXT,
-                    id_tema INTEGER,
-                    id_dificultad INTEGER,
-                    FOREIGN KEY (id_tema) REFERENCES temas(id_tema),
-                    FOREIGN KEY (id_dificultad) REFERENCES dificultades(id_dificultad))
-                    """)
-            #c.execute ("""
-                    #CREATE TABLE IF NOT EXISTS pregunta_aproximacion (
-                    #id_pregunta INTEGER PRIMARY KEY AUTOINCREMENT,
-                    #desarrollo_pregunta TEXT,
-                    #rta_correcta TEXT,
-                    #id_tema INTEGER,
-                    #id_dificultad INTEGER,
-                    #FOREIGN KEY (id_tema) REFERENCES temas(id_tema),
-                    #FOREIGN KEY (id_dificultad) REFERENCES dificultades(id_dificultad))
-                    #""")
-            c.execute ("""
-                    CREATE TABLE IF NOT EXISTS administradores (
-                    id_administrador INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nombre_administrador TEXT,
-                    contraseña_administrador TEXT)
-                    """)
-            print ("Tablas creadas!")
-            self._conexion.commit()
-        except Exception as E:
-            print (f"Error!! {E}")
-        finally:
-            self.cerrar_conexion()
     ############################################### PARTICIPANTES ############################################################
     def alta_participante (self, participante):
         nombre_participante_aux = participante.get_nombre()
-        self.crear_conexion()
-        c = self._conexion.cursor()
+        conexion = self._BD.get_conexion()
+        c= conexion.cursor()
+        ##self.crear_conexion()
+        ##c = self._conexion.cursor()
         c.execute ("SELECT 1 FROM participantes WHERE LOWER(nombre_participante) = LOWER(?)", (nombre_participante_aux,))
         resu = c.fetchone()
         if resu:
@@ -106,26 +39,41 @@ class DAO8Escalones:
         resu = c.fetchone()
         id_participante = resu[0]
         participante.set_id(id_participante)
-        self.comitear_cambios()
-        self.cerrar_conexion()
+        conexion.commit()
+        self._BD.cerrar_conexion()
+        ##self.comitear_cambios()
+        ##self.cerrar_conexion()
     
     def modificar_participante (self, participante_buscado, nombre_nuevo):
         id_participante_buscado = participante_buscado.get_id()
-        self.crear_conexion()
-        c = self._conexion.cursor()
-        c.execute ("UPDATE participantes SET (nombre_participante) = ? WHERE id_participante = ?",(nombre_nuevo, id_participante_buscado,))
-        self.comitear_cambios()
-        self.cerrar_conexion()
+        ##self.crear_conexion()
+        ##c = self._conexion.cursor()
+        conexion = self._BD.get_conexion()
+        c= conexion.cursor()
+        c.execute ("SELECT 1 FROM participantes WHERE LOWER(nombre_participante) = LOWER(?)", (nombre_nuevo,))
+        resu = c.fetchone()
+        if resu:
+            print(f"Se encontro coincidencia de {nombre_nuevo} para modificar asi que no se va a modificar")
+        else:
+            print(f"Como no se encontro coincidencia de {nombre_nuevo} se va a modificar")
+            c.execute ("UPDATE participantes SET (nombre_participante) = ? WHERE id_participante = ?",(nombre_nuevo, id_participante_buscado,))
+        ##self.comitear_cambios()
+        ##self.cerrar_conexion()
+        conexion.commit()
+        self._BD.cerrar_conexion()
     
     def baja_participante (self, jugador_eliminar):
         id_jugador_eliminar = jugador_eliminar.get_id()
-        self.crear_conexion()
-        c = self._conexion.cursor()
+        ##self.crear_conexion()
+        ##c = self._conexion.cursor()
+        conexion = self._BD.get_conexion()
+        c= conexion.cursor()
         c.execute("DELETE FROM participantes WHERE id_participante = ?", (id_jugador_eliminar,))
         c.execute("DELETE FROM sqlite_sequence WHERE name = 'participantes'")
-        self.comitear_cambios()
-        self.cerrar_conexion()
-        
+        ##self.comitear_cambios()
+        ##self.cerrar_conexion()
+        conexion.commit()
+        self._BD.cerrar_conexion()
     ########################################## PREGUNTAS #################################################################
     def alta_pregunta_normal (self, pregunta_normal):
         #suponiendo que desde la interfaz ya se eligió cual tema de pregunta va a ser y la dificultad
@@ -241,33 +189,33 @@ class DAO8Escalones:
         print("retornando...")
         return lista_aux
     
-    def descargar_pregunta_aproximacion (self, nombre_tema, dificultad_buscada):
+    def descargar_preguntas_aproximacion (self, nombre_tema, dificultad_buscada):
+        lista_aux = []
+        preguntas_usadas = set()
+        
         self.crear_conexion()
         c = self._conexion.cursor()
         c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tema,))
         resu = c.fetchone()
         id_tema_buscado = resu[0]
         
-        c.execute("SELECT id_dificultad FROM dificultades WHERE LOWER(nombre_dificultad) = LOWER(?)", (dificultad_buscada,))
+        c.execute("SELECT id_dificultad FROM dificultades WHERE LOWER(nombre_dificultad) = LOWER(?)",(dificultad_buscada,))
         resu = c.fetchone()
         id_dificultad_buscada = resu[0]
         
-        c.execute("SELECT id_pregunta FROM preguntas WHERE id_dificultad = (?) AND id_tema = (?) AND lista_opciones IS NULL", (id_dificultad_buscada, id_tema_buscado,))
-        resu = c.fetchone()
-        id_pregunta = resu[0]
+        c.execute("""SELECT id_pregunta, desarrollo_pregunta, rta_correcta 
+                FROM preguntas WHERE id_dificultad = (?) AND id_tema = (?) AND lista_opciones IS NULL""",
+                (id_dificultad_buscada, id_tema_buscado,))
+        lista_preguntas = c.fetchall()
         
-        c.execute("SELECT desarrollo_pregunta FROM preguntas WHERE id_pregunta = (?)", (id_pregunta,))
-        resu = c.fetchone()
-        desarrollo_preg = resu[0]
-        
-        c.execute("SELECT rta_correcta FROM preguntas WHERE id_pregunta = (?)", (id_pregunta,))
-        resu = c.fetchone()
-        rta_correcta = resu[0]
-        
-        pregunta_aux = Pregunta_aproximacion(id_tema_buscado, desarrollo_preg, rta_correcta, id_dificultad_buscada)
-        pregunta_aux.set_id(id_pregunta)
-        print("retornando...")
-        return pregunta_aux
+        for id_pregunta, desarrollo_pregunta, rta_correcta in lista_preguntas:
+            if id_pregunta not in preguntas_usadas:
+                pregunta_aux = Pregunta_aproximacion(id_tema_buscado, desarrollo_pregunta, rta_correcta, id_dificultad_buscada)
+                pregunta_aux.set_id(id_pregunta)
+                lista_aux.append(pregunta_aux)
+                print("cargando pregunta...")
+                preguntas_usadas.add(id_pregunta)
+        return lista_aux
     
     
     ########################################### TEMATICAS ################################################################

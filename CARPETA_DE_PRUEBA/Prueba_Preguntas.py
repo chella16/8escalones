@@ -1,13 +1,22 @@
 from pregunta_comun import Pregunta_comun
 from pregunta_aproximacion import Pregunta_aproximacion
 from conexiones_bd import DAO8Escalones
+from base_datos import Base_Datos_8Escalones
 from tematica import Tematica
 from jugador import Jugador
 
-base_datos = DAO8Escalones('8escalones.db')
+db_path = "8escalones.db"
+db_singleton1 = Base_Datos_8Escalones(db_path)
+base_datos = DAO8Escalones('8escalones.db', db_singleton1)
+print ("conectada sin problemas...")
 
-#tematica1 = Tematica('Entretenimiento')
-#base_datos.alta_tematica(tematica1)
+participante1 = Jugador("participantenpc")
+#base_datos.alta_participante(participante1)
+base_datos.modificar_participante(participante1, "cavipelotudo")
+#base_datos.baja_participante(participante1)
+
+tematica1 = Tematica('Entretenimiento')
+base_datos.alta_tematica(tematica1)
 #base_datos.mostrar_tematicas()
 #tematica1.mostrar_info()
 #base_datos.eliminar_todas_tematicas()
@@ -53,7 +62,7 @@ base_datos = DAO8Escalones('8escalones.db')
 #pregunta3 = Pregunta_aproximacion("deportes", "pregunta aproximacion?", "100", "normal")
 #base_datos.alta_pregunta_aproximacion(pregunta3)
 
-lista_preg = []
-lista_preg = base_datos.descargar_preguntas_normales('deportes', 'normal')
-for p in lista_preg:
-    p.mostrar_info_preg()
+#lista_preg = []
+#lista_preg = base_datos.descargar_preguntas_normales('cine y televisión', 'normal')
+#for p in lista_preg:
+    #p.mostrar_info_preg()
