@@ -28,7 +28,6 @@ from PyQt6.QtCore import pyqtSignal, QEventLoop,QObject
 
 
 class ControladorJuego():
-   
     def __init__(self,contrAnterior,listaJugadores):
         super().__init__()
         self.vista = VistaJuego(listaJugadores)
@@ -49,7 +48,7 @@ class ControladorJuego():
         self.__dificultad='Normal'
         self.__respuesta_actual_correcta=None
         #Conexion signals
-        self.vista.signalIniciarJuego.connect(self.ejecutar_escalon)
+        self.vista.signalIniciarJuego.connect(self.ejecutar_escalones)
         self.vista.signalOp1.connect(self.contestar_pregunta)
         self.vista.signalOp2.connect(self.contestar_pregunta)
         self.vista.signalOp3.connect(self.contestar_pregunta)
@@ -117,13 +116,16 @@ class ControladorJuego():
         self.set_estado_partida()
         self.eliminacion()
         self.resetRondaActuales()
+        
+    def ejecutar_escalones(self):
+        for escalon in range(2):
+            self.ejecutar_escalon()
 
     def comparar_strikes(self):
         max_strikes = 0
         for jugador in self.__lista_sobrevivientes:
             if jugador.get_strikes() > max_strikes:
                 max_strikes=jugador.get_strikes()
-         
         self.__limpiar_lista_strikes(max_strikes)
 
     def __limpiar_lista_strikes(self, max_strikes):#va en la de arriba
@@ -162,7 +164,6 @@ class ControladorJuego():
         for pregunta in self.__escalon_actual.get_lista_preguntas_comunes():
             print("itera")
             print(pregunta)
-            
 
 class State_con_preg_de_aprox:
     
