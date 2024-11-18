@@ -64,7 +64,7 @@ class ControladorJuego():
         self.vista.setWidgetPregAprox(pregunta.get_consigna())
     
     def cambiarWidget(self): #mostrar el widget oculto de preg aprox
-       self.vista.cambiarWidget()
+        self.vista.cambiarWidget()
         
     def contestar_pregunta(self,rta_usuario):
         #comparar la rta_usuario con self.__pregunta_actual
@@ -265,8 +265,6 @@ class State_con_preg_de_aprox:
         else:
             self.__loopea = True
             return
-        
-              
 
                 
         
