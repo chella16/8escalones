@@ -55,7 +55,7 @@ class WidgetCronometro(QWidget): #conectado con iniciar partida, en la vista se 
    
         
     def iniciarCronometro(self): #por cada jugador se debe volver a crear un obj Cronometro, ya que el hilo muere 
-        self.cronometro = Cronometro(30)
+        self.cronometro = Cronometro(60)
         self.cronometro.signalDetener.connect(self.signalJugadorTerminoTurno.emit)
         self.cronometro.signalActualizarTiempo.connect(self.actualizarTiempo) #para que se update la interfaz
         self.cronometro.start()
@@ -199,8 +199,7 @@ class WidgetEscalones(QWidget):
         
         self.listaEscalonesWidgets = [] 
         self.actualNroEscalon = 1 #se empieza en el escalon 1
-    
-        
+
         self.crearEscalones()
         self.crearLayout()
     
@@ -340,10 +339,11 @@ class VistaJuego(MainWindow):
         self.btnIniciar = QPushButton("Iniciar Partida")
         self.listaWidgetsJugadores = [] #contiene los widgetEscalones del juego, para poder acceder a cada uno de ellos, escalon en indice 0 de esta lista es = escalon nro 1
         self.preguntaWidget = PreguntaWidget() #Widget de las preguntas
+        self.preguntaWidget.hide()
         self.preguntaAproximacionWidget = WidgetPregAproximacion()  # Wiidget de aproximación
         self.preguntaAproximacionWidget.hide() #todavia no se debe mostrar 
         self.escalonesWidget = WidgetEscalones() #Widget de los Escalones
-        self.cronometroWidget =WidgetCronometro(30)
+        self.cronometroWidget =WidgetCronometro(60)
         self.cronometroWidget.hide()
         self.strikesWidget = WidgetStrikesJugador()
         self.strikesWidget.hide()
@@ -354,7 +354,7 @@ class VistaJuego(MainWindow):
         self.setCentralWidget(self.labelFondo)
         
         #Manejo de signals
-        self.btnIniciar.clicked.connect(lambda :(self.cronometroWidget.show(),self.strikesWidget.show(),self.btnIniciar.hide(),self.signalIniciarJuego.emit()))
+        self.btnIniciar.clicked.connect(lambda :(self.cronometroWidget.show(),self.preguntaWidget.show(),self.btnIniciar.hide(),self.signalIniciarJuego.emit()))
         self.preguntaWidget.btnRtaA.clicked.connect(self.getRtaA)
         self.preguntaWidget.btnRtaB.clicked.connect(self.getRtaB)
         self.preguntaWidget.btnRtaC.clicked.connect(self.getRtaC)
@@ -364,6 +364,7 @@ class VistaJuego(MainWindow):
         #Limpiar el input cuando se presiona enter
     
     def mostrarStrikes(self,strikes):
+        self.strikesWidget.show()
         self.strikesWidget.actualizarStrikes(strikes) 
         
     def ocultarStrikes(self):
