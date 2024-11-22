@@ -232,23 +232,33 @@ class WidgetEscalones(QWidget):
         self.cambiarColor(self.actualNroEscalon) 
 
 class CustomDialogRespuesta(QDialog): #Dialog que salta cuando se selecciona una opcion al responder la pregunta
-    def __init__(self, rta:str, parent=None): #el parametro rta seria "Incorrecto" o "Correcto" dependiendo que se le pasa como parametro
+    def __init__(self, rta:bool,parent=None): #el parametro rta seria "Incorrecto" o "Correcto" dependiendo que se le pasa como parametro
         super().__init__(parent)
         self.setWindowTitle("Los 8 Escalones")
-
+        self.setWindowIcon(QIcon("Images/WindowIcon.png"))
+        self.setFixedSize(90,65)
         QBtn = QDialogButtonBox.StandardButton.Ok 
-
+        
         self.buttonBox = QDialogButtonBox(QBtn)
         self.buttonBox.accepted.connect(self.accept) #Que ocurre si pone Ok despues de recibir el mensaje? esto se tendria que enviar al controlador?
                                                     #si se pone ok, entonces se tiene que continuar la ronda?
+
+        if rta:
+            fondo=widgetDeFondoConColor(0,255,0,180,self)
+            message = QLabel("Correcto")
+            
+        else:
+            fondo=widgetDeFondoConColor(255,0,0,200,self)
+            message = QLabel("Incorrecto") 
+        font = QFont("Arial Black",10)
+        message.setFont(font) 
         layout = QVBoxLayout()
-        message = QLabel(rta) #aca iria incorrecto o correcto
         layout.addWidget(message)
         layout.addWidget(self.buttonBox)
-        self.setLayout(layout)
+        fondo.setLayout(layout)
     
     def mostrar(self):
-        return self.exec_()
+        self.exec()
 
 
 class WidgetPregAproximacion(QWidget):
@@ -447,6 +457,10 @@ class VistaJuego(MainWindow):
         self.cronometroWidget.pararCronometro()
         rta = self.preguntaWidget.getOpciones()[3]
         self.signalOp4.emit(rta)
+    
+    def mostrarDialogRta(self,rta:bool): #para mostrar un dialog cuando el usuario responda, recibe un booleano para determinar si respondio bien o mal
+        dialog=CustomDialogRespuesta(rta,self)
+        dialog.mostrar()
     
     def verificarInputAprox(self): #se activa este metodo cuando el user ingresa enter en el input de su pregunta de aproximacion
         rta = self.preguntaAproximacionWidget.rtaUser.text()

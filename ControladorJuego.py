@@ -74,6 +74,7 @@ class ControladorJuego():
         print(self.__pregunta_actual.verificar_respuesta(rta_usuario))
         if self.__pregunta_actual.verificar_respuesta(rta_usuario): #caso que es correcta la rta
             self.__respuesta_actual_correcta=True#se muestra el Dialog con el texto Correcto
+            
         else:
             self.__respuesta_actual_correcta=False# se muestra el Dialog con el texto Incorrecto
     
@@ -103,7 +104,7 @@ class ControladorJuego():
             self.vista.cronometroWidget.signalJugadorTerminoTurno.connect(eventLoop.quit) 
             eventLoop.exec()
             
-            
+            self.vista.mostrarDialogRta(self.__respuesta_actual_correcta)
             if not self.__respuesta_actual_correcta:
                 jugador.set_strikes()#le aumenta 1 strike
             nro_preg_actual += 1
@@ -161,7 +162,6 @@ class ControladorJuego():
     
     def eliminacion(self):
         self.__estado_actual.eliminacion()
-        self.__estado_eliminacion=None
         self.reset_lista_van_aprox()
         
     def get_lista_sobrevivientes(self):
