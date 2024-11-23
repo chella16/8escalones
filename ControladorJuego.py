@@ -57,8 +57,7 @@ class ControladorJuego():
         self.vista.signalOp4.connect(self.contestar_pregunta)
         #set_estado_partida maneja la conexion del signalRtaAprox
         
-        ###POR AHORA XQ NO ESTAN TODOS LOS ESCALONES######
-        self.__lista_temas_aux=["Cine y Televisión","Cultura General"] 
+        
         
     def actualizar_vista_rta(self, pregunta):
         self.vista.setPreguntaYOpciones(pregunta.get_consigna(),pregunta.get_opciones())
@@ -83,7 +82,8 @@ class ControladorJuego():
     def __cargar_temas(self):
         bd=DAO_Temas(self.__BD)
         lista_tematicas=bd.descargar_temas()
-        self.__lista_temas=lista_tematicas
+        self.__lista_temas=[tema.get_nombre_tematica() for tema in lista_tematicas]
+        
     
     def __cargar_jugadores(self):
         bd=DAO_Participantes(self.__BD)
@@ -112,8 +112,9 @@ class ControladorJuego():
     
         
     def ejecutar_escalon(self):
-        tema_random=random.choice(self.__lista_temas_aux)
-        #self.__lista_temas_aux.remove(tema_random)         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        tema_random=random.choice(self.__lista_temas)
+        self.__lista_temas.remove(tema_random)       
+        print(tema_random)
         self.__escalon_actual=Escalon(tema_random, self.__dificultad)
         bd=DAO_Preguntas(self.__BD)
         self.__escalon_actual.set_escalon(bd)#hay q ver si chela hizo la bajada de preguntas
