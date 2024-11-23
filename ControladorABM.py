@@ -9,31 +9,38 @@ from PyQt6.QtWidgets import QApplication
 class ControladorABM():
     def __init__(self):
         self.vista = VentanaABM()
+        self.vista.show()
         self.__BD=Base_Datos_8Escalones("8escalones.db")
         self.__cargar_temas()
+        self.__listaNombreTemas = [tema.get_nombre_tematica() for tema in self.__listaTemas]
         self.__cargar_dificultades()
+        self.__listaNombreDificultades = [dificultad.get_nombre() for dificultad in self.__listaDificultades]
+        self.vista.setTemas(self.__listaNombreTemas)
+        self.vista.setDificultades(self.__listaNombreDificultades)
         self.__crearDict()
-        self.getTemaYPreguntasDict()  #obtiene las preguntas y los temas de la BD y los pone en un Dict
-        self.vista.setTemas(self.__listaTemas)
-        self.vista.setDificultades(self.__listaDificultades)
+        
+        #manejo de signal
         self.vista.signalCambioDeTema.connect(self.actualizarPreguntas)
-    
-        #self.dict = {'tema': subDict{'dificultad':listaPreg}}
+        self.vista.signalCambioDeDificultad.connect(self.actualizarPreguntas)
+        self.vista.signalCrearAddTema.connect(self.crearAddTema)
     
     def __crearDict(self):
         bd = DAO_Preguntas(self.__BD)
         self.dict={}
-        for tema in self.__listaTemas:
+        for tema in self.__listaNombreTemas:
             subDict= {}
-            for dificultad in self.__listaDificultades:
+            for dificultad in self.__listaNombreDificultades:
                 subDict[dificultad]= bd.descargar_preguntas_comunes(tema,dificultad)
             self.dict[tema] = subDict
-        print(self.dict)
-            
-    def actualizarPreguntas(self,tema,dif):
-        preguntas = self.dict[tema][dif]
-        self.vista.setPreguntasTemaActual(preguntas)
     
+            
+    def actualizarPreguntas(self):
+        tema=self.vista.temaActual
+        dif = self.vista.dificultadActual
+        preguntas = [pregunta.get_consigna() for pregunta in self.dict[tema][dif]]
+        self.vista.setPreguntasActuales(preguntas)
+    
+
     def __cargar_temas(self):
         bd=DAO_Temas(self.__BD)
         lista_tematicas=bd.descargar_temas()
@@ -44,9 +51,14 @@ class ControladorABM():
         listaDificultades=bd.descargar_dificultades()
         self.__listaDificultades=listaDificultades
     
+    def crearAddTema(self):
+        self.vista.mostrarCustomDialogABM("Agregar Tema")
 
+    
+        
+        
+        
 if __name__ == "__main__":
     app = QApplication([])
     window = ControladorABM()
-    window.show()
     app.exec()

@@ -64,15 +64,6 @@ class Base_Datos_8Escalones:
                         CONSTRAINT "participante" FOREIGN KEY("id_participante") REFERENCES "participantes"("id_participante"),
                         CONSTRAINT "partida" FOREIGN KEY("id_partida") REFERENCES "partidas"("id_partida"));
                         """)
-                
-                #c.execute("""
-                        #CREATE TABLE IF NOT EXISTS escalon (
-                        #nro_escalon INTEGER PRIMARY KEY,
-                        #id_partida INTEGER,
-                        #id_tema INTEGER,
-                        #FOREIGN KEY (id_partida) REFERENCES partida(id_partida),
-                        #FOREIGN KEY (id_tema) REFERENCES temas(id_tema))
-                        #""")
                 c.execute ("""
                         CREATE TABLE IF NOT EXISTS preguntas (
                         id_pregunta INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -84,16 +75,6 @@ class Base_Datos_8Escalones:
                         FOREIGN KEY (id_tema) REFERENCES temas(id_tema),
                         FOREIGN KEY (id_dificultad) REFERENCES dificultades(id_dificultad))
                         """)
-                #c.execute ("""
-                        #CREATE TABLE IF NOT EXISTS pregunta_aproximacion (
-                        #id_pregunta INTEGER PRIMARY KEY AUTOINCREMENT,
-                        #desarrollo_pregunta TEXT,
-                        #rta_correcta TEXT,
-                        #id_tema INTEGER,
-                        #id_dificultad INTEGER,
-                        #FOREIGN KEY (id_tema) REFERENCES temas(id_tema),
-                        #FOREIGN KEY (id_dificultad) REFERENCES dificultades(id_dificultad))
-                        #""")
                 c.execute ("""
                         CREATE TABLE IF NOT EXISTS administradores (
                         id_administrador INTEGER PRIMARY KEY AUTOINCREMENT,
