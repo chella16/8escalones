@@ -1,32 +1,3 @@
-from abc import ABC, abstractmethod
-
-class Interfaz_Jugador(ABC):
-    
-    @abstractmethod
-    def get_nombre(self) -> str:
-        pass
-    
-    @abstractmethod
-    def set_strikes(self):
-        pass
-    
-    @abstractmethod
-    def get_strikes(self):
-        pass
-    
-    @abstractmethod    
-    def reset_strikes(self):
-        pass
-    
-    @abstractmethod
-    def set_id (self, id):
-        pass
-    
-    @abstractmethod
-    def get_id (self):
-        pass
-
-
 
 class Jugador:
     
@@ -41,7 +12,6 @@ class Jugador:
         self.__distancia_rta_aprox=None
         ######
         
-    
     def get_nombre(self) -> str:
         return self.__nombre
     
