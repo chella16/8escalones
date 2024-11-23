@@ -245,7 +245,7 @@ class State_con_preg_de_aprox:
         #puede ser que no todas las distancias de los usuarios son iguales
         #x distancias sean menores a la maxima y n-x iguales 
         self.__instancia_de_juego.vista.cambiarColorJugadorRonda([jugador.get_nombre() for jugador in self.__lista_jugadores_sin_dic],self.__lista_jugadores_sin_dic[-1].get_nombre(),200,200,200) #[-1] para agarrar al ultimo jugador que quedo pintado de verde por la ronda aprox
-        self.__jugadores_aprox_actuales_dict= [jugador for jugador in self.__lista_jugadores_sin_dic if jugador.get_distancia() == max_distancia]
+        self.__lista_jugadores_sin_dic= [jugador for jugador in self.__lista_jugadores_sin_dic if jugador.get_distancia() == max_distancia]
     
     #############################################################################
     
