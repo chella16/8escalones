@@ -68,7 +68,12 @@ class DAO_Temas (Interfaz_DAO):
             
             conexion = self._BD.get_conexion()
             c= conexion.cursor()
-            c.execute ("SELECT id_tema, nombre_tema FROM temas ORDER BY RANDOM()")
+            c.execute ("""SELECT t.id_tema, t.nombre_tema FROM temas t
+                    JOIN preguntas p ON p.id_tema = t.id_tema
+                    GROUP BY t.id_tema, t.nombre_tema
+                    HAVING SUM(CASE WHEN p.lista_opciones IS NOT NULL THEN 1 ELSE 0 END) >= 18
+                    AND SUM(CASE WHEN p.lista_opciones IS NULL THEN 1 ELSE 0 END) >= 2
+                    ORDER BY RANDOM();""")
             lista_temas = c.fetchall()
             
             for id_tema, nombre_tema in lista_temas:

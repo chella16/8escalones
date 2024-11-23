@@ -1,20 +1,49 @@
+from abc import ABC, abstractmethod
+
+class Interfaz_Jugador(ABC):
+    
+    @abstractmethod
+    def get_nombre(self) -> str:
+        pass
+    
+    @abstractmethod
+    def set_strikes(self):
+        pass
+    
+    @abstractmethod
+    def get_strikes(self):
+        pass
+    
+    @abstractmethod    
+    def reset_strikes(self):
+        pass
+    
+    @abstractmethod
+    def set_id (self, id):
+        pass
+    
+    @abstractmethod
+    def get_id (self):
+        pass
+
+
+
 class Jugador:
     
     def __init__(self, nombre): #¿Qué sabe hacer un jugador? Para mi, un jugador sabe decir su nombre, sabe responder preguntas y decir si está eliminado o no
         self.__id = "" #esto lo agregue yo para asegurar utilizar bien el singleton
         self.__nombre= nombre 
-        self.__eliminado=False
         self.__strikes=0 #cuando pifia una pregunta se le suma un strike ?¿ con dos strikes queda eliminado ?¿
-        self.__va_a_aproximacion=False
         
-    def responder_pregunta(self, pregunta) -> str:
-        pass #?¿ creo q esto es una signal q tiene q ver con apretar un boton ligado a una opcion
+        ######lo hace el director
+        self.__responde_bien_preg_aprox=False
+        self.__rta_aproximacion=None
+        self.__distancia_rta_aprox=None
+        ######
+        
     
     def get_nombre(self) -> str:
         return self.__nombre
-        
-    def get_estado(self) -> str:
-        return self.__eliminado
     
     def set_strikes(self):
         self.__strikes+=1
@@ -24,12 +53,12 @@ class Jugador:
         
     def reset_strikes(self):
         self.__strikes=0
-        
-    def set_eliminado(self):#para respetar la privacidad de los atributos 
-        self.__eliminado=True
     
     def set_id (self, id): #esto es por lo del singleton
         self.__id = id
     
     def get_id (self):
         return self.__id
+    
+    
+    
