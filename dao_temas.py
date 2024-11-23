@@ -70,6 +70,7 @@ class DAO_Temas (Interfaz_DAO):
             c= conexion.cursor()
             c.execute ("SELECT id_tema, nombre_tema FROM temas ORDER BY RANDOM()")
             lista_temas = c.fetchall()
+            
             for id_tema, nombre_tema in lista_temas:
                 tema_aux = Tematica(nombre_tema)
                 tema_aux.set_id_tematica(id_tema)

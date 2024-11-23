@@ -1080,22 +1080,183 @@ for pregunta in preguntas_historia_mitologia:
     dao_preguntas.alta_preg_comun(p)
     print(f"Pregunta registrada: {consigna}")
 """
-dao_preguntas.baja("157")
-dao_preguntas.baja("158")
-dao_preguntas.baja("159")
-dao_preguntas.baja("160")
-dao_preguntas.baja("161")
-dao_preguntas.baja("162")
-dao_preguntas.baja("163")
-dao_preguntas.baja("164")
-dao_preguntas.baja("165")
-dao_preguntas.baja("166")
-dao_preguntas.baja("167")
-dao_preguntas.baja("168")
-dao_preguntas.baja("169")
-dao_preguntas.baja("170")
-dao_preguntas.baja("171")
-dao_preguntas.baja("172")
-dao_preguntas.baja("173")
-dao_preguntas.baja("174")
-dao_preguntas.baja("175")
+# lista preg aprox
+"""
+preguntas_historia_mitologia_aprox = [
+    {
+        "consigna": "¿En qué año (Antes de Cristo) se construyó la Gran Muralla China?",
+        "respuesta": "221"
+    },
+    {
+        "consigna": "¿En qué año (Antes de Cristo) Julio César fue asesinado?",
+        "respuesta": "44"
+    },
+    {
+        "consigna": "¿En qué año comenzó la Primera Guerra Mundial?",
+        "respuesta": "1914"
+    },
+    {
+        "consigna": "¿En qué año Cristóbal Colón llegó a América?",
+        "respuesta": "1492"
+    },
+    {
+        "consigna": "¿En qué año cayó el Imperio Romano de Occidente?",
+        "respuesta": "476"
+    }
+]
+
+for pregunta in preguntas_historia_mitologia_aprox:
+    consigna = pregunta["consigna"]
+    respuesta = pregunta["respuesta"]
+    
+    # Crear la pregunta
+    p = Pregunta_aproximacion("Historia y Mitología", consigna, respuesta, "Normal")
+    
+    # Registrar la pregunta usando dao_preg_aprox
+    dao_preguntas.alta_preg_aprox(p)
+    print(f"Pregunta de aproximación registrada: {consigna}")
+"""
+
+######################## LISTA DE PREGUNTAS DE ARTE Y MUSICA #################################################################
+"""
+preguntas_arte_musica = [
+    {
+        "consigna": "¿Quién pintó la famosa obra 'La noche estrellada'?",
+        "respuesta": "Vincent van Gogh",
+        "opciones": ["Vincent van Gogh", "Pablo Picasso", "Claude Monet", "Salvador Dalí"]
+    },
+    {
+        "consigna": "¿En qué país nació Ludwig van Beethoven?",
+        "respuesta": "Alemania",
+        "opciones": ["Austria", "Francia", "Alemania", "Italia"]
+    },
+    {
+        "consigna": "¿Quién es el autor de la famosa obra 'El grito'?",
+        "respuesta": "Edvard Munch",
+        "opciones": ["Pablo Picasso", "Edvard Munch", "Gustav Klimt", "Henri Matisse"]
+    },
+    {
+        "consigna": "¿Cuál de los siguientes compositores es conocido por su obra 'Las cuatro estaciones'?",
+        "respuesta": "Antonio Vivaldi",
+        "opciones": ["Johann Sebastian Bach", "Wolfgang Amadeus Mozart", "Antonio Vivaldi", "Ludwig van Beethoven"]
+    },
+    {
+        "consigna": "¿Qué estilo de pintura es asociado con Salvador Dalí?",
+        "respuesta": "Surrealismo",
+        "opciones": ["Impresionismo", "Surrealismo", "Cubismo", "Realismo"]
+    },
+    {
+        "consigna": "¿Quién es conocido por su famosa escultura 'David'?",
+        "respuesta": "Michelangelo",
+        "opciones": ["Leonardo da Vinci", "Donatello", "Michelangelo", "Rafael"]
+    },
+    {
+        "consigna": "¿En qué ciudad se encuentra el Museo del Louvre?",
+        "respuesta": "París",
+        "opciones": ["Londres", "Roma", "París", "Madrid"]
+    },
+    {
+        "consigna": "¿Qué instrumento musical tiene 88 teclas?",
+        "respuesta": "Piano",
+        "opciones": ["Piano", "Guitarra", "Violín", "Flauta"]
+    },
+    {
+        "consigna": "¿En qué país nació el pintor Pablo Picasso?",
+        "respuesta": "España",
+        "opciones": ["Italia", "España", "Francia", "México"]
+    },
+    {
+        "consigna": "¿Qué famoso músico compuso la ópera 'Don Giovanni'?",
+        "respuesta": "Wolfgang Amadeus Mozart",
+        "opciones": ["Franz Schubert", "Wolfgang Amadeus Mozart", "Ludwig van Beethoven", "Richard Wagner"]
+    },
+    {
+        "consigna": "¿Quién pintó 'La última cena'?",
+        "respuesta": "Leonardo da Vinci",
+        "opciones": ["Miguel Ángel", "Leonardo da Vinci", "Rafael", "Caravaggio"]
+    },
+    {
+        "consigna": "¿Qué artista es conocido por sus obras de 'líneas negras' y 'formas geométricas' en el cubismo?",
+        "respuesta": "Pablo Picasso",
+        "opciones": ["Pablo Picasso", "Jackson Pollock", "Henri Matisse", "Vincent van Gogh"]
+    },
+    {
+        "consigna": "¿Qué famosa pintura fue robada del Museo del Louvre en 1911?",
+        "respuesta": "La Mona Lisa",
+        "opciones": ["La Mona Lisa", "El grito", "La noche estrellada", "Las Meninas"]
+    },
+    {
+        "consigna": "¿En qué época se originó el Renacimiento?",
+        "respuesta": "Siglo XV",
+        "opciones": ["Siglo XIII", "Siglo XV", "Siglo XVII", "Siglo XIX"]
+    },
+    {
+        "consigna": "¿Qué compositor es conocido por la creación de 'Sinfonía No. 5'?",
+        "respuesta": "Ludwig van Beethoven",
+        "opciones": ["Ludwig van Beethoven", "Johannes Brahms", "Franz Schubert", "Pyotr Ilyich Tchaikovsky"]
+    },
+    {
+        "consigna": "¿Quién es conocido como el 'padre de la ópera'?",
+        "respuesta": "Wolfgang Amadeus Mozart",
+        "opciones": ["Wolfgang Amadeus Mozart", "Ludwig van Beethoven", "Richard Wagner", "Giuseppe Verdi"]
+    },
+    {
+        "consigna": "¿Qué famoso pintor cubista colaboró con Georges Braque en el desarrollo del cubismo?",
+        "respuesta": "Pablo Picasso",
+        "opciones": ["Paul Cézanne", "Pablo Picasso", "Henri Matisse", "Vincent van Gogh"]
+    },
+    {
+        "consigna": "¿Cuál es el nombre de la famosa obra de música clásica que incluye la pieza 'Marcha Turca'?",
+        "respuesta": "Sonata para piano en do mayor",
+        "opciones": ["Las cuatro estaciones", "Sinfonía No. 40", "Sonata para piano en do mayor", "Sonatina en do mayor"]
+    }
+]
+
+for pregunta in preguntas_arte_musica:
+    consigna = pregunta["consigna"]
+    respuesta = pregunta["respuesta"]
+    opciones = pregunta["opciones"]
+    
+    # Crear la pregunta
+    p = Pregunta_comun("Arte y Música", consigna, respuesta, "Normal", opciones)
+    
+    # Registrar la pregunta usando dao_preguntas
+    dao_preguntas.alta_preg_comun(p)
+    print(f"Pregunta registrada: {consigna}")
+"""
+#lista de preg de aprox
+"""
+preguntas_arte_musica_aprox = [
+    {
+        "consigna": "¿En qué año nació Ludwig van Beethoven?",
+        "respuesta": "1770"
+    },
+    {
+        "consigna": "¿En qué año se pintó 'La última cena' de Leonardo da Vinci?",
+        "respuesta": "1498"
+    },
+    {
+        "consigna": "¿En qué año murió Wolfgang Amadeus Mozart?",
+        "respuesta": "1791"
+    },
+    {
+        "consigna": "¿En qué año se pintó 'La noche estrellada' de Vincent van Gogh?",
+        "respuesta": "1889"
+    },
+    {
+        "consigna": "¿En qué año se inauguró el Museo del Louvre como museo público?",
+        "respuesta": "1793"
+    }
+]
+
+for pregunta in preguntas_arte_musica_aprox:
+    consigna = pregunta["consigna"]
+    respuesta = pregunta["respuesta"]
+    
+    # Crear la pregunta
+    p = Pregunta_aproximacion("Arte y Música", consigna, respuesta, "Normal")
+    
+    # Registrar la pregunta usando dao_preg_aprox
+    dao_preguntas.alta_preg_aprox(p)
+    print(f"Pregunta de aproximación registrada: {consigna}")
+"""
