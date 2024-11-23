@@ -1,16 +1,16 @@
 
 class Jugador:
     
-    def __init__(self, nombre): #¿Qué sabe hacer un jugador? Para mi, un jugador sabe decir su nombre, sabe responder preguntas y decir si está eliminado o no
+    def __init__(self, nombre): 
         self.__id = "" #esto lo agregue yo para asegurar utilizar bien el singleton
         self.__nombre= nombre 
-        self.__strikes=0 #cuando pifia una pregunta se le suma un strike ?¿ con dos strikes queda eliminado ?¿
+        self.__strikes=0 
         
-        ######lo hace el director
+        
+        #atributos para la aproximacion
         self.__responde_bien_preg_aprox=False
         self.__rta_aproximacion=None
         self.__distancia_rta_aprox=None
-        ######
         
     def get_nombre(self) -> str:
         return self.__nombre

@@ -172,82 +172,18 @@ class State_con_preg_de_aprox:
         self.__jugadores_aprox_actuales_dict = [{'nombre': jugador.get_nombre(),'rta':None,'distancia':None,'safa':False} for jugador in self.__instancia_de_juego.get_lista_van_a_aproximacion()]
         self.__jugador_actual = None
         self.__pregunta_aprox_actual = None
-        ##################nuevo#######################
+        ##################atributo nuevo#######################
         self.__lista_jugadores_sin_dic = self.__instancia_de_juego.get_lista_van_a_aproximacion()
-        ##############################################
+        ###############################################
+        
     def get_rta_aprox(self,rta):
         for nombre in self.__jugadores_aprox_actuales_dict:
             if nombre['nombre'] == self.__jugador_actual:
                 nombre['rta'] = rta
         print(self.__jugadores_aprox_actuales_dict)
     
-    ##########################nuevo#########################  
-    def get_rta_aprox_nuevo(self,rta):
-        for jugador in self.__lista_jugadores_sin_dic:
-            if jugador.get_nombre() == self.__jugador_actual:
-                jugador.set_rta_aproximacion(rta)
-        print(jugador.get_rta_aproximacion())
-    ##########################nuevo############################  
     
-    def eliminacion_nuevo(self):
-        i = 0
-        self.__instancia_de_juego.cambiarWidget() #cambiar a las preguntas aproximacion
-        while True: #bucle poscondicional que se rompe cuando queda una sola persona en la lista
-            self.__pregunta_aprox_actual = self.__instancia_de_juego.get_pregunta_aproximacion(0) #IMPORTANTE acordarse de cambiar el 0 por el i
-            i += 1
-            self.ronda_aprox()
-            if len(self.__lista_jugadores_sin_dic) == 1:
-                break
-            
-        self.__instancia_de_juego.get_lista_sobrevivientes().remove(self.__lista_jugadores_sin_dic[0])
-        self.__instancia_de_juego.vista.cambiarColorJugadorEliminado(self.__lista_jugadores_sin_dic.get_nombre()) #pintar jugador de rojo en la vista
-        self.__instancia_de_juego.cambiarWidget() #cambiar a las preguntas normales
     
-    ######################nuevo##################################
-    
-    def ronda_aprox_nuevo(self):  
-        self.__instancia_de_juego.actualizar_vista_rta_aprox(self.__pregunta_aprox_actual)
-        for jugador in self.__lista_jugadores_sin_dic:
-            self.__jugador_actual = jugador.get_nombre()
-            listaNombresAprox = [jugador.get_nombre() for jugador in self.__lista_jugadores_sin_dic]
-            
-            self.__instancia_de_juego.vista.cambiarColorJugadorRonda(listaNombresAprox,jugador.get_nombre(),0,255,0)  #pinta de verde al jugador q le toca responder
-            self.__instancia_de_juego.vista.cronometroWidget.iniciarCronometro() #se crea un cronometro por cada jugador, ya que es un hilo y un mismo hilo no se puede ejecutar mas de una vez
-            eventLoop = QEventLoop()
-            self.__instancia_de_juego.vista.cronometroWidget.signalJugadorTerminoTurno.connect(eventLoop.quit)   
-            eventLoop.exec()
-        
-        #invocar metodo para ver quien respondio mal  
-        self.verificar_casos()
-    
-    ##########################nuevo#####################################
-    
-    def verificar_casos_nuevo(self):
-        max_distancia = 0
-        sumatoria=0
-        for jugador in self.__lista_jugadores_sin_dic:
-            distancia_calculada=abs(int(self.__pregunta_aprox_actual.get_rta()) - int(jugador.get_rta()))
-            jugador.set_distancia_rta_aprox(distancia_calculada)
-            sumatoria += distancia_calculada
-            
-            if jugador.get_distancia() == 0:
-                jugador.set_ = True
-                
-            if max_distancia < jugador.get_distancia():
-                max_distancia = jugador.set_distancia()
-        
-        #caso3 -> todos responden la misma distancia
-        
-        if sumatoria/len(self.__lista_jugadores_sin_dic) == max_distancia: #la media es igual a la max distancia por ende todos respondieron igual
-            return                                                                  #solo puede dar menor o igual y si da menor entonces uno respondio distinto (con menos distancia)
-            #loopea de una                                                          #ese chabon es el que safa
-            
-        #puede ser que no todas las distancias de los usuarios son iguales
-        #x distancias sean menores a la maxima y n-x iguales 
-        self.__instancia_de_juego.vista.cambiarColorJugadorRonda([jugador.get_nombre() for jugador in self.__lista_jugadores_sin_dic],self.__lista_jugadores_sin_dic[-1].get_nombre(),200,200,200) #[-1] para agarrar al ultimo jugador que quedo pintado de verde por la ronda aprox
-        self.__lista_jugadores_sin_dic= [jugador for jugador in self.__lista_jugadores_sin_dic if jugador.get_distancia() == max_distancia]
-    
-    #############################################################################
     
     def eliminacion(self):
         i = 0
@@ -306,6 +242,81 @@ class State_con_preg_de_aprox:
         self.__instancia_de_juego.vista.cambiarColorJugadorRonda([registroJugador['nombre'] for registroJugador in self.__jugadores_aprox_actuales_dict],self.__jugadores_aprox_actuales_dict[-1]['nombre'],200,200,200) #[-1] para agarrar al ultimo jugador que quedo pintado de verde por la ronda aprox
         self.__jugadores_aprox_actuales_dict= [registroJugador for registroJugador in self.__jugadores_aprox_actuales_dict if registroJugador['distancia'] == max_distancia]
         
+##########################nuevo#########################  
+    def get_rta_aprox_nuevo(self,rta):
+        for jugador in self.__lista_jugadores_sin_dic:
+            if jugador.get_nombre() == self.__jugador_actual:
+                jugador.set_rta_aprox(rta)
+        print(jugador.get_rta_aprox())
+    ##########################nuevo############################  
+    
+    def eliminacion_nuevo(self):
+        i = 0
+        self.__instancia_de_juego.cambiarWidget() #cambiar a las preguntas aproximacion
+        self.reset_atributos_de_aproximacion()#se ejecuta una vez por eliminacion para setear los atributos de aproximacion al estado por defecto
+        while True: #bucle poscondicional que se rompe cuando queda una sola persona en la lista
+            self.__pregunta_aprox_actual = self.__instancia_de_juego.get_pregunta_aproximacion(0) #IMPORTANTE acordarse de cambiar el 0 por el i PORQUE SINO AGARRA SIEMPRE LA MISMA
+            i += 1
+            self.ronda_aprox_nuevo()
+            if len(self.__lista_jugadores_sin_dic) == 1:
+                break
+        jugador_eliminado=self.__lista_jugadores_sin_dic[0] 
+        self.__instancia_de_juego.get_lista_sobrevivientes().remove(jugador_eliminado)#es el mismo objeto
+        self.__instancia_de_juego.vista.cambiarColorJugadorEliminado(jugador_eliminado.get_nombre()) #pintar jugador de rojo en la vista
+        self.__instancia_de_juego.cambiarWidget() #cambiar a las preguntas normales
+    
+    ######################nuevo##################################
+    
+    def ronda_aprox_nuevo(self):  
+        self.__instancia_de_juego.actualizar_vista_rta_aprox(self.__pregunta_aprox_actual)
+        for jugador in self.__lista_jugadores_sin_dic:
+            self.__jugador_actual = jugador.get_nombre()
+            listaNombresAprox = [jugador.get_nombre() for jugador in self.__lista_jugadores_sin_dic]
+            
+            self.__instancia_de_juego.vista.cambiarColorJugadorRonda(listaNombresAprox,jugador.get_nombre(),0,255,0)  #pinta de verde al jugador q le toca responder
+            self.__instancia_de_juego.vista.cronometroWidget.iniciarCronometro() #se crea un cronometro por cada jugador, ya que es un hilo y un mismo hilo no se puede ejecutar mas de una vez
+            eventLoop = QEventLoop()
+            self.__instancia_de_juego.vista.cronometroWidget.signalJugadorTerminoTurno.connect(eventLoop.quit)   
+            eventLoop.exec()
+        
+        #invocar metodo para ver quien respondio mal  
+        self.verificar_casos_nuevo()
+    
+    ##########################nuevo#####################################
+    
+    def verificar_casos_nuevo(self):
+        max_distancia = 0
+        sumatoria=0
+        for jugador in self.__lista_jugadores_sin_dic:
+            distancia_calculada=abs(int(self.__pregunta_aprox_actual.get_rta()) - int(jugador.get_rta_aprox()))
+            jugador.set_distancia_rta_aprox(distancia_calculada)
+            sumatoria += distancia_calculada
+            
+            if jugador.get_distancia_rta_aprox() == 0:
+                jugador.set_responde_bien_preg_aprox(True)
+                
+            if max_distancia < jugador.get_distancia_rta_aprox():
+                max_distancia = jugador.set_distancia_rta_aprox()
+        
+        #caso3 -> todos responden la misma distancia
+        
+        if sumatoria/len(self.__lista_jugadores_sin_dic) == max_distancia: #la media es igual a la max distancia por ende todos respondieron igual
+            return                                                                  #solo puede dar menor o igual y si da menor entonces uno respondio distinto (con menos distancia)
+            #loopea de una                                                          #ese chabon es el que safa
+            
+        #puede ser que no todas las distancias de los usuarios son iguales
+        #x distancias sean menores a la maxima y n-x iguales 
+        self.__instancia_de_juego.vista.cambiarColorJugadorRonda([jugador.get_nombre() for jugador in self.__lista_jugadores_sin_dic],self.__lista_jugadores_sin_dic[-1].get_nombre(),200,200,200) #[-1] para agarrar al ultimo jugador que quedo pintado de verde por la ronda aprox
+        self.__lista_jugadores_sin_dic= [jugador for jugador in self.__lista_jugadores_sin_dic if jugador.get_distancia_rta_aprox() == max_distancia]
+    
+    ##############################nuevo###############################################
+    
+    def reset_atributos_de_aproximacion(self):
+        for jugador in self.__lista_jugadores_sin_dic:
+            jugador.set_distancia_rta_aprox(None)
+            jugador.set_rta_aprox(None)
+            jugador.set_responde_bien_preg_aprox(False)
+    
         
 class State_sin_preg_eliminacion:
     
