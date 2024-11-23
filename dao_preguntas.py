@@ -3,7 +3,6 @@ import json
 import sys
 import os
 from interfaz_dao import Interfaz_DAO
-sys.path.append(os.path.abspath("8escalones"))
 from preguntas import Pregunta_aproximacion, Pregunta_comun
 
 class DAO_Preguntas(Interfaz_DAO):
@@ -157,7 +156,7 @@ class DAO_Preguntas(Interfaz_DAO):
                 ORDER BY RANDOM()""", (id_tema_buscado, id_dificultad_buscada,))
         lista_preguntas = c.fetchall()
         
-        if len (lista_preguntas) >= 18:
+        if len (lista_preguntas) >= 18: 
             for id_pregunta, desarrollo_pregunta, rta_correcta, lista_opciones in lista_preguntas:
                 cantidad = cantidad + 1
                 if id_pregunta not in preguntas_usadas:
@@ -171,9 +170,11 @@ class DAO_Preguntas(Interfaz_DAO):
                     break
             print("retornando...")
         else:
-            print("No hay suficientes preguntas de este tema en esta dificultad")
+            print("No hay suficientes preguntas de este tema en esta dificultad") # nose si el manejo tiene que ir aca o en el tema
         self._BD.cerrar_conexion()
         return lista_aux
+    
+    
     
     def descargar_preguntas_aproximacion (self, nombre_tema, dificultad_buscada):
         lista_aux = []
@@ -206,4 +207,5 @@ class DAO_Preguntas(Interfaz_DAO):
     
     ########################################################################################################################
     
-    
+    #def mostrar_preguntas (self):
+        
