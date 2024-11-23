@@ -35,13 +35,4 @@ class ControladorInicial():
             self.controladorOpciones = ControladorOpciones(self)
         else:
             self.controladorOpciones.vista.show()
-            
         
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    controlador = ControladorInicial()
-    sys.exit(app.exec())
-
-
-#poner la entrada de admin de una en el juego (seria la pantalla de invitado acutal)
-#un controlador por cada vista 

@@ -55,7 +55,7 @@ class WidgetCronometro(QWidget): #conectado con iniciar partida, en la vista se 
    
         
     def iniciarCronometro(self): #por cada jugador se debe volver a crear un obj Cronometro, ya que el hilo muere 
-        self.cronometro = Cronometro(30)
+        self.cronometro = Cronometro(60)
         self.cronometro.signalDetener.connect(self.signalJugadorTerminoTurno.emit)
         self.cronometro.signalActualizarTiempo.connect(self.actualizarTiempo) #para que se update la interfaz
         self.cronometro.start()
@@ -199,8 +199,7 @@ class WidgetEscalones(QWidget):
         
         self.listaEscalonesWidgets = [] 
         self.actualNroEscalon = 1 #se empieza en el escalon 1
-    
-        
+
         self.crearEscalones()
         self.crearLayout()
     
@@ -233,23 +232,33 @@ class WidgetEscalones(QWidget):
         self.cambiarColor(self.actualNroEscalon) 
 
 class CustomDialogRespuesta(QDialog): #Dialog que salta cuando se selecciona una opcion al responder la pregunta
-    def __init__(self, rta:str, parent=None): #el parametro rta seria "Incorrecto" o "Correcto" dependiendo que se le pasa como parametro
+    def __init__(self, rta:bool,parent=None): #el parametro rta seria "Incorrecto" o "Correcto" dependiendo que se le pasa como parametro
         super().__init__(parent)
         self.setWindowTitle("Los 8 Escalones")
-
+        self.setWindowIcon(QIcon("Images/WindowIcon.png"))
+        self.setFixedSize(90,65)
         QBtn = QDialogButtonBox.StandardButton.Ok 
-
+        
         self.buttonBox = QDialogButtonBox(QBtn)
         self.buttonBox.accepted.connect(self.accept) #Que ocurre si pone Ok despues de recibir el mensaje? esto se tendria que enviar al controlador?
                                                     #si se pone ok, entonces se tiene que continuar la ronda?
+
+        if rta:
+            fondo=widgetDeFondoConColor(0,255,0,180,self)
+            message = QLabel("Correcto")
+            
+        else:
+            fondo=widgetDeFondoConColor(255,0,0,200,self)
+            message = QLabel("Incorrecto") 
+        font = QFont("Arial Black",10)
+        message.setFont(font) 
         layout = QVBoxLayout()
-        message = QLabel(rta) #aca iria incorrecto o correcto
         layout.addWidget(message)
         layout.addWidget(self.buttonBox)
-        self.setLayout(layout)
+        fondo.setLayout(layout)
     
     def mostrar(self):
-        return self.exec_()
+        self.exec()
 
 
 class WidgetPregAproximacion(QWidget):
@@ -340,10 +349,11 @@ class VistaJuego(MainWindow):
         self.btnIniciar = QPushButton("Iniciar Partida")
         self.listaWidgetsJugadores = [] #contiene los widgetEscalones del juego, para poder acceder a cada uno de ellos, escalon en indice 0 de esta lista es = escalon nro 1
         self.preguntaWidget = PreguntaWidget() #Widget de las preguntas
+        self.preguntaWidget.hide()
         self.preguntaAproximacionWidget = WidgetPregAproximacion()  # Wiidget de aproximación
         self.preguntaAproximacionWidget.hide() #todavia no se debe mostrar 
         self.escalonesWidget = WidgetEscalones() #Widget de los Escalones
-        self.cronometroWidget =WidgetCronometro(30)
+        self.cronometroWidget =WidgetCronometro(60)
         self.cronometroWidget.hide()
         self.strikesWidget = WidgetStrikesJugador()
         self.strikesWidget.hide()
@@ -354,7 +364,7 @@ class VistaJuego(MainWindow):
         self.setCentralWidget(self.labelFondo)
         
         #Manejo de signals
-        self.btnIniciar.clicked.connect(lambda :(self.cronometroWidget.show(),self.strikesWidget.show(),self.btnIniciar.hide(),self.signalIniciarJuego.emit()))
+        self.btnIniciar.clicked.connect(lambda :(self.cronometroWidget.show(),self.preguntaWidget.show(),self.btnIniciar.hide(),self.signalIniciarJuego.emit()))
         self.preguntaWidget.btnRtaA.clicked.connect(self.getRtaA)
         self.preguntaWidget.btnRtaB.clicked.connect(self.getRtaB)
         self.preguntaWidget.btnRtaC.clicked.connect(self.getRtaC)
@@ -364,6 +374,7 @@ class VistaJuego(MainWindow):
         #Limpiar el input cuando se presiona enter
     
     def mostrarStrikes(self,strikes):
+        self.strikesWidget.show()
         self.strikesWidget.actualizarStrikes(strikes) 
         
     def ocultarStrikes(self):
@@ -446,6 +457,10 @@ class VistaJuego(MainWindow):
         self.cronometroWidget.pararCronometro()
         rta = self.preguntaWidget.getOpciones()[3]
         self.signalOp4.emit(rta)
+    
+    def mostrarDialogRta(self,rta:bool): #para mostrar un dialog cuando el usuario responda, recibe un booleano para determinar si respondio bien o mal
+        dialog=CustomDialogRespuesta(rta,self)
+        dialog.mostrar()
     
     def verificarInputAprox(self): #se activa este metodo cuando el user ingresa enter en el input de su pregunta de aproximacion
         rta = self.preguntaAproximacionWidget.rtaUser.text()
