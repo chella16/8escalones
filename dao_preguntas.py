@@ -156,21 +156,19 @@ class DAO_Preguntas(Interfaz_DAO):
                 ORDER BY RANDOM()""", (id_tema_buscado, id_dificultad_buscada,))
         lista_preguntas = c.fetchall()
         
-        if len (lista_preguntas) >= 18: 
-            for id_pregunta, desarrollo_pregunta, rta_correcta, lista_opciones in lista_preguntas:
-                cantidad = cantidad + 1
-                if id_pregunta not in preguntas_usadas:
-                    lista_opciones_aux = json.loads(lista_opciones)
-                    pregunta_aux = Pregunta_comun(id_tema_buscado, desarrollo_pregunta, rta_correcta, id_dificultad_buscada, lista_opciones_aux)
-                    pregunta_aux.set_id(id_pregunta)
-                    lista_aux.append(pregunta_aux)
-                    print("cargando pregunta...")
-                    preguntas_usadas.add(id_pregunta)
-                if cantidad == 19: #nose si esta tan bueno que sean 19, capaz para reusarlo estaria bueno devolverla completa
-                    break
-            print("retornando...")
-        else:
-            print("No hay suficientes preguntas de este tema en esta dificultad") # nose si el manejo tiene que ir aca o en el tema
+        for id_pregunta, desarrollo_pregunta, rta_correcta, lista_opciones in lista_preguntas:
+            cantidad = cantidad + 1
+            if id_pregunta not in preguntas_usadas:
+                lista_opciones_aux = json.loads(lista_opciones)
+                pregunta_aux = Pregunta_comun(id_tema_buscado, desarrollo_pregunta, rta_correcta, id_dificultad_buscada, lista_opciones_aux)
+                pregunta_aux.set_id(id_pregunta)
+                lista_aux.append(pregunta_aux)
+                print("cargando pregunta...")
+                preguntas_usadas.add(id_pregunta)
+            if cantidad == 19: #nose si esta tan bueno que sean 19, capaz para reusarlo estaria bueno devolverla completa
+                break
+        
+        print("retornando...")
         self._BD.cerrar_conexion()
         return lista_aux
     

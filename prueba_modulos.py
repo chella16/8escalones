@@ -42,12 +42,12 @@ print ("conectada sin problemas...")
 temanuevo = Tematica("nombretematica")
 daotemas.alta(temanuevo)
 #daotemas.modificacion(temanuevo, "Trap")
-"""print ("Lista TEMAS")
+print ("Lista TEMAS")
 lista_temas = []
 lista_temas = daotemas.descargar_temas()
 for t in lista_temas:
     t.mostrar_info()
-
+"""
 print ("Lista preguntas comunessss")
 lista_preguntascomun = []
 lista_preguntascomun = daopreguntas.descargar_preguntas_comunes("Cine y Televisión", "Normal")
@@ -58,8 +58,9 @@ print ("Lista preguntas aproximacion")
 lista_preguntas_aprox = []
 lista_preguntas_aprox = daopreguntas.descargar_preguntas_aproximacion("Cine y Televisión", "Normal")
 for p in lista_preguntas_aprox:
-    p.mostrar_info_preg()"""
+    p.mostrar_info_preg()
     
 daoparticipante.eliminar_todos_participantes()
     
+    """
 
