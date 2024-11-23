@@ -75,9 +75,11 @@ class DAO_Temas (Interfaz_DAO):
                 tema_aux = Tematica(nombre_tema)
                 tema_aux.set_id_tematica(id_tema)
                 lista_aux.append(tema_aux)
-                cantidad = cantidad + 1
-                if cantidad == 8: ##nose si esta bueno que este tenga una cantidad definida
+                
+                if cantidad == 7: ##nose si esta bueno que este tenga una cantidad definida
                     break
+                cantidad = cantidad + 1
+            
             self._BD.cerrar_conexion()
             return lista_aux
     

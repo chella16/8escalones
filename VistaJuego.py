@@ -358,7 +358,7 @@ class VistaJuego(MainWindow):
         self.strikesWidget = WidgetStrikesJugador()
         self.strikesWidget.hide()
         
-        self.setCentralWidget(self.labelFondo)
+        
         self.setJugadores()
         self.crearLayout()
         self.setCentralWidget(self.labelFondo)
