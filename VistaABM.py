@@ -5,18 +5,17 @@ from MainWindow import *
 
 class CustomDialogABM(QDialog): #usado para Altas y Modificaciones en preguntas y temas
     signalInput = pyqtSignal(str) #para emitir lo que se cambia en el input
-    
+    signalRechazoCambios = pyqtSignal()
     def __init__(self,mensaje:str,parent=None):
         super().__init__(parent)
         self.setWindowTitle("Los 8 Escalones")
-        self.setWindowIcon("Images/WindowIcon.png")
+        self.setWindowIcon(QIcon("Images/WindowIcon.png"))
 
         btns = QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
 
         self.buttonBox = QDialogButtonBox(btns)
         self.buttonBox.accepted.connect(self.confirmo)#si acepta mediante el btn ok, se debe emitir el cambio
-        self.buttonBox.rejected.connect(self.reject) #si cancela simplemente se cierra el dialog
-        
+        self.buttonBox.rejected.connect(self.rechazo) #si cancela simplemente se cierra el dialog
         
         self.consigna = QLabel(mensaje)
         self.input = QLineEdit()
@@ -29,6 +28,10 @@ class CustomDialogABM(QDialog): #usado para Altas y Modificaciones en preguntas 
         layout.addWidget(self.input)
         layout.addWidget(self.buttonBox)
         self.setLayout(layout)
+        
+    def rechazo(self):
+        self.signalRechazoCambios.emit()
+        self.reject()
         
     def confirmo(self): #aca dentro tendria que ir la logica para que no ingresen espacios en blanco al final de la sentencia
         print(self.input.text())
@@ -60,8 +63,8 @@ class WidgetPreguntas(QWidget):
         self.setLayout(layout)
         
 class VentanaABM(MainWindow):
-    signalCambioDeTema = pyqtSignal(str)
-    signalCambioDeDificultad = pyqtSignal(str)
+    signalCambioDeTema = pyqtSignal()
+    signalCambioDeDificultad = pyqtSignal()
     signalCrearAddTema = pyqtSignal()
     #signalCrearModTema = pyqtSignal()
     #signalCrearDelTema = pyqtSignal()
@@ -107,7 +110,7 @@ class VentanaABM(MainWindow):
         layoutGrupoTemas.addWidget(self.btnDelTema)
         
         grupoTemas.setLayout(layoutGrupoTemas)
-        
+       
         #btns de abm preguntas
         self.btnAddPreg = QPushButton("Agregar Pregunta")
         self.btnModPreg = QPushButton("Modificar Pregunta")
@@ -142,21 +145,40 @@ class VentanaABM(MainWindow):
         mainLayot.addLayout(layoutTemaYPreg)
         self.labelFondo.setLayout(mainLayot)
     
-    
+    #manejo de lo que las preguntas que se muestran
+    def actualizarTema(self):
+        self.temaActual = self.temas.temasComboBox.currentText()
+        
     def setTemas(self,listaTemas:list[str]):#para inicializar los temas de la BD
         self.temas.temasComboBox.addItems(listaTemas)
+        self.temaActual = self.temas.temasComboBox.currentText()
         
         #se maneja lo que pasa cuando se cambia de tema en la vista
-        self.temas.temasComboBox.currentIndexChanged.connect(lambda tema=self.temas.temasComboBox.currentText() :self.signalCambioDeTema.emit(tema)) #el controlador lo conectaria con un metodo que invoque a setPreguntasActuales, y le pase como parametro la lista de preguntas de dicho tema
-    
+        self.temas.temasComboBox.currentTextChanged.connect(lambda: (self.actualizarTema(), self.signalCambioDeTema.emit()))
+
+    def actualizarDif(self):
+        self.dificultadActual = self.dificultad.dificultadComboBox.currentText()
+        
     def setDificultades(self,listaDificultades:list[str]):
         self.dificultad.dificultadComboBox.addItems(listaDificultades)
+        self.dificultadActual = self.dificultad.dificultadComboBox.currentText()
         
         #se maneja lo que pasa cuando se cambia la dificultad en la vista
-        self.dificultad.dificultadComboBox.currentIndexChanged.connect(lambda dif=self.dificultad.dificultadComboBox.currentText() :self.signalCambioDeDificultad.emit(dif))
+        self.dificultad.dificultadComboBox.currentTextChanged.connect(lambda : (self.actualizarDif(),self.signalCambioDeDificultad.emit()))
     
     def setPreguntasActuales(self,listaPreguntasTemaYDificultadActual:list[str]): #para inicializar las preguntas del tema y la dificultad actual, se invoca del controlador ABM
         self.preguntas.Qlista.clear() #limpiar lo que estaba antes
         self.preguntas.Qlista.addItems(listaPreguntasTemaYDificultadActual)
-    
+    ###############
 
+    def mostrarCustomDialogABM(self,mensaje:str):
+        dialog = CustomDialogABM(mensaje,self)
+        dialog.exec()
+    
+    def mostrarCustomDialogIngresarOpciones(self): #para llenar las opciones de una pregunta creada
+        for i in range(4): ##agg las opciones que ingreasa a una lista
+            dialog = CustomDialogABM(f"Ingrese la opcion {i}")
+            dialog.exec()
+            dialog.signalInput.connect()
+            dialog.signalRechazoCambios.connect() #se tendria que no permitir que se guaden las respuestas que ingreso
+        

@@ -9,27 +9,6 @@ import random
 import time
 from PyQt6.QtCore import pyqtSignal, QEventLoop,QObject
 
-#POSIBLES CASOS POR ESCALON:
-#a)PARA TOTALIDADES: Responden todos bien/ responden todos mal/ responden  todos 1 de dos: 
-#Si responden todos bien(o todos mal o todos una de dos) se hace una pregunta de aproximacion y pasan los x jugadores mas cercanos, el mas alejado se elimina
-#b)PARA RESULTADOS DIVIDIDOS: Comprende en general a todos los casos en los que exista una diferencia en respuestas
-#Se hace una pregunta de aproximacion entre los que caigan en la clase mas baja que en cuanto a respuestas acertadas y pasan los x jugadores mas cercanos, el jugador mas alejado se elimina
-#c)UNO SOLO RESPONDE MAL: se elimina sin pregunta aproximacion
-
-
-
-#Hasta donde está hecha la interfaz para el juego:
-#1)lo primero es cargar a los juagadores que ingresaste en la base de datos (singleton para cada jugador DAO para la consulta que los sube a la BD ?¿)
-#2)crear el escalon
-#3)crear la ronda y asigna las preguntas que se van sacando del escalon (implica asignar la respuesta)
-#por jugador
-#4)mostrar el texto de la pregunta para el jugador actual. mostrar el texto de las opciones
-#5)cuando el jugador clickea una opcion se pinta
-#6)despues que clickea el jugador cambia de estado
-#7)pasa al siguiente y repite proceso
-#8)
-
-
 class ControladorJuego():
     def __init__(self,contrAnterior,listaJugadores):
         super().__init__()
