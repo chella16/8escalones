@@ -1,9 +1,6 @@
 import sqlite3
-import sys
-import os
 from interfaz_dao import Interfaz_DAO
 from dao_preguntas import DAO_Preguntas
-sys.path.append(os.path.abspath("8escalones"))
 from tematica import Tematica
 
 class DAO_Temas (Interfaz_DAO):

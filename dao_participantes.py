@@ -48,3 +48,14 @@ class DAO_Participantes (Interfaz_DAO):
         c.execute("DELETE FROM sqlite_sequence WHERE name = 'participantes'")
         conexion.commit()
         self._BD.cerrar_conexion()
+    
+    ##########################################################################################################
+    
+    def eliminar_todos_participantes(self):
+        conexion = self._BD.get_conexion()
+        c= conexion.cursor()
+        c.execute("DELETE FROM participantes")
+        c.execute("DELETE FROM sqlite_sequence WHERE name = 'participantes'")
+        conexion.commit()
+        self._BD.cerrar_conexion()
+        print("cerrando bd...")
