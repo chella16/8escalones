@@ -163,12 +163,12 @@ class DAO_Preguntas(Interfaz_DAO):
                 pregunta_aux = Pregunta_comun(id_tema_buscado, desarrollo_pregunta, rta_correcta, id_dificultad_buscada, lista_opciones_aux)
                 pregunta_aux.set_id(id_pregunta)
                 lista_aux.append(pregunta_aux)
-                print("cargando pregunta...")
+                #print("cargando pregunta...")
                 preguntas_usadas.add(id_pregunta)
             if cantidad == 19: #nose si esta tan bueno que sean 19, capaz para reusarlo estaria bueno devolverla completa
                 break
         
-        print("retornando...")
+        #print("retornando...")
         self._BD.cerrar_conexion()
         return lista_aux
     
@@ -198,12 +198,9 @@ class DAO_Preguntas(Interfaz_DAO):
                 pregunta_aux = Pregunta_aproximacion(id_tema_buscado, desarrollo_pregunta, rta_correcta, id_dificultad_buscada)
                 pregunta_aux.set_id(id_pregunta)
                 lista_aux.append(pregunta_aux)
-                print("cargando pregunta...")
+                #print("cargando pregunta...")
                 preguntas_usadas.add(id_pregunta)
         self._BD.cerrar_conexion()
         return lista_aux
     
     ########################################################################################################################
-    
-    #def mostrar_preguntas (self):
-        

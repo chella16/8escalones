@@ -40,7 +40,7 @@ print ("conectada sin problemas...")
 
 #abmpreguntas.baja("5")
 temanuevo = Tematica("nombretematica")
-daotemas.alta(temanuevo)
+daotemas.baja(9)
 #daotemas.modificacion(temanuevo, "Trap")
 print ("Lista TEMAS")
 lista_temas = []

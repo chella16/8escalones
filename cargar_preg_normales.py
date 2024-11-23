@@ -1382,7 +1382,6 @@ for pregunta in preguntas_arte_musica_aprox:
     dao_preguntas.alta_preg_aprox(p)
     print(f"Pregunta de aproximación registrada: {consigna}")
 """
-
 dao_preguntas.baja(185)
 dao_preguntas.baja(186)
 dao_preguntas.baja(187)
