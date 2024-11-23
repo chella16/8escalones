@@ -1,15 +1,11 @@
 #from pregunta_comun import Pregunta_comun
 #from pregunta_aproximacion import Pregunta_aproximacion
-import sys
-import os
 
 from dao_participantes import DAO_Participantes
 from dao_preguntas import DAO_Preguntas
 from dao_temas import DAO_Temas
 
 from base_datos import Base_Datos_8Escalones
-
-sys.path.append(os.path.abspath("8escalones"))
 
 # Ahora puedes importar helper
 from jugador import Jugador
@@ -43,24 +39,28 @@ print ("conectada sin problemas...")
 #abmpreguntas.modificacion_rta_comun(pregunta1, "rta_nueva")
 
 #abmpreguntas.baja("5")
-temanuevo = Tematica("Ricardo Iorio")
-#daotemas.alta(temanuevo)
-daotemas.modificacion(temanuevo, "Trap")
+temanuevo = Tematica("nombretematica")
+daotemas.alta(temanuevo)
+#daotemas.modificacion(temanuevo, "Trap")
 print ("Lista TEMAS")
 lista_temas = []
 lista_temas = daotemas.descargar_temas()
 for t in lista_temas:
     t.mostrar_info()
-
+"""
 print ("Lista preguntas comunessss")
 lista_preguntascomun = []
-lista_preguntascomun = daopreguntas.descargar_preguntas_comunes("Entretenimiento", "Normal")
+lista_preguntascomun = daopreguntas.descargar_preguntas_comunes("Cine y Televisión", "Normal")
 for p in lista_preguntascomun:
     p.mostrar_info_preg()
 
 print ("Lista preguntas aproximacion")
 lista_preguntas_aprox = []
-lista_preguntas_aprox = daopreguntas.descargar_preguntas_aproximacion("Entretenimiento", "Normal")
+lista_preguntas_aprox = daopreguntas.descargar_preguntas_aproximacion("Cine y Televisión", "Normal")
 for p in lista_preguntas_aprox:
     p.mostrar_info_preg()
+    
+daoparticipante.eliminar_todos_participantes()
+    
+    """
 
