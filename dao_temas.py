@@ -8,27 +8,36 @@ class DAO_Temas (Interfaz_DAO):
     def __init__(self, bd):
         super().__init__(bd)
     
-    def alta(self, tematica):
-        nombre_tema_aux = tematica.get_nombre_tematica()
+    def verificacion (self, nombre_tematica):
         
         conexion = self._BD.get_conexion()
         c= conexion.cursor()
-        c.execute ("SELECT 1 FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tema_aux,))
+        c.execute ("SELECT 1 FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tematica,))
         resu = c.fetchone()
-        
         if resu:
-            print (f"se encontro coincidencias de: {nombre_tema_aux}")
-            c.execute("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tema_aux,))
+            return False
         else:
-            print (f"como no se encontro coincidencia se va a insertar: {nombre_tema_aux}")
-            c.execute("INSERT INTO temas (nombre_tema) VALUES (?)", (nombre_tema_aux,))
-            c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) =LOWER(?)", (nombre_tema_aux,))
-        resu = c.fetchone()
-        id_tema = resu[0]
-        tematica.set_id_tematica (id_tema)
+            return True
+    
+    def alta(self, nombre_tematica):
+        #nombre_tema_aux = tematica.get_nombre_tematica()
+        
+        conexion = self._BD.get_conexion()
+        c= conexion.cursor()
+        
+        #print (f"como no se encontro coincidencia se va a insertar: {nombre_tematica}")
+        c.execute("INSERT INTO temas (nombre_tema) VALUES (?)", (nombre_tematica,))
+        
+        #c.execute ("SELECT id_tema FROM temas WHERE LOWER(nombre_tema) =LOWER(?)", (nombre_tematica,))
+        #resu = c.fetchone()
+        #id_tema = resu[0]
+        #tematica.set_id_tematica (id_tema)
+        #tematica_nueva = Tematica(nombre_tematica)
+        #tematica_nueva.set_id_tematica(id_tema)
         
         conexion.commit()
         self._BD.cerrar_conexion()
+        #return tematica_nueva
     
     def baja(self, id_tema_eliminar):
         #self.eliminar_preguntas_categorias(id_tema_eliminar) #para eliminar en cascada las preguntas que tiene esa categoria
