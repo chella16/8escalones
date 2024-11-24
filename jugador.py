@@ -12,6 +12,8 @@ class Jugador:
         self.__rta_aproximacion=None
         self.__distancia_rta_aprox=None
         
+        self.__partidas_ganadas = None #atributo para mostrar el ranking
+        
     def get_nombre(self) -> str:
         return self.__nombre
     
@@ -30,5 +32,9 @@ class Jugador:
     def get_id (self):
         return self.__id
     
+    def set_partidas_ganadas (self, cantidad):
+        self.__partidas_ganadas = cantidad
     
+    def get_partidas_ganadas (self):
+        return self.__partidas_ganadas
     

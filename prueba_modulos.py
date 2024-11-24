@@ -4,6 +4,7 @@
 from dao_participantes import DAO_Participantes
 from dao_preguntas import DAO_Preguntas
 from dao_temas import DAO_Temas
+from dao_partidas import Dao_Partida
 
 from base_datos import Base_Datos_8Escalones
 
@@ -17,7 +18,8 @@ basedatos = Base_Datos_8Escalones(db_path)
 daoparticipante = DAO_Participantes(basedatos)
 daopreguntas = DAO_Preguntas(basedatos)
 daotemas = DAO_Temas(basedatos)
-print ("conectada sin problemas...")
+daopartida = Dao_Partida(basedatos)
+#print ("conectada sin problemas...")
 
 #participante1 = Jugador("peluca")
 #abmparticipante.alta(participante1)
@@ -39,6 +41,7 @@ print ("conectada sin problemas...")
 #abmpreguntas.modificacion_rta_comun(pregunta1, "rta_nueva")
 
 #abmpreguntas.baja("5")
+"""
 temanuevo = Tematica("nombretematica")
 daotemas.baja(9)
 #daotemas.modificacion(temanuevo, "Trap")
@@ -47,6 +50,8 @@ lista_temas = []
 lista_temas = daotemas.descargar_temas()
 for t in lista_temas:
     t.mostrar_info()
+"""
+
 """
 print ("Lista preguntas comunessss")
 lista_preguntascomun = []
@@ -63,4 +68,6 @@ for p in lista_preguntas_aprox:
 daoparticipante.eliminar_todos_participantes()
     
     """
+daoparticipante.alta("pepe")
 
+#daopartida.alta()

@@ -18,6 +18,7 @@ class DAO_Temas (Interfaz_DAO):
             return False
         else:
             return True
+        self._BD.cerrar_conexion()
     
     def alta(self, nombre_tematica):
         #nombre_tema_aux = tematica.get_nombre_tematica()
@@ -93,6 +94,23 @@ class DAO_Temas (Interfaz_DAO):
                 if cantidad == 7: ##nose si esta bueno que este tenga una cantidad definida
                     break
                 cantidad = cantidad + 1
+            
+            self._BD.cerrar_conexion()
+            return lista_aux
+        
+    def descargar_temas_abm (self):
+            lista_aux = []
+            
+            conexion = self._BD.get_conexion()
+            c= conexion.cursor()
+            c.execute ("""SELECT id_tema, nombre_tema FROM temas
+                    ORDER BY nombre_tema;""")
+            lista_temas = c.fetchall()
+            
+            for id_tema, nombre_tema in lista_temas:
+                tema_aux = Tematica(nombre_tema)
+                tema_aux.set_id_tematica(id_tema)
+                lista_aux.append(tema_aux)
             
             self._BD.cerrar_conexion()
             return lista_aux
