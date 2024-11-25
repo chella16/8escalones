@@ -92,7 +92,7 @@ class ControladorJuego():
     def ejecutar_escalon(self):
         tema_random=random.choice(self.__lista_temas)
         self.__lista_temas.remove(tema_random)       
-        
+        self.vista.setTematicaActual(tema_random) #para poner la tematica en la vista
         self.__escalon_actual=Escalon(tema_random, self.__dificultad)
         bd=DAO_Preguntas(self.__BD)
         self.__escalon_actual.set_escalon(bd)#hay q ver si chela hizo la bajada de preguntas
@@ -251,6 +251,9 @@ class State_con_preg_de_aprox:
         self.__instancia_de_juego.vista.cambiarColorJugadorRonda([registroJugador['nombre'] for registroJugador in self.__jugadores_aprox_actuales_dict],self.__jugadores_aprox_actuales_dict[-1]['nombre'],200,200,200) #[-1] para agarrar al ultimo jugador que quedo pintado de verde por la ronda aprox
         self.__jugadores_aprox_actuales_dict= [registroJugador for registroJugador in self.__jugadores_aprox_actuales_dict if registroJugador['distancia'] == max_distancia]
         
+        if len(self.__jugadores_aprox_actuales_dict) == 1:
+            return 
+        self.__instancia_de_juego.vista.mostrarJugadoresVanAproximacion([registroJugador['nombre'] for registroJugador in self.__jugadores_aprox_actuales_dict])
 ##########################nuevo#########################  
     def get_rta_aprox_nuevo(self,rta):
         for jugador in self.__lista_jugadores_sin_dic:

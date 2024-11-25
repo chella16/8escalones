@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout,QGridLayout, QLabel, QPushButton, QWidget, QDialogButtonBox, QDialog,QLineEdit
+from PyQt6.QtWidgets import QListWidget,QHBoxLayout, QVBoxLayout,QGridLayout, QLabel, QPushButton, QWidget, QDialogButtonBox, QDialog,QLineEdit
 from PyQt6.QtCore import Qt,pyqtSignal,QThread
 from PyQt6.QtGui import QPalette,QColor,QFont,QPixmap 
 from MainWindow import *
@@ -117,6 +117,7 @@ class PreguntaWidget(QWidget):
     
     def crearBtns(self):
         # Crear el label de la pregunta
+        self.tematicaWidget = WidgetTematica()
         self.labelPregunta = QLabel("Pregunta") #va a ser cargada desde la BD
         self.labelPregunta.setFont(QFont("Arial", 12))
         self.labelPregunta.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -130,9 +131,10 @@ class PreguntaWidget(QWidget):
         
     def crearLayout(self):
         #darle un fondo a el texto de la pregunta
-        fondo = widgetDeFondoConColor(255,255,255,255)
+        fondo = widgetDeFondoConColor(255,255,255,180)
         fondo.setFixedHeight(100)
         layoutFondo = QVBoxLayout()
+        layoutFondo.addWidget(self.tematicaWidget,alignment=Qt.AlignmentFlag.AlignCenter)
         layoutFondo.addWidget(self.labelPregunta)
         fondo.setLayout(layoutFondo)
         
@@ -156,7 +158,9 @@ class PreguntaWidget(QWidget):
     
     def getOpciones(self):
         return [self.btnRtaA.text(),self.btnRtaB.text(),self.btnRtaC.text(),self.btnRtaD.text()]
-       
+    
+    def setTematicaActual(self,tematica:str):
+        self.tematicaWidget.setTematicaActual(tematica) 
     
 
 
@@ -271,6 +275,7 @@ class WidgetPregAproximacion(QWidget):
     
     def crearBtns(self):
         # Crear el label de la pregunta
+        self.tematicaWidget = WidgetTematica()
         self.labelPreguntaArpox = QLabel("Pregunta de Aproximación") #va a ser cargada desde la BD
         self.labelPreguntaArpox.setFont(QFont("Arial", 12))
         self.labelPreguntaArpox.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -283,9 +288,10 @@ class WidgetPregAproximacion(QWidget):
         
     def crearLayout(self):
         #darle un fondo a el texto de la pregunta
-        fondo = widgetDeFondoConColor(255,255,255,255)
+        fondo = widgetDeFondoConColor(255,255,255,180)
         fondo.setFixedHeight(100)
         layoutFondo = QVBoxLayout()
+        layoutFondo.addWidget(self.tematicaWidget,alignment=Qt.AlignmentFlag.AlignCenter)
         layoutFondo.addWidget(self.labelPreguntaArpox)
         fondo.setLayout(layoutFondo)
         
@@ -297,6 +303,9 @@ class WidgetPregAproximacion(QWidget):
     
     def setPreguntaAprox(self,pregunta):
         self.labelPreguntaArpox.setText(pregunta)
+    
+    def setTematicaActual(self,tematica:str):
+        self.tematicaWidget.setTematicaActual(tematica) 
 
 
 class WidgetStrikesJugador(QWidget):
@@ -323,7 +332,31 @@ class WidgetStrikesJugador(QWidget):
     def actualizarStrikes(self,strikes):
         self.labelStrikes.setText(f"Errores: {strikes}/{self.cantPreguntas}")
    
+       
+class WidgetTematica(QWidget):
+    def __init__(self):
+        super().__init__() 
+        self.setFixedHeight(50)
+        self.labelTematicaActual = QLabel(parent=self)
 
+        self.crearLayout()
+    
+    def crearLayout(self):
+        fuente = QFont("Arial Black", 10, QFont.Weight.Bold)
+        self.labelTematicaActual.setFont(fuente)
+        
+        fondo = widgetDeFondoConColor(0,255,0,255)
+        layoutFondo = QVBoxLayout()
+        layoutFondo.addWidget(self.labelTematicaActual)
+        fondo.setLayout(layoutFondo)
+        
+        mainLayout =QVBoxLayout()
+        mainLayout.addWidget(fondo)
+        self.setLayout(mainLayout)
+    
+    def setTematicaActual(self,tematica:str):
+        self.labelTematicaActual.setText(tematica)
+        
 class VistaJuego(MainWindow):  
     signalOp1 = pyqtSignal(str)
     signalOp2 = pyqtSignal(str)
@@ -356,6 +389,7 @@ class VistaJuego(MainWindow):
         self.cronometroWidget =WidgetCronometro(60)
         self.cronometroWidget.hide()
         self.strikesWidget = WidgetStrikesJugador()
+        self.widgetTematica = WidgetTematica()
         self.strikesWidget.hide()
         
         
@@ -470,4 +504,32 @@ class VistaJuego(MainWindow):
             return
         self.cronometroWidget.pararCronometro()
         self.signalRtaAprox.emit(rta)
-       
+    
+    def setTematicaActual(self,tematica:str):
+        self.preguntaWidget.setTematicaActual(tematica) 
+        self.preguntaAproximacionWidget.setTematicaActual(tematica) 
+    
+    def mostrarJugadoresVanAproximacion(self,listaVanAproximacion):
+        self.dialogVanAprox = CustomDialogVanAprox(listaVanAproximacion,self)
+        self.dialogVanAprox.exec()
+
+class CustomDialogVanAprox(QDialog):
+    def __init__(self, listaVanAproximacion,parent = None):
+        super().__init__(parent)
+        self.setWindowTitle("Los 8 Escalones")
+        self.setWindowIcon(QIcon("Images/WindowIcon.png"))
+        
+        QBtn = QDialogButtonBox.StandardButton.Ok 
+        
+        self.buttonBox = QDialogButtonBox(QBtn)
+        self.buttonBox.accepted.connect(self.accept)
+        self.consigna = QLabel("Los jugadores que van a la siguiente ronda de Aproximacion")
+        self.listaItems = QListWidget()
+        self.listaItems.addItems(listaVanAproximacion)
+        self.crearLayout()
+        
+    def crearLayout(self):
+        layout = QVBoxLayout()
+        layout.addWidget(self.consigna)
+        layout.addWidget(self.listaItems)
+        self.setLayout(layout)

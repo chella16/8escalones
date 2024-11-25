@@ -53,11 +53,20 @@ class VentanaIniciarJuego(MainWindow):
             self.actualizarNroJugadores()
             if self.nroJugadores == 9:
                 self.signalEnviarJugadores.emit(self.listaJugadores)
-
-         
+    
+    def resetListaJugadores(self):
+        self.listaJugadores = []
+        self.__resetNroJugadores()
         
     def actualizarNroJugadores(self):
         self.nroJugadores += 1
+        self.__setText()
+
+    def __resetNroJugadores(self):
+        self.nroJugadores = 0
+        self.__setText()
+    
+    def __setText(self):
         self.textoCantJugadores.setText(f"{self.nroJugadores}/9 Jugadores Ingresados")
 
     

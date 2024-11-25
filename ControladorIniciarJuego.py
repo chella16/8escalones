@@ -18,6 +18,7 @@ class ControladorIniciarJuego():
     
     def volverAtrasVista(self):
         self.vista.hide()
+        self.vista.resetListaJugadores()
         self.contrAnterior.vista.show()
         
     def cambiarVista(self,listaJugadores):
