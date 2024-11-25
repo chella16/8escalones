@@ -58,40 +58,42 @@ class DAO_Preguntas(Interfaz_DAO):
         
         conexion.commit()
         self._BD.cerrar_conexion()
+        
     
     def modificacion_consigna(self, pregunta, nuevo_desarrollo):
-        # probablemente tenga que matchear por id en lugar de consigna 
-        consigna_a_modificar = pregunta.get_consigna()
+        
+        id_a_modificar = pregunta.get_id()
         
         conexion = self._BD.get_conexion()
         c= conexion.cursor()
         
-        c.execute("UPDATE preguntas SET (desarrollo_pregunta) = ? WHERE LOWER(desarrollo_pregunta) = LOWER(?)",(nuevo_desarrollo, consigna_a_modificar,))
+        c.execute("UPDATE preguntas SET (desarrollo_pregunta) = (?) WHERE id_pregunta = (?)",(nuevo_desarrollo, id_a_modificar,))
         
         conexion.commit()
         self._BD.cerrar_conexion()
     
-    def modificacion_rta_comun(self, pregunta, rta_nueva):
-        # probablemente tenga que matchear por id en lugar de consigna 
-        consigna_a_modificar = pregunta.get_consigna()
+    def modificacion_rta_comun(self, pregunta, rta_nueva, lista_opciones):
+        
+        id_a_modificar = pregunta.get_id() # matchear por id
         
         conexion = self._BD.get_conexion()
         c= conexion.cursor()
         
-        c.execute("SELECT rta_correcta FROM preguntas WHERE LOWER(desarrollo_pregunta) = LOWER(?)", (consigna_a_modificar,))
-        r = c.fetchone()
-        rta_antigua = r[0]
+        #c.execute("SELECT rta_correcta FROM preguntas WHERE LOWER(desarrollo_pregunta) = LOWER(?)", (consigna_a_modificar,))
+        #r = c.fetchone()
+        #rta_antigua = r[0]
         
-        c.execute ("SELECT lista_opciones FROM preguntas WHERE LOWER(desarrollo_pregunta) = LOWER(?)", (consigna_a_modificar,))
-        r = c.fetchone()
-        l = r[0]
-        opciones = json.loads(l)
-        opciones.remove(rta_antigua)
-        opciones.append(rta_nueva)
-        nuevas_opciones = json.dumps (opciones)
+        #c.execute ("SELECT lista_opciones FROM preguntas WHERE LOWER(desarrollo_pregunta) = LOWER(?)", (consigna_a_modificar,))
+        #r = c.fetchone()
+        #l = r[0]
+        #opciones = json.loads(l)
+        #opciones.remove(rta_antigua)
+        #opciones.append(rta_nueva)
+        #nuevas_opciones = json.dumps (opciones)
+        lista_opciones_nuevas = json.dumps(lista_opciones)
         
-        c.execute("UPDATE preguntas SET (rta_correcta) = ? WHERE LOWER(desarrollo_pregunta) = LOWER(?)",(rta_nueva, consigna_a_modificar,))
-        c.execute("UPDATE preguntas SET (lista_opciones) = ? WHERE LOWER(desarrollo_pregunta) = LOWER(?)",(nuevas_opciones, consigna_a_modificar,))
+        c.execute("UPDATE preguntas SET (rta_correcta) = ? WHERE id_pregunta = (?)",(rta_nueva, id_a_modificar,))
+        c.execute("UPDATE preguntas SET (lista_opciones) = ? WHERE id_pregunta = (?)",(lista_opciones_nuevas, id_a_modificar,))
         
         conexion.commit()
         self._BD.cerrar_conexion()
@@ -204,3 +206,5 @@ class DAO_Preguntas(Interfaz_DAO):
         return lista_aux
     
     ########################################################################################################################
+    
+    

@@ -15,10 +15,11 @@ class DAO_Temas (Interfaz_DAO):
         c.execute ("SELECT 1 FROM temas WHERE LOWER(nombre_tema) = LOWER(?)", (nombre_tematica,))
         resu = c.fetchone()
         if resu:
+            self._BD.cerrar_conexion()
             return False
         else:
+            self._BD.cerrar_conexion()
             return True
-        self._BD.cerrar_conexion()
     
     def alta(self, nombre_tematica):
         #nombre_tema_aux = tematica.get_nombre_tematica()
