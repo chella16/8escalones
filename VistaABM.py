@@ -202,6 +202,7 @@ class WidgetPreguntas(QWidget):
 class VentanaABM(MainWindow):
     signalCambioDeTema = pyqtSignal()
     signalCambioDeDificultad = pyqtSignal()
+    signalAtras = pyqtSignal()
     
     #signals referidos al customDialog
     signalEnviarTema = pyqtSignal(str)
@@ -232,6 +233,7 @@ class VentanaABM(MainWindow):
         self.crearLayout()
         self.setCentralWidget(self.labelFondo)
         
+        self.btnAtras.clicked.connect(self.signalAtras.emit)
         #manejo de signals
         self.btnAddTema.clicked.connect(self.signalCrearAddTema.emit) #se conecta en el controlador, en caso de ser emitida la signal se tiene q crear el dialog correspondiente, desde el controlador
         self.btnModTema.clicked.connect(self.signalCrearModTema.emit)
@@ -251,6 +253,7 @@ class VentanaABM(MainWindow):
         grupoPreg = QGroupBox("ABM Preguntas")
         layoutGrupoPreg = QVBoxLayout()
         
+        self.btnAtras = QPushButton("Atras")
         #btns de abm temas
         self.btnAddTema = QPushButton("Agregar Tema")
         self.btnModTema = QPushButton("Modificar Tema")
@@ -275,12 +278,12 @@ class VentanaABM(MainWindow):
         
         layoutGrupos.addWidget(grupoTemas)
         layoutGrupos.addWidget(grupoPreg)
-        
+        layoutGrupos.addWidget(self.btnAtras)
         mainLayoutGrupos.addWidget(fondo)
         return mainLayoutGrupos
         
     def crearLayout(self):
-        
+
         layoutGrupos = self.__crearGruposABM()
         
         layoutSeleccion = QHBoxLayout()

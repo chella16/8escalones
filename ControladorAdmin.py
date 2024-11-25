@@ -12,12 +12,12 @@ class ControladorAdmin():
         
         #manejo de signals
         self.vista.signalABMTemasYPreg.connect(self.mostrarVentanaABM) 
-        self.vista.signalABMAdmin.connect(self.mostrarVentanaABMAdmin)
+        self.vista.signalABMUsuarios.connect(self.mostrarVentanaABMAdmin) #FALTA IMPLEMNENTAR EL ABM DE usuarios
         self.vista.signalAtras.connect(self.volverAtrasVista)
     
     def volverAtrasVista(self):
         self.vista.hide()
-        self.contAnterior.vista.show()
+        self.contAnterior.contAnterior.vista.show()
     
     def mostrarVentanaABM(self):
         self.vista.hide()

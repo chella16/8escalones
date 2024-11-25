@@ -11,8 +11,9 @@ from PyQt6.QtCore import Qt
 
 # !!!!!!!!!!!!!!!!!!!!!! descargar_preguntas_comunes de dao preguntas solo baja 19 preguntas, estaria bueno que baje todas las preguntas
 class ControladorABM():
-    def __init__(self):
+    def __init__(self,controladorAnt):
         self.vista = VentanaABM()
+        self._controladorAnt = controladorAnt
         self.__BD=Base_Datos_8Escalones("8escalones.db")
         self.__daoPreguntas = DAO_Preguntas(self.__BD)
         self.__daoTemas = DAO_Temas(self.__BD)
@@ -26,7 +27,7 @@ class ControladorABM():
         self.actualizarPreguntas()
         self.vista.show()
         
-        
+        self.vista.signalAtras.connect(self.volverAtras)
         #manejo de signal
         self.vista.signalCambioDeTema.connect(self.actualizarPreguntas)
         self.vista.signalCambioDeDificultad.connect(self.actualizarPreguntas)
@@ -39,6 +40,10 @@ class ControladorABM():
         self.vista.signalCrearAddPreg.connect(self.crearAltaPreg)
         self.vista.signalCrearDelPreg.connect(self.crearDelPreg)
         self.vista.signalCrearModPreg.connect(self.crearModPreg)
+    
+    def volverAtras(self):
+        self.vista.hide()
+        self._controladorAnt.vista.show()
         
     def actualizarPreguntas(self):
         tema= self.vista.temaActual
@@ -134,8 +139,6 @@ class ControladorABM():
         self.rechazoCambios = False
         self.vista.signalRechazoCambios.connect(self.rechazo)
         temaEliminar = self.buscarTema() 
-        print(temaEliminar.get_id_tematica())
-        print(temaEliminar.get_nombre_tematica())
         self.vista.mostrarTemaBaja()
         
         if self.rechazoCambios:
@@ -145,7 +148,9 @@ class ControladorABM():
         #el tema a eliminar es el que esta puesto en la vista
         
         self.__daoTemas.baja(temaEliminar.get_id_tematica()) #nose si este metodo tambien borra las preguntas del tema
-        
+        self.__cargar_temas()
+        self.actualizarPreguntas()
+
      
     def altaPreguntaAprox(self,pregunta:list):   
         preguntaIngresadaAprx =self.obtenerPreguntaAprox(pregunta)
@@ -243,9 +248,4 @@ class ControladorABM():
             self.vista.signalEnviarPreguntaAprox.disconnect()
         except TypeError:
             pass
-        
-
-if __name__ == "__main__":
-    app = QApplication([])
-    window = ControladorABM()
-    app.exec()
+    
