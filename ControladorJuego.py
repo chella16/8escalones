@@ -5,8 +5,9 @@ from base_datos import Base_Datos_8Escalones
 from dao_temas import DAO_Temas
 from dao_participantes import DAO_Participantes
 from dao_preguntas import DAO_Preguntas
+from dao_partidas import Dao_Partida
 import random
-import time
+from VistaGanador import VentanaGanador
 from PyQt6.QtCore import pyqtSignal, QEventLoop,QObject
 
 class ControladorJuego():
@@ -35,8 +36,6 @@ class ControladorJuego():
         self.vista.signalOp3.connect(self.contestar_pregunta)
         self.vista.signalOp4.connect(self.contestar_pregunta)
         #set_estado_partida maneja la conexion del signalRtaAprox
-        
-        
         
     def actualizar_vista_rta(self, pregunta):
         self.vista.setPreguntaYOpciones(pregunta.get_consigna(),pregunta.get_opciones())
@@ -93,7 +92,7 @@ class ControladorJuego():
     def ejecutar_escalon(self):
         tema_random=random.choice(self.__lista_temas)
         self.__lista_temas.remove(tema_random)       
-        print(tema_random)
+        
         self.__escalon_actual=Escalon(tema_random, self.__dificultad)
         bd=DAO_Preguntas(self.__BD)
         self.__escalon_actual.set_escalon(bd)#hay q ver si chela hizo la bajada de preguntas
@@ -108,13 +107,23 @@ class ControladorJuego():
     def resetStrikes(self):
         for jugador in self.__lista_sobrevivientes:
             jugador.reset_strikes()
+    
+    def getGanador(self):
+        return  self.__lista_sobrevivientes[0]
+    
+    def guardarGanador(self,idGandor):
+        daoPartida = Dao_Partida(self.__BD)
+        daoPartida.alta(idGandor)
         
     def ejecutar_escalones(self):
         for escalon in range(8):
             self.ejecutar_escalon()
             self.vista.subirEscalon()
         self.vista.hide()
-        #self.vistaGanador.show()
+        ganador = self.getGanador()
+        self.guardarGanador(ganador.get_id())
+        self.vistaGanador = VentanaGanador(ganador.get_nombre())
+        self.vistaGanador.show()
 
     def comparar_strikes(self):
         max_strikes = 0
@@ -180,7 +189,7 @@ class State_con_preg_de_aprox:
         for nombre in self.__jugadores_aprox_actuales_dict:
             if nombre['nombre'] == self.__jugador_actual:
                 nombre['rta'] = rta
-        print(self.__jugadores_aprox_actuales_dict)
+        
     
     
     
@@ -247,7 +256,7 @@ class State_con_preg_de_aprox:
         for jugador in self.__lista_jugadores_sin_dic:
             if jugador.get_nombre() == self.__jugador_actual:
                 jugador.set_rta_aprox(rta)
-        print(jugador.get_rta_aprox())
+        
     ##########################nuevo############################  
     
     def eliminacion_nuevo(self):

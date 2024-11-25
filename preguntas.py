@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 class Pregunta(ABC): #Una pregunta a nivel general tiene: consigna, respuesta correcta, temática, el metodo para obtener la información de la base de datos varía según el tipo de pregunta
-    def __init__(self, tema, consigna, rta, dificultad): #ya que varía la consulta realizada
+    def __init__(self, tema:str, consigna:str, rta:str, dificultad:str): #ya que varía la consulta realizada
         self._id = ""
         self._consigna = consigna
         self._respuesta_correcta = rta

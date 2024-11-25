@@ -4,7 +4,8 @@ class Dificultad ():
         self.__id = id_dif
         self.__nombre = nombre_dif
     
-    
+    def get_id (self):
+        return self.__id
     def set_nombre (self, nombre):
         self.__nombre = nombre
     

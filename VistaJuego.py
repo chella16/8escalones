@@ -278,7 +278,7 @@ class WidgetPregAproximacion(QWidget):
 
         # Crear Input para Rta del usuario
         self.rtaUser = QLineEdit() 
-        self.rtaUser.setPlaceholderText("Ingresa tu respuesta aquí")
+        self.rtaUser.setEchoMode(QLineEdit.EchoMode.Password)
         self.rtaUser.setAlignment(Qt.AlignmentFlag.AlignCenter)      
         
     def crearLayout(self):
