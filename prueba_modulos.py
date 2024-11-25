@@ -68,8 +68,10 @@ for p in lista_preguntas_aprox:
 daoparticipante.eliminar_todos_participantes()
     
     """
-jugadorprueba = Jugador("pepe")
+"""
+jugadorprueba = Jugador("pepecarlos")
 
-daoparticipante.alta("pepe")
+daoparticipante.alta(jugadorprueba)
+"""
 
-#daopartida.alta()
+daopartida.alta(2)

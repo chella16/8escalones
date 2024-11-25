@@ -12,7 +12,7 @@ class Dao_Partida (Interfaz_DAO):
         conexion = self._BD.get_conexion()
         c= conexion.cursor()
         
-        c.execute ("INSERT INTO partidas (id_participante_ganador) VALUES", (id_ganador,))
+        c.execute ("INSERT INTO partidas (id_participante_ganador) VALUES (?)", (id_ganador,))
         
         conexion.commit()
         self._BD.cerrar_conexion()
