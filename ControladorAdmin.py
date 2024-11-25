@@ -1,5 +1,5 @@
 from VistaAdmin import VentanaAdmin
-
+from ControladorABM import ControladorABM
 
 class ControladorAdmin():
     def __init__(self,contAnterior):
@@ -8,10 +8,10 @@ class ControladorAdmin():
         self.contAnterior = contAnterior
 
         #inicializar Controladores
-        #falta ver esta parte de la IGU
+        self.controladorABMTemaYPreg = None
         
         #manejo de signals
-        self.vista.signalABMPreg.connect(self.mostrarVentanaABMPreg) 
+        self.vista.signalABMTemasYPreg.connect(self.mostrarVentanaABM) 
         self.vista.signalABMAdmin.connect(self.mostrarVentanaABMAdmin)
         self.vista.signalAtras.connect(self.volverAtrasVista)
     
@@ -19,8 +19,12 @@ class ControladorAdmin():
         self.vista.hide()
         self.contAnterior.vista.show()
     
-    def mostrarVentanaABMPreg(self):
-        pass #falta hacer la interfaz del ABM Preguntas
+    def mostrarVentanaABM(self):
+        self.vista.hide()
+        if self.controladorABMTemaYPreg == None:
+            self.controladorLoginAdmin = ControladorABM(self)
+        else:
+            self.controladorLoginAdmin.vista.show()
     
     def mostrarVentanaABMAdmin(self):
         pass #falta hacer la interfaz del ABM Administradores

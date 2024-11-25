@@ -19,8 +19,8 @@ class VentanaAdmin(MainWindow):
         self.setCentralWidget(self.labelFondo)
         
     def crearBtns(self):
-        self.btnABMPreg = QPushButton("ABM Preguntas")
-        self.btnABMAdmin = QPushButton("ABM Temas")
+        self.btnABMPreg = QPushButton("ABM Temas yPreguntas")
+        self.btnABMAdmin = QPushButton("ABM Usuarios")
 
         self.btnAtras = QPushButton("Atras")
         
