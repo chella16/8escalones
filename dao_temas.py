@@ -117,7 +117,7 @@ class DAO_Temas (Interfaz_DAO):
             return lista_aux
     
     def eliminar_todas_tematicas (self):
-            self.crear_conexion()
+            conexion = self._BD.get_conexion()
             c = self._conexion.cursor()
             c.execute ("DELETE FROM temas")
             c.execute("DELETE FROM sqlite_sequence WHERE name = 'temas'")

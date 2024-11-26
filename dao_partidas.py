@@ -40,3 +40,13 @@ class Dao_Partida (Interfaz_DAO):
         
         self._BD.cerrar_conexion()
         return lista_ranking
+    
+    def eliminar_todas_partidas(self):
+        
+        conexion = self._BD.get_conexion()
+        c= conexion.cursor()
+        c.execute ("DELETE FROM partidas")
+        c.execute("DELETE FROM sqlite_sequence WHERE name = 'partidas'")
+        
+        conexion.commit()
+        self._BD.cerrar_conexion()

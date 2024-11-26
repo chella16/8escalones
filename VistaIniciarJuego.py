@@ -8,7 +8,7 @@ class VentanaIniciarJuego(MainWindow):
     signalEnviarDificultad = pyqtSignal(str)
     signalAtras = pyqtSignal()
     def __init__(self):
-        super().__init__("Images/FondoJuego.jpg")
+        super().__init__("8escalones\Images\FondoJuego.jpg")
         self.nroJugadores = 0
         self.listaJugadores = []
         self.crearBtns()
