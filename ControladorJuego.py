@@ -88,22 +88,22 @@ class ControladorJuego():
         return nro_preg_actual
     
         
-    def ejecutar_escalon(self):
+    def __ejecutar_escalon(self):
         tema_random=random.choice(self.__lista_temas)
         self.__lista_temas.remove(tema_random)       
         self.vista.setTematicaActual(tema_random) #para poner la tematica en la vista
         self.__escalon_actual=Escalon(tema_random, self.__dificultad)
         bd=DAO_Preguntas(self.__BD)
-        self.__escalon_actual.set_escalon(bd)#hay q ver si chela hizo la bajada de preguntas
+        self.__escalon_actual.set_escalon(bd)
         nro_preg_actual = 0
-        for ronda in range(1):
+        for ronda in range(2):
             nro_preg_actual = self.ronda(nro_preg_actual)
-        self.comparar_strikes()#despues de esto la lista de jugadores q van a aproximacion y esta lista para verificar la eliminacion
-        self.set_estado_partida()
-        self.eliminacion()
-        self.resetStrikes()
+        self.__comparar_strikes()#despues de esto la lista de jugadores q van a aproximacion y esta lista para verificar la eliminacion
+        self.__set_estado_partida()
+        self.__eliminacion()
+        self.__resetStrikes()
     
-    def resetStrikes(self):
+    def __resetStrikes(self):
         for jugador in self.__lista_sobrevivientes:
             jugador.reset_strikes()
     
@@ -116,7 +116,7 @@ class ControladorJuego():
         
     def ejecutar_escalones(self):
         for escalon in range(8):
-            self.ejecutar_escalon()
+            self.__ejecutar_escalon()
             self.vista.subirEscalon()
         self.vista.hide()
         ganador = self.getGanador()
@@ -124,7 +124,7 @@ class ControladorJuego():
         self.vistaGanador = VentanaGanador(ganador.get_nombre())
         self.vistaGanador.show()
 
-    def comparar_strikes(self):
+    def __comparar_strikes(self):
         max_strikes = 0
         for jugador in self.__lista_sobrevivientes:
             if jugador.get_strikes() > max_strikes:
@@ -135,7 +135,7 @@ class ControladorJuego():
         self.__lista_van_a_aproximacion = [jugador for jugador in self.__lista_sobrevivientes if jugador.get_strikes() == max_strikes]
         
         
-    def set_estado_partida(self):
+    def __set_estado_partida(self):
         
         if len(self.__lista_van_a_aproximacion)>1:
             self.vista.cambiarColorJugadorRonda([nombre.get_nombre() for nombre in self.__lista_sobrevivientes],self.__lista_sobrevivientes[-1].get_nombre(),200,200,200) #[-1] para agarrar al ultimo sobreviviente que quedo pintado de verde por el escalon
@@ -148,7 +148,7 @@ class ControladorJuego():
     def reset_lista_van_aprox(self):
         self.__lista_van_a_aproximacion.clear()
     
-    def eliminacion(self):
+    def __eliminacion(self):
         self.__estado_actual.eliminacion()
         self.reset_lista_van_aprox()
         
@@ -226,22 +226,16 @@ class State_con_preg_de_aprox:
             distancia_calculada=abs(int(self.__pregunta_aprox_actual.get_rta()) - int(jugador.get_rta_aprox()))
             jugador.set_distancia_rta_aprox(distancia_calculada)
             sumatoria += distancia_calculada
-            
-            #if jugador.get_distancia_rta_aprox() == 0:
-                #jugador.set_responde_bien_preg_aprox(True)
                 
             if max_distancia < jugador.get_distancia_rta_aprox():
                 max_distancia = distancia_calculada
         
-        #caso3 -> todos responden la misma distancia
+        # todos responden la misma distancia
         
         if sumatoria/len(self.__lista_jugadores_sin_dic) == max_distancia: #la media es igual a la max distancia por ende todos respondieron igual
-            self.__instancia_de_juego.vista.mostrarJugadoresVanAproximacion([jugador.get_nombre() for jugador in self.__lista_jugadores_sin_dic])#solo puede dar menor o igual y si da menor entonces uno respondio distinto (con menos distancia)
+            self.__instancia_de_juego.vista.mostrarJugadoresVanAproximacion([jugador.get_nombre() for jugador in self.__lista_jugadores_sin_dic])#solo puede dar menor o igual y si da menor entonces uno o mas respondieron con una distancia menor a la maxima. Esos van a safar
             return                                                                  
-            #loopea de una  #ese chabon es el que safa
-            
-        #puede ser que no todas las distancias de los usuarios son iguales
-        #x distancias sean menores a la maxima y n-x iguales 
+            #loopea de una   
         self.__instancia_de_juego.vista.cambiarColorJugadorRonda([jugador.get_nombre() for jugador in self.__lista_jugadores_sin_dic],self.__lista_jugadores_sin_dic[-1].get_nombre(),200,200,200) #[-1] para agarrar al ultimo jugador que quedo pintado de verde por la ronda aprox
         self.__lista_jugadores_sin_dic= [jugador for jugador in self.__lista_jugadores_sin_dic if jugador.get_distancia_rta_aprox() == max_distancia]
         
@@ -253,7 +247,6 @@ class State_con_preg_de_aprox:
         for jugador in self.__lista_jugadores_sin_dic:
             jugador.set_distancia_rta_aprox(None)
             jugador.set_rta_aprox(None)
-            jugador.set_responde_bien_preg_aprox(False)
     
         
 class State_sin_preg_eliminacion:

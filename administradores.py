@@ -5,7 +5,7 @@ class Admin:
         self.__contraseña=password
         
     def match(self)->bool:
-        pass #dao consulta 
+        pass #DAO consulta 
     
     
     
