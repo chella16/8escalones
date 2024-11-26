@@ -151,10 +151,10 @@ class PreguntaWidget(QWidget):
         
     def setPreguntaYOpciones(self,pregunta:str,opciones:list):
         self.labelPregunta.setText(pregunta)
-        self.btnRtaA.setText(opciones[0])
-        self.btnRtaB.setText(opciones[1])
-        self.btnRtaC.setText(opciones[2])
-        self.btnRtaD.setText(opciones[3])
+        self.btnRtaA.setText(str(opciones[0]))
+        self.btnRtaB.setText(str(opciones[1]))
+        self.btnRtaC.setText(str(opciones[2]))
+        self.btnRtaD.setText(str(opciones[3]))
     
     def getOpciones(self):
         return [self.btnRtaA.text(),self.btnRtaB.text(),self.btnRtaC.text(),self.btnRtaD.text()]
@@ -162,8 +162,6 @@ class PreguntaWidget(QWidget):
     def setTematicaActual(self,tematica:str):
         self.tematicaWidget.setTematicaActual(tematica) 
     
-
-
         
 class WidgetEscalon(QWidget):
     def __init__(self, nroEscalon):
