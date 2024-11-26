@@ -501,7 +501,7 @@ class VistaJuego(MainWindow):
             self.preguntaAproximacionWidget.rtaUser.setPlaceholderText("Ingrese una respuesta sin espacios en blanco")
             return
         try:
-            rta = int(rta) #para asegurarnos q la rta es un entero
+            prueba = int(rta) #para asegurarnos q la rta es un entero
         except ValueError:
             return
         self.cronometroWidget.pararCronometro()
