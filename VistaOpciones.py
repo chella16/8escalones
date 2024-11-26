@@ -21,8 +21,6 @@ class VentanaOpciones(MainWindow):
         self.sliderVol = QSlider(Qt.Orientation.Horizontal)
         self.textVol = QLabel("Volumen: 50")
         self.valorVol = 0.5
-        self.radioBtnNormal = QRadioButton("Normal")
-        self.radioBtnDificil = QRadioButton("Dificil")
         self.btnAplicar = QPushButton("Aplicar")
         self.btnEntrarAdmin = QPushButton("Entrar como Admin")
         
@@ -33,10 +31,7 @@ class VentanaOpciones(MainWindow):
         self.sliderVol.setTickInterval(5)
         self.sliderVol.setTickPosition(QSlider.TickPosition.TicksBelow)
         self.sliderVol.valueChanged.connect(self.setValueVol)
-        
-        #config radio btns
-        self.radioBtnNormal.setChecked(True)
-        
+                
         #emitir señal para confirmar los ajustes
         self.btnAplicar.clicked.connect(self.emitirCambios)
         
@@ -56,13 +51,6 @@ class VentanaOpciones(MainWindow):
     def crearLayout(self):  
         widgetContenedor = widgetDeFondoConColor(255,255,255,180)
     
-        grupoDificultad = QGroupBox("Seleccionar Dificultad")
-        dificultadLayout = QVBoxLayout()
-        dificultadLayout.addWidget(self.textVol)
-        dificultadLayout.addWidget(self.radioBtnNormal)
-        dificultadLayout.addWidget(self.radioBtnDificil)
-        grupoDificultad.setLayout(dificultadLayout)
-        
         grupoVolumen = QGroupBox()
         volumenLayout = QVBoxLayout()
         volumenLayout.addWidget(self.textVol)
@@ -70,7 +58,7 @@ class VentanaOpciones(MainWindow):
         grupoVolumen.setLayout(volumenLayout)
         
         layout = QGridLayout()
-        layout.addWidget(grupoDificultad, 0, 0)
+        #layout.addWidget(grupoDificultad, 0, 0)
         layout.addWidget(grupoVolumen, 0, 1)
         layout.addWidget(self.btnAtras, 1, 0)
         layout.addWidget(self.btnAplicar, 1, 1)
