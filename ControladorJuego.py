@@ -11,7 +11,7 @@ from VistaGanador import VentanaGanador
 from PyQt6.QtCore import pyqtSignal, QEventLoop,QObject
 
 class ControladorJuego():
-    def __init__(self,contrAnterior,listaJugadores):
+    def __init__(self,contrAnterior,listaJugadores,dificultad):
         super().__init__()
         self.vista = VistaJuego(listaJugadores)
         self.vista.show()
@@ -27,7 +27,7 @@ class ControladorJuego():
         self.__BD=Base_Datos_8Escalones("8escalones.db")
         self.__cargar_jugadores()
         self.__cargar_temas()
-        self.__dificultad='Normal'
+        self.__dificultad= dificultad
         self.__respuesta_actual_correcta=None
         #Conexion signals
         self.vista.signalIniciarJuego.connect(self.ejecutar_escalones)
