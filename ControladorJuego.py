@@ -96,7 +96,7 @@ class ControladorJuego():
         bd=DAO_Preguntas(self.__BD)
         self.__escalon_actual.set_escalon(bd)#hay q ver si chela hizo la bajada de preguntas
         nro_preg_actual = 0
-        for ronda in range(2):
+        for ronda in range(1):
             nro_preg_actual = self.ronda(nro_preg_actual)
         self.comparar_strikes()#despues de esto la lista de jugadores q van a aproximacion y esta lista para verificar la eliminacion
         self.set_estado_partida()
