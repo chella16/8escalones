@@ -142,7 +142,7 @@ class ControladorJuego():
             self.vista.cambiarColorJugadorRonda([nombre.get_nombre() for nombre in self.__lista_sobrevivientes],self.__lista_sobrevivientes[-1].get_nombre(),200,200,200) #[-1] para agarrar al ultimo sobreviviente que quedo pintado de verde por el escalon
             self.vista.ocultarStrikes()
             self.__estado_actual=State_con_preg_de_aprox(self)
-            self.vista.signalRtaAprox.connect(self.__estado_actual.get_rta_aprox) #se le delega a la clase State con preg de aprox
+            self.vista.signalRtaAprox.connect(self.__estado_actual.get_rta_aprox_nuevo) #se le delega a la clase State con preg de aprox
         else:
             self.__estado_actual=State_sin_preg_eliminacion(self) 
     
@@ -194,7 +194,7 @@ class State_con_preg_de_aprox:
     
     
     
-    def eliminacion(self):
+    def eliminacion_viejo(self):
         i = 0
         self.__instancia_de_juego.cambiarWidget() #cambiar a las preguntas aproximacion
         while True: #bucle poscondicional
@@ -262,7 +262,7 @@ class State_con_preg_de_aprox:
         
     ##########################nuevo############################  
     
-    def eliminacion_nuevo(self):
+    def eliminacion(self):
         i = 0
         self.__instancia_de_juego.cambiarWidget() #cambiar a las preguntas aproximacion
         self.reset_atributos_de_aproximacion()#se ejecuta una vez por eliminacion para setear los atributos de aproximacion al estado por defecto
@@ -304,22 +304,27 @@ class State_con_preg_de_aprox:
             jugador.set_distancia_rta_aprox(distancia_calculada)
             sumatoria += distancia_calculada
             
-            if jugador.get_distancia_rta_aprox() == 0:
-                jugador.set_responde_bien_preg_aprox(True)
+            #if jugador.get_distancia_rta_aprox() == 0:
+                #jugador.set_responde_bien_preg_aprox(True)
                 
             if max_distancia < jugador.get_distancia_rta_aprox():
-                max_distancia = jugador.set_distancia_rta_aprox()
+                max_distancia = distancia_calculada
         
         #caso3 -> todos responden la misma distancia
         
         if sumatoria/len(self.__lista_jugadores_sin_dic) == max_distancia: #la media es igual a la max distancia por ende todos respondieron igual
             return                                                                  #solo puede dar menor o igual y si da menor entonces uno respondio distinto (con menos distancia)
-            #loopea de una                                                          #ese chabon es el que safa
+            #loopea de una  #ese chabon es el que safa
+            
             
         #puede ser que no todas las distancias de los usuarios son iguales
         #x distancias sean menores a la maxima y n-x iguales 
         self.__instancia_de_juego.vista.cambiarColorJugadorRonda([jugador.get_nombre() for jugador in self.__lista_jugadores_sin_dic],self.__lista_jugadores_sin_dic[-1].get_nombre(),200,200,200) #[-1] para agarrar al ultimo jugador que quedo pintado de verde por la ronda aprox
         self.__lista_jugadores_sin_dic= [jugador for jugador in self.__lista_jugadores_sin_dic if jugador.get_distancia_rta_aprox() == max_distancia]
+        
+        if len(self.__lista_jugadores_sin_dic) == 1:
+            return 
+        self.__instancia_de_juego.vista.mostrarJugadoresVanAproximacion([jugador.get_nombre() for jugador in self.__lista_jugadores_sin_dic])
     
     ##############################nuevo###############################################
     
