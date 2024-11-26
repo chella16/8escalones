@@ -9,7 +9,7 @@ class VentanaInicial(MainWindow):
     signalCerrar = pyqtSignal()
     
     def __init__(self):
-        super().__init__("Images/FondoPantallaPpal.png")
+        super().__init__("8escalones\Images\FondoPantallaPpal.png")
         self.btnWidth = 150
         self.btnHeight = 40
         
