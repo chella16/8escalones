@@ -14,6 +14,25 @@ class Jugador:
         
         self.__partidas_ganadas = None #atributo para mostrar el ranking
         
+    
+    
+    def get_rta_aprox(self):
+        return self.__rta_aproximacion
+    
+    def set_rta_aprox(self,rta):
+        self.__rta_aproximacion=rta
+    
+    def get_distancia_rta_aprox(self):
+        return self.__distancia_rta_aprox
+    
+    def set_distancia_rta_aprox(self, distancia):
+        self.__distancia_rta_aprox=distancia
+        
+    def set_responde_bien_preg_aprox(self, bool):
+        self.__responde_bien_preg_aprox=bool
+        
+    
+    
     def get_nombre(self) -> str:
         return self.__nombre
     

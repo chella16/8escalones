@@ -6,8 +6,8 @@ from PyQt6.QtCore import Qt,pyqtSignal
 
 class VentanaAdmin(MainWindow):
     signalAtras = pyqtSignal()
-    signalABMPreg = pyqtSignal()
-    signalABMAdmin = pyqtSignal()
+    signalABMTemasYPreg = pyqtSignal()
+    signalABMUsuarios = pyqtSignal()
     
     def __init__(self):
         super().__init__("Images/FondoJuego.jpg")
@@ -19,8 +19,8 @@ class VentanaAdmin(MainWindow):
         self.setCentralWidget(self.labelFondo)
         
     def crearBtns(self):
-        self.btnABMPreg = QPushButton("ABM Preguntas")
-        self.btnABMAdmin = QPushButton("ABM Temas")
+        self.btnABMPreg = QPushButton("ABM Temas y Preguntas")
+        self.btnABMAdmin = QPushButton("ABM Usuarios")
 
         self.btnAtras = QPushButton("Atras")
         
@@ -28,8 +28,8 @@ class VentanaAdmin(MainWindow):
         self.btnABMAdmin.setFixedSize(self.btnWidth, self.btnHeight)
         self.btnAtras.setFixedSize(80, 30)
     
-        self.btnABMPreg.clicked.connect(self.signalABMPreg.emit)
-        self.btnABMAdmin.clicked.connect(self.signalABMAdmin.emit)
+        self.btnABMPreg.clicked.connect(self.signalABMTemasYPreg.emit)
+        self.btnABMAdmin.clicked.connect(self.signalABMUsuarios.emit)
         self.btnAtras.clicked.connect(self.signalAtras.emit)
         
     

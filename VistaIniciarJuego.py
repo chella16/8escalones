@@ -1,10 +1,11 @@
 from MainWindow import *
-from PyQt6.QtWidgets import QLineEdit,QGridLayout, QLabel,QPushButton
+from PyQt6.QtWidgets import QLineEdit,QGridLayout, QLabel,QPushButton,QGroupBox,QVBoxLayout,QRadioButton
 from PyQt6.QtCore import Qt,pyqtSignal
 
 
 class VentanaIniciarJuego(MainWindow):
     signalEnviarJugadores = pyqtSignal(list)
+    signalEnviarDificultad = pyqtSignal(str)
     signalAtras = pyqtSignal()
     def __init__(self):
         super().__init__("8escalones\Images\FondoJuego.jpg")
@@ -17,7 +18,9 @@ class VentanaIniciarJuego(MainWindow):
     def crearBtns(self):
         self.title = QLabel("Ingreso de jugadores")
         self.btnAtras = QPushButton("Atras")
-        
+        self.radioBtnNormal = QRadioButton("Normal")
+        self.radioBtnDificil = QRadioButton("Dificil")
+        self.radioBtnNormal.setChecked(True) #x defecto true
         self.btnAtras.clicked.connect(self.signalAtras.emit)
         
         self.ingresarNombre = QLineEdit()
@@ -28,12 +31,20 @@ class VentanaIniciarJuego(MainWindow):
     
     def crearLayout(self):
         widgetContenedor = widgetDeFondoConColor(255,255,255,180,self.labelFondo)
-        widgetContenedor.setGeometry(250, 100, 300, 200)
+        widgetContenedor.setGeometry(250, 100, 250, 200)
+
+        grupoDificultad = QGroupBox("Seleccionar Dificultad")
+        dificultadLayout = QVBoxLayout()
+        dificultadLayout.addWidget(self.radioBtnNormal)
+        dificultadLayout.addWidget(self.radioBtnDificil)
+        grupoDificultad.setLayout(dificultadLayout)
+        
         layout = QGridLayout()
         layout.addWidget(self.title,0,0,1,2,alignment=Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.ingresarNombre,1,0,1,2)
         layout.addWidget(self.textoCantJugadores,2,1,1,2)
         layout.addWidget(self.btnAtras,3,0)
+        layout.addWidget(grupoDificultad)
         widgetContenedor.setLayout(layout)
         
         
@@ -52,12 +63,30 @@ class VentanaIniciarJuego(MainWindow):
             self.listaJugadores.append(nombre)
             self.actualizarNroJugadores()
             if self.nroJugadores == 9:
+                self.enviarDificultad()
                 self.signalEnviarJugadores.emit(self.listaJugadores)
-
-         
+                
+                
+    def enviarDificultad(self):
+        if self.radioBtnDificil.isChecked():
+            dificultad = "Dificil"
+        if self.radioBtnNormal.isChecked():
+            dificultad = "Normal"
+        self.signalEnviarDificultad.emit(dificultad)
+    
+    def resetListaJugadores(self):
+        self.listaJugadores = []
+        self.__resetNroJugadores()
         
     def actualizarNroJugadores(self):
         self.nroJugadores += 1
+        self.__setText()
+
+    def __resetNroJugadores(self):
+        self.nroJugadores = 0
+        self.__setText()
+    
+    def __setText(self):
         self.textoCantJugadores.setText(f"{self.nroJugadores}/9 Jugadores Ingresados")
 
     
