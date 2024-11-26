@@ -36,7 +36,7 @@ class DAO_Preguntas(Interfaz_DAO):
         
         self._BD.cerrar_conexion()
     
-    def modificacion_consigna(self, pregunta, nuevo_desarrollo):
+    def modificacion_consigna(self, pregunta, nuevo_desarrollo): #comun a ambos 
         
         id_a_modificar = pregunta.get_id()
         

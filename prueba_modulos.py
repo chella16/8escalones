@@ -5,6 +5,7 @@ from dao_participantes import DAO_Participantes
 from dao_preguntas import DAO_Preguntas
 from dao_temas import DAO_Temas
 from dao_partidas import Dao_Partida
+from dao_administradores import DAO_Administradores
 
 from base_datos import Base_Datos_8Escalones
 
@@ -19,6 +20,7 @@ daoparticipante = DAO_Participantes(basedatos)
 daopreguntas = DAO_Preguntas(basedatos)
 daotemas = DAO_Temas(basedatos)
 daopartida = Dao_Partida(basedatos)
+dao_admin = DAO_Administradores(basedatos)
 #print ("conectada sin problemas...")
 
 #participante1 = Jugador("peluca")
@@ -40,7 +42,10 @@ pregunta_aprox = Pregunta_aproximacion("Arte y Música", "preg de aprox de prueb
 daopreguntas.alta_preg_aprox(pregunta_aprox)
 """
 
-#daopreguntas.baja(369)
+"""
+daopreguntas.baja(369)
+daopreguntas.baja(370)
+"""
 
 #abmpreguntas.modificacion_consigna(pregunta1, "preg aprox nueva?")
 #abmpreguntas.modificacion_rta_aprox(pregunta1, "nueva rtaa")
@@ -61,7 +66,7 @@ for t in lista_temas:
     t.mostrar_info()
 """
 
-
+"""
 print ("Lista preguntas comunessss")
 lista_preguntascomun = []
 lista_preguntascomun = daopreguntas.descargar_preguntas_comunes("Cine y Televisión", "Normal")
@@ -75,7 +80,7 @@ for p in lista_preguntas_aprox:
     p.mostrar_info_preg()
 
 #daoparticipante.eliminar_todos_participantes()
-    
+"""
 
 """
 jugadorprueba = Jugador("pepecarlos")
@@ -84,9 +89,14 @@ daoparticipante.alta(jugadorprueba)
 """
 
 #daopartida.alta(2)
+
 """
 daopartida.eliminar_todas_partidas()
 
 daoparticipante.eliminar_todos_participantes()
 """
 
+"""
+dao_admin.alta_administrador("Admin1", "123")
+dao_admin.alta_administrador("Admin2", "321")
+"""
