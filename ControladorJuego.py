@@ -263,6 +263,7 @@ class State_con_preg_de_aprox:
     ##########################nuevo############################  
     
     def eliminacion(self):
+        self.__instancia_de_juego.vista.mostrarJugadoresVanAproximacion([jugador.get_nombre() for jugador in self.__lista_jugadores_sin_dic])
         i = 0
         self.__instancia_de_juego.cambiarWidget() #cambiar a las preguntas aproximacion
         self.reset_atributos_de_aproximacion()#se ejecuta una vez por eliminacion para setear los atributos de aproximacion al estado por defecto
@@ -313,7 +314,8 @@ class State_con_preg_de_aprox:
         #caso3 -> todos responden la misma distancia
         
         if sumatoria/len(self.__lista_jugadores_sin_dic) == max_distancia: #la media es igual a la max distancia por ende todos respondieron igual
-            return                                                                  #solo puede dar menor o igual y si da menor entonces uno respondio distinto (con menos distancia)
+            self.__instancia_de_juego.vista.mostrarJugadoresVanAproximacion([jugador.get_nombre() for jugador in self.__lista_jugadores_sin_dic])#solo puede dar menor o igual y si da menor entonces uno respondio distinto (con menos distancia)
+            return                                                                  
             #loopea de una  #ese chabon es el que safa
             
             
@@ -324,6 +326,7 @@ class State_con_preg_de_aprox:
         
         if len(self.__lista_jugadores_sin_dic) == 1:
             return 
+        print("aaa")
         self.__instancia_de_juego.vista.mostrarJugadoresVanAproximacion([jugador.get_nombre() for jugador in self.__lista_jugadores_sin_dic])
     
     ##############################nuevo###############################################
