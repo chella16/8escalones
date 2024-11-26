@@ -9,7 +9,6 @@ from preguntas import Pregunta_comun, Pregunta_aproximacion
 from dificultad import Dificultad
 from PyQt6.QtCore import Qt
 
-# !!!!!!!!!!!!!!!!!!!!!! descargar_preguntas_comunes de dao preguntas solo baja 19 preguntas, estaria bueno que baje todas las preguntas
 class ControladorABM():
     def __init__(self,controladorAnt):
         self.vista = VentanaABM()

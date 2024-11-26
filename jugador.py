@@ -5,13 +5,8 @@ class Jugador:
         self.__id = "" #esto lo agregue yo para asegurar utilizar bien el singleton
         self.__nombre= nombre 
         self.__strikes=0 
-        
-        
-        #atributos para la aproximacion
-        self.__responde_bien_preg_aprox=False
         self.__rta_aproximacion=None
         self.__distancia_rta_aprox=None
-        
         self.__partidas_ganadas = None #atributo para mostrar el ranking
         
     
@@ -27,12 +22,7 @@ class Jugador:
     
     def set_distancia_rta_aprox(self, distancia):
         self.__distancia_rta_aprox=distancia
-        
-    def set_responde_bien_preg_aprox(self, bool):
-        self.__responde_bien_preg_aprox=bool
-        
-    
-    
+
     def get_nombre(self) -> str:
         return self.__nombre
     
