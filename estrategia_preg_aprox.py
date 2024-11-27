@@ -25,11 +25,16 @@ class Estrategia_Preg_Aprox(Interfaz_Estrategia):
         
         conexion.commit()
     
-    def modificacion_rta_pregunta(self, conexion, pregunta, rta_nueva):
+    
+    def modificacion_rta_pregunta(self, conexion, pregunta, rta_nueva, lista_opciones = None):
         id_a_modificar = pregunta.get_id()
         
+        print("UPDATEANDO preg aproxx")
+        
         c= conexion.cursor()
-        c.execute("UPDATE preguntas SET (rta_correcta) = ? WHERE LOWER(desarrollo_pregunta) = LOWER(?)",(rta_nueva, id_a_modificar,))
+        c.execute("UPDATE preguntas SET (rta_correcta) = (?) WHERE id_pregunta = (?)",(rta_nueva, id_a_modificar,))
+        
+        print("updateado con exito la preg aprox")
         
         conexion.commit()
     

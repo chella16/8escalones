@@ -16,27 +16,15 @@ class DAO_Preguntas(Interfaz_DAO):
     def set_estrategia (self, estrategia):
         self.__estrategia = estrategia
     
-    def alta_preg_comun(self, pregunta_comun):
+    
+    def alta(self, pregunta_comun):
         conexion = self._BD.get_conexion()
-        
-        estrat_preg_comun = Estrategia_Preg_Comun()
-        self.set_estrategia(estrat_preg_comun)
         
         self.__estrategia.alta_pregunta(conexion, pregunta_comun)
         
         self._BD.cerrar_conexion()
     
-    def alta_preg_aprox (self, pregunta_aprox):
-        conexion = self._BD.get_conexion()
-        
-        estrat_preg_aprox = Estrategia_Preg_Aprox()
-        self.set_estrategia(estrat_preg_aprox)
-        
-        self.__estrategia.alta_pregunta(conexion, pregunta_aprox)
-        
-        self._BD.cerrar_conexion()
-    
-    def modificacion_consigna(self, pregunta, nuevo_desarrollo): #comun a ambos 
+    def modificacion(self, pregunta, nuevo_desarrollo): #comun a ambos 
         
         id_a_modificar = pregunta.get_id()
         
@@ -48,23 +36,10 @@ class DAO_Preguntas(Interfaz_DAO):
         conexion.commit()
         self._BD.cerrar_conexion()
     
-    def modificacion_rta_comun(self, pregunta, rta_nueva, lista_opciones):
+    def modificacion_rta(self, pregunta, rta_nueva, lista_opciones= None):
         conexion = self._BD.get_conexion()
-        
-        estrat_preg_comun= Estrategia_Preg_Comun()
-        self.set_estrategia(estrat_preg_comun)
         
         self.__estrategia.modificacion_rta_pregunta(conexion, pregunta, rta_nueva, lista_opciones)
-        
-        self._BD.cerrar_conexion()
-    
-    def modificacion_rta_aprox(self, pregunta, rta_nueva):
-        conexion = self._BD.get_conexion()
-        
-        estrat_preg_aprox = Estrategia_Preg_Aprox()
-        self.set_estrategia(estrat_preg_aprox)
-        
-        self.__estrategia.modificacion_rta_pregunta(conexion, pregunta, rta_nueva)
         
         self._BD.cerrar_conexion()
     
@@ -76,6 +51,14 @@ class DAO_Preguntas(Interfaz_DAO):
         
         conexion.commit()
         self._BD.cerrar_conexion()
+    
+    def descargar_preguntas(self, nombre_tema, dificultad_buscada):
+        conexion = self._BD.get_conexion()
+        
+        lista_auxiliar = self.__estrategia.descargar_preguntas(conexion, nombre_tema, dificultad_buscada)
+        
+        self._BD.cerrar_conexion()
+        return lista_auxiliar
     
     ##############################################################################################
     def eliminar_todas_preguntas(self):

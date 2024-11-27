@@ -2,11 +2,14 @@ from abc import ABC, abstractmethod
 
 class Interfaz_Estrategia (ABC):
     
-    def alta_pregunta(self):
+    @abstractmethod
+    def alta_pregunta(self, conexion, pregunta):
         pass
     
-    def modificacion_rta_pregunta (self):
+    @abstractmethod
+    def modificacion_rta_pregunta (self, conexion, pregunta, rta_nueva, lista_opciones = None):
         pass
     
-    def descargar_preguntas(self):
+    @abstractmethod
+    def descargar_preguntas(self, conexion, nombre_tema, dificultad_buscada):
         pass
