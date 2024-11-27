@@ -1,5 +1,5 @@
 from MainWindow import MainWindow,widgetDeFondoConColor
-from PyQt6.QtWidgets import QApplication,QLabel,QVBoxLayout,QPushButton
+from PyQt6.QtWidgets import QLabel,QVBoxLayout,QPushButton
 from PyQt6.QtGui import QFont
 from PyQt6.QtCore import Qt
 import sys
