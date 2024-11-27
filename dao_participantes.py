@@ -61,11 +61,22 @@ class DAO_Participantes (Interfaz_DAO):
         self._BD.cerrar_conexion()
         print("cerrando bd...")
     
-    def descargar_participante (self):
+    
+    def descargar_participantes (self):
+        lista_jugadores = []
+        
         conexion = self._BD.get_conexion()
         c= conexion.cursor()
         
         c.execute("SELECT * FROM participantes")
         lista_aux = c.fetchall()
         
-        for 
+        for id_participante, nombre_participante in lista_aux:
+            jugador_aux = Jugador(nombre_participante)
+            jugador_aux.set_id(id_participante)
+            lista_jugadores.append(jugador_aux)
+        
+        self._BD.cerrar_conexion()
+        
+        return lista_jugadores
+    
