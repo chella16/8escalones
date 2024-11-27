@@ -7,6 +7,8 @@ from tematica import Tematica
 from preguntas import Pregunta_comun, Pregunta_aproximacion
 from dificultad import Dificultad
 from PyQt6.QtCore import Qt
+from estrategia_preg_aprox import Estrategia_Preg_Aprox
+from estrategia_preg_comun import Estrategia_Preg_Comun
 
 class ControladorABM():
     def __init__(self,controladorAnt):
@@ -44,10 +46,19 @@ class ControladorABM():
         self._controladorAnt.vista.show()
 
     def actualizarPreguntas(self):
+        """"""
         tema= self.vista.temaActual
         dif= self.vista.dificultadActual
-        preguntasNormales = [pregunta.get_consigna() for pregunta in self.__daoPreguntas.descargar_preguntas_comunes(tema,dif)] #lo malo es que se descarga random
-        preguntasAprox=[pregunta.get_consigna() for pregunta in self.__daoPreguntas.descargar_preguntas_aproximacion(tema,dif)]
+        
+        estrat_preg_comun = Estrategia_Preg_Comun()
+        self.__daoPreguntas.set_estrategia(estrat_preg_comun)
+        
+        preguntasNormales = [pregunta.get_consigna() for pregunta in self.__daoPreguntas.descargar_preguntas(tema,dif)] #lo malo es que se descarga random
+        
+        estrat_preg_aprox = Estrategia_Preg_Aprox()
+        self.__daoPreguntas.set_estrategia(estrat_preg_aprox)
+        
+        preguntasAprox=[pregunta.get_consigna() for pregunta in self.__daoPreguntas.descargar_preguntas(tema,dif)]
         self.vista.setPreguntas(preguntasNormales,preguntasAprox)
 
     def __cargar_temas(self):
@@ -73,7 +84,7 @@ class ControladorABM():
         for tema in self.__listaTemas:
             if self.vista.temaActual == tema.get_nombre_tematica():
                 return tema
-                 
+    
     def crearAddTema(self):
         try:
             self.vista.signalEnviarTema.disconnect()
@@ -145,18 +156,28 @@ class ControladorABM():
         #si pasa aca entonces se elimina el tema
         #el tema a eliminar es el que esta puesto en la vista
         
-        self.__daoTemas.baja(temaEliminar.get_id_tematica()) #nose si este metodo tambien borra las preguntas del tema
+        self.__daoTemas.baja(temaEliminar.get_id_tematica())
         self.__cargar_temas()
         self.actualizarPreguntas()
 
-     
-    def altaPreguntaAprox(self,pregunta:list):   
+####################################################################################
+
+    
+    def altaPreguntaAprox(self,pregunta:list):
+        """"""
+        estrat_preg_aprox = Estrategia_Preg_Aprox()
+        self.__daoPreguntas.set_estrategia(estrat_preg_aprox)
+        
         preguntaIngresadaAprx =self.obtenerPreguntaAprox(pregunta)
-        self.__daoPreguntas.alta_preg_aprox(preguntaIngresadaAprx)
+        self.__daoPreguntas.alta(preguntaIngresadaAprx)
         
     def altaPreguntaNormal(self,pregunta:list):
+        """"""
+        estrat_preg_comun = Estrategia_Preg_Comun()
+        self.__daoPreguntas.set_estrategia(estrat_preg_comun)
+        
         preguntaIngresadaNormal =self.obtenerPreguntaNormal(pregunta)
-        self.__daoPreguntas.alta_preg_comun(preguntaIngresadaNormal)
+        self.__daoPreguntas.alta(preguntaIngresadaNormal)
         
     def obtenerPreguntaNormal(self,pregunta:list): #una lista que su primer elemento es la consigna, su segundo elemento una lista, esa lista tiene las 4 opciones
         consigna = pregunta[0]
@@ -169,7 +190,7 @@ class ControladorABM():
         rta = pregunta[1] 
         return Pregunta_aproximacion(self.vista.temaActual,consigna,rta,self.vista.dificultadActual)
         
-        
+    
     def crearAltaPreg(self):
         try:
             self.vista.signalEnviarPreguntaNormal.disconnect()
@@ -210,24 +231,34 @@ class ControladorABM():
         self.vista.signalBorrarPreg.connect(self.borrarPregunta,type=Qt.ConnectionType.UniqueConnection)
         self.vista.dialogBajaPreg()
         
-            
+        
     def modificarPregNormal(self,pregunta):
+        """"""
         consignaOriginal = pregunta[0]
         consignaMod = pregunta[1]
         opciones = pregunta[2]
         rtaCorrecta = pregunta[3]
         preguntaOriginal = self.__getPregunta(consignaOriginal)
-        self.__daoPreguntas.modificacion_consigna(preguntaOriginal,consignaMod)
-        self.__daoPreguntas.modificacion_rta_comun(preguntaOriginal,rtaCorrecta,opciones)
+        
+        estrat_preg_comun = Estrategia_Preg_Comun()
+        self.__daoPreguntas.set_estrategia(estrat_preg_comun)
+        
+        self.__daoPreguntas.modificacion(preguntaOriginal,consignaMod)
+        self.__daoPreguntas.modificacion_rta(preguntaOriginal,rtaCorrecta,opciones)
         
         
     def modificarPregAprox(self,pregunta):
+        """"""
         consignaOriginal = pregunta[0]
         consignaMod = pregunta[1]
         rtaCorrecta = pregunta[2]
         preguntaOriginal = self.__getPregunta(consignaOriginal)
-        self.__daoPreguntas.modificacion_rta_aprox(preguntaOriginal,rtaCorrecta)
-        self.__daoPreguntas.modificacion_consigna(preguntaOriginal,consignaMod)
+        
+        estrat_preg_aprox = Estrategia_Preg_Aprox()
+        self.__daoPreguntas.set_estrategia(estrat_preg_aprox)
+        
+        self.__daoPreguntas.modificacion(preguntaOriginal,consignaMod)
+        self.__daoPreguntas.modificacion_rta(preguntaOriginal,rtaCorrecta)
         
     def crearModPreg(self):
         try:

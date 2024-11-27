@@ -27,15 +27,20 @@ class Estrategia_Preg_Comun (Interfaz_Estrategia):
         
         conexion.commit()
     
-    def modificacion_rta_pregunta(self, conexion,  pregunta, rta_nueva, lista_opciones):
+    
+    def modificacion_rta_pregunta(self, conexion,  pregunta, rta_nueva, lista_opciones=None):
         id_a_modificar = pregunta.get_id() # matchear por id
         
         c= conexion.cursor()
         
         lista_opciones_nuevas = json.dumps(lista_opciones)
         
+        print("UPDATEAnDO PREG COMUN!!")
+        
         c.execute("UPDATE preguntas SET (rta_correcta) = ? WHERE id_pregunta = (?)",(rta_nueva, id_a_modificar,))
         c.execute("UPDATE preguntas SET (lista_opciones) = ? WHERE id_pregunta = (?)",(lista_opciones_nuevas, id_a_modificar,))
+        
+        print("UPDATEADO god prgcomun")
         
         conexion.commit()
     
