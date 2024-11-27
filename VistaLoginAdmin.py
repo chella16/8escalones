@@ -59,3 +59,7 @@ class VentanaLoginAdmin(MainWindow):
     
     def popWarning(self):
         QMessageBox.warning(self, "Advertencia", "El usuario no fue encontrado.")
+    
+    def limpiarInputs(self):
+        self.ingresoUser.clear()
+        self.ingresoClave.clear()
