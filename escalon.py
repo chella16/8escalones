@@ -1,3 +1,5 @@
+from estrategia_preg_aprox import Estrategia_Preg_Aprox
+from estrategia_preg_comun import Estrategia_Preg_Comun
 
 class Escalon:
     
@@ -14,10 +16,18 @@ class Escalon:
     #podria modularizar las 2 consultas para que no quede un metodo tan extenso   
         
     def __cargar_lista_preguntas_comunes(self,bd):
-        self.__lista_preguntas_comunes=bd.descargar_preguntas_comunes(self.__tema, self.__dificultad)
+        """"""
+        estrat_preg_comunes = Estrategia_Preg_Comun()
+        bd.set_estrategia(estrat_preg_comunes)
+        
+        self.__lista_preguntas_comunes=bd.descargar_preguntas(self.__tema, self.__dificultad)
     
     def __cargar_pregunta_aproximacion(self,bd):
-        self.__lista_preguntas_aproximacion=bd.descargar_preguntas_aproximacion(self.__tema, self.__dificultad)
+        """"""
+        estrat_preg_aprox = Estrategia_Preg_Aprox()
+        bd.set_estrategia(estrat_preg_aprox)
+        
+        self.__lista_preguntas_aproximacion=bd.descargar_preguntas(self.__tema, self.__dificultad)
         
     def set_escalon(self,bd):#el controlador interactua con esto y con los get si se quisiera
         self.__cargar_lista_preguntas_comunes(bd)
