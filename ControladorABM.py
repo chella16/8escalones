@@ -211,8 +211,13 @@ class ControladorABM():
         
     
     def __getPregunta(self,consigna):
-        listaPregNormalesTema = [pregunta for pregunta in self.__daoPreguntas.descargar_preguntas_comunes(self.vista.temaActual,self.vista.dificultadActual)]
-        listaPregAproxTema = [pregunta for pregunta in self.__daoPreguntas.descargar_preguntas_aproximacion(self.vista.temaActual,self.vista.dificultadActual)]
+        estrat_preg_comun = Estrategia_Preg_Comun()
+        self.__daoPreguntas.set_estrategia(estrat_preg_comun)
+        listaPregNormalesTema = [pregunta for pregunta in self.__daoPreguntas.descargar_preguntas(self.vista.temaActual,self.vista.dificultadActual)]
+        
+        estrat_preg_aprox = Estrategia_Preg_Aprox()
+        self.__daoPreguntas.set_estrategia(estrat_preg_aprox)
+        listaPregAproxTema = [pregunta for pregunta in self.__daoPreguntas.descargar_preguntas(self.vista.temaActual,self.vista.dificultadActual)]
 
         for preg in listaPregNormalesTema + listaPregAproxTema: #lopeo en las dos listas en un mismo loop y fue
             if preg.get_consigna() == consigna:
