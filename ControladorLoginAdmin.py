@@ -26,11 +26,13 @@ class ControladorLoginAdmin():
     def login(self,usuario,contrasenia):
         if self.__daoAdmin.verificacion(usuario,contrasenia):
             #existes el user en la bd
+            self.vista.limpiarInputs()
             self.cambiarVista()
         else:
             self.vista.popWarning()
             
-            
+
+        
     def cambiarVista(self): #se tendria que conectar con la BD, por ahora solo cambio la vista
         self.vista.hide()
         if self.controladorAdmin == None:
