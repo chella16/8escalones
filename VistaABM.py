@@ -2,6 +2,22 @@ from PyQt6.QtWidgets import QMessageBox,QListWidgetItem,QLineEdit,QDialogButtonB
 from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtGui import QFont
 from MainWindow import *
+import re
+
+def verificarInput(text)-> bool: #devuelve True si el input puede pasar al controlador, false en caso contrario
+    if not text: #si esta vacio retorna falso
+        print(1)
+        return False 
+    
+    if text[-1] == " ": #ultimo caracter es un espacio
+        print(2)
+        return False 
+
+    if re.match(r'^[a-zA-Z0-9\s¿?"\'ñÑáéíóúÁÉÍÓÚ()\₂\+\-\*/=%^]+$',text):
+        print("ES valido")
+        return True
+    print(4)
+    return False
 
 class CustomDialogAM(QDialog): #usado para Altas y Modificaciones en preguntas y temas
     signalInput = pyqtSignal(str) #para emitir lo que se cambia en el input
@@ -29,12 +45,21 @@ class CustomDialogAM(QDialog): #usado para Altas y Modificaciones en preguntas y
         layout.addWidget(self.buttonBox)
         self.setLayout(layout)
         
-    def setText(self,text):
-        self.input.setText(text)
+    def setText(self,text)->bool:
+        if verificarInput(text):
+            print("valido")
+            self.input.setText(text)
+            return True
+        else:
+            print(text)
+            self.input.setPlaceholderText("Ingrese un texto valido")
+            return False
         
     def confirmo(self): #aca dentro tendria que ir la logica para que no ingresen espacios en blanco al final de la sentencia
-        self.signalInput.emit(self.input.text())
-        self.accept() #es para que se cierre el dialogo
+        if self.setText(self.input.text()):
+            self.signalInput.emit(self.input.text())
+            self.accept() #es para que se cierre el dialogo
+            
 
 
 class CustomDialogTipoPregunta(QDialog):
