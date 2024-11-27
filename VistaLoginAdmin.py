@@ -1,10 +1,10 @@
-from PyQt6.QtWidgets import QPushButton,QVBoxLayout,QLabel, QLineEdit,QGridLayout
+from PyQt6.QtWidgets import QPushButton,QVBoxLayout,QLabel, QLineEdit,QGridLayout,QMessageBox
 from PyQt6.QtCore import Qt,pyqtSignal
 from MainWindow import MainWindow, widgetDeFondoConColor
 
 class VentanaLoginAdmin(MainWindow):
     signalAtras = pyqtSignal()
-    signalLogin = pyqtSignal()
+    signalLogin = pyqtSignal(str,str)
     def __init__(self):
         super().__init__("Images/FondoJuego.jpg")
         self.btnWidth = 150
@@ -29,7 +29,7 @@ class VentanaLoginAdmin(MainWindow):
         self.btnAtras.clicked.connect(self.signalAtras.emit)
         self.btnAtras.setFixedSize(80, 30)
         
-        self.btnLogin.clicked.connect(self.signalLogin.emit)
+        self.btnLogin.clicked.connect(self.enviarIngreso)
         
     
     def crearLayout(self):
@@ -50,3 +50,12 @@ class VentanaLoginAdmin(MainWindow):
         layout2.addWidget(widgetContenedor,alignment=Qt.AlignmentFlag.AlignCenter)
         layout2.addWidget(self.btnAtras, alignment= Qt.AlignmentFlag.AlignLeft)
         self.labelFondo.setLayout(layout2)
+
+    def enviarIngreso(self):
+        contrasenia = self.ingresoClave.text()
+        user = self.ingresoUser.text()
+        
+        self.signalLogin.emit(user,contrasenia)
+    
+    def popWarning(self):
+        QMessageBox.warning(self, "Advertencia", "El usuario no fue encontrado.")

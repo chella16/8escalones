@@ -36,6 +36,7 @@ class VentanaAbmUser(MainWindow):
     signalBorrarUser = pyqtSignal()
     signalBorrarAllUsers = pyqtSignal()
     signalAtras = pyqtSignal()
+    signalBorrarAllUsersBtn = pyqtSignal()
     
     def __init__(self):
         super().__init__("Images/FondoJuego.jpg")
@@ -47,7 +48,7 @@ class VentanaAbmUser(MainWindow):
         
         self.btnModUsuario.clicked.connect(self.signalModUser.emit)
         self.btnDelUsuario.clicked.connect(self.signalBorrarUser.emit)
-        self.btnDelAllUsuario.clicked.connect(self.signalBorrarAllUsers.emit)
+        self.btnDelAllUsuario.clicked.connect(self.signalBorrarAllUsersBtn.emit)
         self.btnAtras.clicked.connect(self.signalAtras.emit)
         
     def __crearGrupoABM(self)-> QVBoxLayout:
@@ -86,7 +87,7 @@ class VentanaAbmUser(MainWindow):
     def aggUsuarios(self,listaUser):
         self.listaUserWidget.aggUsers(listaUser)
     
-    def limpiarUsersVista(self):
+    def __limpiarUsersVista(self):
         self.listaUserWidget.limpiar()
     
     
@@ -102,6 +103,7 @@ class VentanaAbmUser(MainWindow):
             self.listaUserWidget.removerUser(nombreUserActual)
         else:
             return
+    
         self.signalEnviarBorrarUser.emit(nombreUserActual)
     
     def mostrarDelAllUsers(self):
@@ -111,6 +113,7 @@ class VentanaAbmUser(MainWindow):
         else:
             return
         self.signalBorrarAllUsers.emit()
+        
         
     def __getNombreUsuarioActual(self):
         userSeleccionado = self.listaUserWidget.getItemUserActual()
@@ -128,3 +131,7 @@ class VentanaAbmUser(MainWindow):
         dialog.signalInput.connect(lambda nombreMod: self.signalEnviarModUser.emit(nombreUserActual,nombreMod))
         dialog.exec()
         
+
+    def actualizarUsuarios(self,listaJugadores):
+        self.__limpiarUsersVista()
+        self.aggUsuarios(listaJugadores)
