@@ -1,5 +1,6 @@
 import sqlite3
 from interfaz_dao import Interfaz_DAO
+from jugador import Jugador
 
 class DAO_Participantes (Interfaz_DAO):
     
@@ -59,3 +60,12 @@ class DAO_Participantes (Interfaz_DAO):
         conexion.commit()
         self._BD.cerrar_conexion()
         print("cerrando bd...")
+    
+    def descargar_participante (self):
+        conexion = self._BD.get_conexion()
+        c= conexion.cursor()
+        
+        c.execute("SELECT * FROM participantes")
+        lista_aux = c.fetchall()
+        
+        for 

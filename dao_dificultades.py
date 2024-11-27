@@ -1,14 +1,13 @@
 import sqlite3
-from interfaz_dao import Interfaz_DAO
 from dificultad import Dificultad
 
-class DAO_Dificultades(Interfaz_DAO):
+class DAO_Dificultades():
     
     def __init__(self, bd):
-        super().__init__(bd)
+        self.__BD = bd
     
     def alta(self):
-        conexion = self._BD.get_conexion()
+        conexion = self.__BD.get_conexion()
         c= conexion.cursor()
         c.execute ("SELECT 1 FROM dificultades WHERE nombre_dificultad = (?)", ('Normal',))
         resu = c.fetchone()
@@ -26,12 +25,12 @@ class DAO_Dificultades(Interfaz_DAO):
             c.execute ("INSERT INTO dificultades (nombre_dificultad) VALUES (?)", ('Dificil',))
         
         conexion.commit()
-        self._BD.cerrar_conexion()
+        self.__BD.cerrar_conexion()
     
     def descargar_dificultades (self):
         lista_aux= []
         
-        conexion = self._BD.get_conexion()
+        conexion = self.__BD.get_conexion()
         c= conexion.cursor()
         c.execute ("SELECT * FROM dificultades")
         dificultades = c.fetchall()
@@ -40,11 +39,11 @@ class DAO_Dificultades(Interfaz_DAO):
             dificultad_aux = Dificultad(id_dificultad, nombre_dificultad)
             lista_aux.append(dificultad_aux)
         
-        self._BD.cerrar_conexion()
+        self.__BD.cerrar_conexion()
         return lista_aux
     
     def mostrar_dificultades (self):
-        conexion = self._BD.get_conexion()
+        conexion = self.__BD.get_conexion()
         c= conexion.cursor()
         print (f"tabla de dificultades: ...")
         c.execute ("SELECT * FROM dificultades")
@@ -53,4 +52,4 @@ class DAO_Dificultades(Interfaz_DAO):
         print (f"tabla de dificultades: ...")
         for t in resu:
             print (t)
-        self._BD.cerrar_conexion()
+        self.__BD.cerrar_conexion()
