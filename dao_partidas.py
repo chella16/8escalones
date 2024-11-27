@@ -41,6 +41,15 @@ class Dao_Partida (Interfaz_DAO):
         self._BD.cerrar_conexion()
         return lista_ranking
     
+    def eliminar_partidas_jugador (self, id_jugador): #no se si usarlo pero lo cree por las dudas mas q nada por prolijidad en la bd
+        conexion = self._BD.get_conexion()
+        c= conexion.cursor()
+        
+        c.execute ("DELETE FROM partidas WHERE id_participante_ganador = (?)", (id_jugador,))
+        
+        conexion.commit()
+        self._BD.cerrar_conexion()
+    
     def eliminar_todas_partidas(self):
         
         conexion = self._BD.get_conexion()
@@ -50,3 +59,5 @@ class Dao_Partida (Interfaz_DAO):
         
         conexion.commit()
         self._BD.cerrar_conexion()
+    
+    
