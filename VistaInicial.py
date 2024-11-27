@@ -7,9 +7,10 @@ class VentanaInicial(MainWindow):
     signalJugar = pyqtSignal()
     signalOpciones = pyqtSignal()
     signalCerrar = pyqtSignal()
+    signalRanking = pyqtSignal()
     
     def __init__(self):
-        super().__init__("8escalones\Images\FondoPantallaPpal.png")
+        super().__init__("Images\FondoPantallaPpal.png")
         self.btnWidth = 150
         self.btnHeight = 40
         
@@ -20,14 +21,17 @@ class VentanaInicial(MainWindow):
         
     def crearBtns(self):
         self.btnJugar = QPushButton("Jugar")
+        self.btnRanking = QPushButton("Ranking")
         self.btnOpciones = QPushButton("Opciones")
         self.btnAtras = QPushButton("Salir")
         
         self.btnJugar.setFixedSize(self.btnWidth, self.btnHeight)
+        self.btnRanking.setFixedSize(self.btnWidth, self.btnHeight)
         self.btnOpciones.setFixedSize(self.btnWidth, self.btnHeight)
         self.btnAtras.setFixedSize(80, 30)
     
         self.btnJugar.clicked.connect(self.signalJugar.emit)
+        self.btnRanking.clicked.connect(self.signalRanking.emit)
         self.btnOpciones.clicked.connect(self.signalOpciones.emit)
         self.btnAtras.clicked.connect(self.signalCerrar.emit)
         
@@ -37,5 +41,6 @@ class VentanaInicial(MainWindow):
         layout.setContentsMargins(50, 80, 50, 50)
         layout.addWidget(self.btnJugar,alignment=Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.btnOpciones,alignment=Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.btnRanking,alignment=Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.btnAtras,200,alignment=Qt.AlignmentFlag.AlignLeft)
         self.labelFondo.setLayout(layout)

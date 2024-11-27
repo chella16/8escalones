@@ -3,7 +3,6 @@ from base_datos import Base_Datos_8Escalones
 from dao_temas import DAO_Temas
 from dao_preguntas import DAO_Preguntas
 from dao_dificultades import DAO_Dificultades
-from PyQt6.QtWidgets import QApplication
 from tematica import Tematica
 from preguntas import Pregunta_comun, Pregunta_aproximacion
 from dificultad import Dificultad
@@ -43,7 +42,7 @@ class ControladorABM():
     def volverAtras(self):
         self.vista.hide()
         self._controladorAnt.vista.show()
-        
+
     def actualizarPreguntas(self):
         tema= self.vista.temaActual
         dif= self.vista.dificultadActual

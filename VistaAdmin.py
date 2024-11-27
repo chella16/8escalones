@@ -20,16 +20,16 @@ class VentanaAdmin(MainWindow):
         
     def crearBtns(self):
         self.btnABMPreg = QPushButton("ABM Temas y Preguntas")
-        self.btnABMAdmin = QPushButton("ABM Usuarios")
+        self.btnABMUser = QPushButton("ABM Usuarios")
 
         self.btnAtras = QPushButton("Atras")
         
         self.btnABMPreg.setFixedSize(self.btnWidth, self.btnHeight)
-        self.btnABMAdmin.setFixedSize(self.btnWidth, self.btnHeight)
+        self.btnABMUser.setFixedSize(self.btnWidth, self.btnHeight)
         self.btnAtras.setFixedSize(80, 30)
     
         self.btnABMPreg.clicked.connect(self.signalABMTemasYPreg.emit)
-        self.btnABMAdmin.clicked.connect(self.signalABMUsuarios.emit)
+        self.btnABMUser.clicked.connect(self.signalABMUsuarios.emit)
         self.btnAtras.clicked.connect(self.signalAtras.emit)
         
     
@@ -37,7 +37,7 @@ class VentanaAdmin(MainWindow):
         layout = QVBoxLayout()
         layout.setContentsMargins(50, 80, 50, 50)
         layout.addWidget(self.btnABMPreg,alignment=Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.btnABMAdmin,alignment=Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.btnABMUser,alignment=Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.btnAtras,200,alignment=Qt.AlignmentFlag.AlignLeft)
         self.labelFondo.setLayout(layout)
         
