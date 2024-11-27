@@ -3,6 +3,8 @@ from PyQt6.QtCore import pyqtSignal
 from MainWindow import *
 from VistaABM import CustomDialogAM
 import sys
+import re
+
 
 class WidgetListaUser(QWidget):
     def __init__(self):
@@ -27,7 +29,35 @@ class WidgetListaUser(QWidget):
     
     def aggUsers(self,usuarios):
         self.Qlista.addItems(usuarios)  
-      
+
+class CustomDialogUserAM(CustomDialogAM):
+    def __init__(self, mensaje, parent=None):
+        super().__init__(mensaje, parent)
+        
+    def setText(self,text)->bool:
+        if self.verificarInputUser(text):
+            print("valido")
+            self.input.setText(text)
+            return True
+        else:
+            print(text)
+            self.input.setPlaceholderText("Ingrese un texto valido")
+            return False
+        
+    def verificarInputUser(self,text)-> bool: #devuelve True si el input puede pasar al controlador, false en caso contrario
+        if not text: #si esta vacio retorna falso
+            print(1)
+            return False 
+        
+        if text[-1] == " ": #ultimo caracter es un espacio
+            print(2)
+            return False 
+
+        if re.match(r'^[a-zA-Z0-9]+$',text):
+            print("ES valido")
+            return True
+        print(4)
+        return False
 class VentanaAbmUser(MainWindow):
     signalEnviarBorrarUser = pyqtSignal(str)
     signalEnviarModUser = pyqtSignal(str,str)
@@ -126,7 +156,7 @@ class VentanaAbmUser(MainWindow):
             QMessageBox.warning(self, "Advertencia", "seleccione un usuario para modificar.")
             return
         
-        dialog = CustomDialogAM("Modificar el nombre del Usuario",self)
+        dialog = CustomDialogUserAM("Modificar el nombre del Usuario",self)
         dialog.setText(nombreUserActual)
         dialog.signalInput.connect(lambda nombreMod: self.signalEnviarModUser.emit(nombreUserActual,nombreMod))
         dialog.exec()
