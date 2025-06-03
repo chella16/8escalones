@@ -12,4 +12,5 @@ Un juego interactivo desarrollado para el Trabajo Práctico Final de Programaci�
 2. Ejecuta el juego: `python main.py`
 
 ## Capturas de pantalla
-![Juego en acción](Imagenes-ingame/screenshot1.png)
+![Juego en acción](Imagenes-ingame/Screenshot_1.png,Imagenes-ingame/Screenshot_2.png,Imagenes-ingame/Screenshot_3.png )
+
