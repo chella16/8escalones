@@ -15,5 +15,5 @@ Un juego interactivo desarrollado para el Trabajo Práctico Final de Programaci�
 | Captura 1 | Captura 2 | Captura 3 |
 |-----------|-----------|-----------|
 | ![Imagen 1](Imagenes-ingame/Screenshot_1.png) | ![Imagen 2](Imagenes-ingame/Screenshot_2.png) | ![Imagen 3](Imagenes-ingame/Screenshot_3.png) |
-| *Juego en acción* | *Menú principal* | *Pantalla de puntuación* |
+| *Menú principal* | *Juego en acción* | *ABM preguntas* |
 
