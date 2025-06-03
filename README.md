@@ -1,6 +1,6 @@
 # 8escalones - Proyecto Final POO
 
-![Logo del proyecto](Images/logo.png)
+![Logo del proyecto](Images/WindowIcon.png)
 
 Un juego interactivo desarrollado para el Trabajo Práctico Final de Programación Orientada a Objetos.
 
