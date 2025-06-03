@@ -8,7 +8,7 @@ Un juego interactivo desarrollado para el Trabajo Pr√°ctico Final de Programaci√
 - Python
 
 ##DESCARGAR
-https://github.com/chella16/8escalones/download/v1.0/8escalones.zip
+[https://github.com/chella16/8escalones/download/v1.0/8escalones.zip](https://github.com/chella16/8escalones/releases/download/APP/8escalones.rar)
 
 ## Capturas de pantalla
 | Captura 1 | Captura 2 | Captura 3 |
